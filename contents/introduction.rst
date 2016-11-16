@@ -163,7 +163,15 @@ License
 Credits
 ---------------------
 
-Swarm is code by Ethersphere (ΞTHΞRSPHΞЯΞ) :url:, the team behind swarm: Viktor Trón, Dániel A. Nagy, Aron Fischer, Nick Johnson and Zsolt Felföldi.
+Swarm is code by Ethersphere (ΞTHΞRSPHΞЯΞ) `https://github.com/ethersphere`
+
+the team behind swarm:
+
+* Viktor Trón @zelig
+* Dániel A. Nagy @nagydani
+* Aron Fischer @homotopycolimit
+* Nick Johnson @Arachnid
+* Zsolt Felföldi @zsfelfoldi
 
 Swarm is funded by the Ethereum Foundation.
 
@@ -176,8 +184,8 @@ Special thanks to
 * Nick Savers, Alex Beregszaszi, Daniel Varga, Juan Benet for inspiring discussions and ideas
 * Participants of the orange lounge research group
 * Roman Mandeleil and Anton Nashatyrev for the java implementation
-* Community contributors for feedback and testing
 * Igor Sharudin for example dapps
+* Community contributors for feedback and testing
 
 
 Community
@@ -205,8 +213,11 @@ Pull requests should by default commit on the `master` branch (edge).
 Roadmap and Resources
 --------------------------
 
-Swarm roadmap and tentative plan for features and POC series are found on the wiki and referenced from
-the *swarm homepage* on http://swarm-gateways.net/bzz:/swarm/
+Swarm roadmap and tentative plan for features and POC series are found on the wiki:
+https://github.com/ethereum/go-ethereum/wiki/swarm-roadmap
+https://github.com/ethereum/go-ethereum/wiki/swarm---POC-series
+
+the *swarm homepage* is accessible via swarm at bzz://swarm or the gateway http://swarm-gateways.net/bzz:/swarm/
 
 The swarm page also contains a list of swarm-related talks (video recording and slides).
 
@@ -220,9 +231,9 @@ Public gateways are:
 
 Swarm testnet monitor: http://stats.ens.domains/
 
-
 Source code is at https://github.com/ethereum/go-ethereum/
 
 Example dapps are at https://github.com/ethereum/swarm-dapps
 
+This document source https://github.com/ethersphere/swarm-guide
 

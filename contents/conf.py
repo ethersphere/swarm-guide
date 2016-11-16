@@ -32,7 +32,7 @@ import shlex
 extensions = [
     # 'sphinx.ext.intersphinx',
     # 'sphinx.ext.todo',
-    # 'sphinx.ext.mathjax',
+    'sphinx.ext.mathjax',
     # 'sphinx.ext.ifconfig',
     # 'sphinxcontrib.httpdomain',
 ]
