@@ -145,413 +145,53 @@ The console http module is a very simple http client, that understands the bzz s
 * `http.download(url, /path/to/save)`
 * `http.loadScript(url)` should be same as JSRE.loadScript
 
-bzz console api overview
+Swarm RPC API
 ----------------------------
 
-  bzz.upload(localfspath, indexfile)
+Swarm exposes an RPC API under the ``bzz`` namespace. It offers the following methods:
+
+``bzz.upload(localfspath, indexfile)``
   returns content hash
 
-  bzz.download(bzzpath, localdirpath)
+``bzz.download(bzzpath, localdirpath)``
 
-  bzz.put(content, contentType)
+``bzz.put(content, contentType)``
+  returns content hash
 
-   returns content hash
-
-  bzz.get(bzzpath)
+``bzz.get(bzzpath)``
   returns object with content, mime type, status code and content size
 
-  bzz.register(address, hash, domain)
-
-  bzz.resolve(domain)
+``bzz.resolve(domain)``
   returns content hash
+  resolves the domain name to a content hash using ENS.
+
+``bzz.info()``
+  information about the swarm node
+
+``bzz.hive()``
+  outputs the kademlia table in a human-friendly table format
+
+Chequebook RPC API
+------------------------------
+
+Swarm also exposes an RPC API for the chequebook offering the followng methods:
+
+``chequebook.``
+``chequebook.``
+``chequebook.``
+``chequebook.``
+``chequebook.``
 
 Name Registration for swarm content
 -----------------------------------------
 
-It is the swarm hash of a piece of data that dictates routing. Therefore its role is somehwhat analogous to an IP address in the TCP/IP internet. Domain names can be registered on the blockchain and set to resolve to any swarm hash. The bzz blockchain registry is thus analogous to DNS (and no ICANN nor any name servers are needed).
+It is the swarm hash of a piece of data that dictates routing. Therefore its role is somehwhat analogous to an IP address in the TCP/IP internet. Domain names can be registered on the blockchain and set to resolve to any swarm hash. The Ethereum Name Service is thus analogous to DNS (and no ICANN nor any name servers are needed).
 
 Currently the domain name is any arbitrary string in that the contract does not impose any restrictions. Since this is used in the host part of the url in the bzz scheme, we recommend using wellformed domain names so that there is interoperability with restrictive url handler libs.
 
-In the bzz:// URL scheme it is possible to supply a block number;
-
-.. code-block:: js
-
-  bzz://swarm.com;144
-
-and this means that we want swarm.com to be resolved to a hash as registered in the registry at block 144. (Note the semicolon @code{;} in the URL)
-
-Example: using bzz api and registered names:
-
-.. code-block:: js
-
-   hash = bzz.upload("/path/to/my/directory");
-
-   hash = bzz.put("console.log(\"hello from console\")", "application/javascript");
-
-  bzz.get(hash);
-  {
-    content: 'console.log("hello");',
-    contentType: 'application/javascript',
-    status: '0'
-    size: '21',
-  }
-
-  http.get("bzz://"+hash);
-  'console.log("hello from console")'
-
-  http.loadScript("bzz://"+hash);
-  hello from console
-  true
-
-  bzz.register(primary, hash, "hello")
-
-Name registration for contracts
------------------------------------------
-
-It is also possible to register human readable names for contracts.
-@subsubheading Prerequisites
-In order to do this, you must have a @code{globalRegistrar} contract deployed and you must have HashReg, @code{UrlHint} deployed and registered with @code{globalRegistrar}.
-
-These need to be done only once for every chain. See appendix.
-
-If this was successful, you will see these commands respond with addresses.
-
-.. code-block:: js
-
-  registrar.owner("HashReg");
-  registrar.owner("UrlHint");
-  registrar.addr("HashReg");
-  registrar.addr("UrlHint");
-
-
-and these commands will respond with code:
-
-.. code-block:: js
-
-  eth.getCode(globalRegistrarAddr);
-  eth.getCode(hashRegAddr);
-  eth.getCode(urlHintAddr);
-
-
-If these checks are ok, you are all set up.
-
-Creating and a contract
-++++++++++++++++++++++++++++++++
-
-In order to continue this example, we must write a contract and deploy its compiled code on the blockchain. We proceed:
-
-.. code-block:: js
-
-  source = "contract test \n" +
-  "   /// @@notice will multiply `a` by 7.\n" +
-  "   function multiply(uint a) returns(uint d) {\n" +
-  "      return a * 7;\n" +
-  "   }\n" +
-  "} ";
-  contract = eth.compile.solidity(source).test;
-  contractaddress = eth.sendTransaction({from: primary, data: contract.code});
-
-
-Then we must wait until the contract is included in a block. Thus, if we are on a private test network, wem must mine a block
-
-.. code-block:: js
-
-    miner.start(1); admin.sleepBlocks(1); miner.stop();
-
-
-we continue
-
-.. code-block:: js
-
-  contractaddress = eth.getTransactionReceipt(txhash).contractAddress;
-  eth.getCode(contractaddress);
-
-  multiply7 = eth.contract(contract.info.abiDefinition).at(contractaddress);
-  fortytwo = multiply7.multiply.call(6);
-
-
-Then we check if everything worked and the contracts are deployed and usable
-
-.. code-block:: js
-
-  code = eth.getCode(contractaddress);
-  abiDef = contract.info.abiDefinition;
-  multiply7 = eth.contract(abiDef).at(contractaddress);
-  multiply7.multiply.call(6);
-
-Deploying contract info in swarm and registering its hash
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-The contract.info substructure given back from the solidity compiler can be deployed with swarm. The resulting contenthash is registered in the HashReg.
-
-
-.. code-block:: js
-
-  contenthash = bzz.put(JSON.stringify(contract.info),  "application/eth-contractinfo+json");
-  admin.register(primary, contractaddress, contenthash);
-  miner.start(1); admin.sleepBlocks(1); miner.stop();
-  //mining only needed if you are on a private chain self mining
-
-
-Contract usage from dapp (or user-side case example)
---------------------------------------------------------------
-
-:command:`eth.getContractInfo()` will magically work. If the url fetcher has the bzz protocol scheme enabled, then it tries to fetch it with the registered contenthash. (If there is no swarm or the content is not (yet) uploaded there, it gracefully falls back to the UrlHint, ie., it looks up the url hint for the contentHash, fetches its content, and verifies it against the contentHash for protection.)
-
-Note that the user needs the contractaddress but nothing else.
-
-
-.. code-block:: js
-
-  info = admin.getContractInfo(contractaddress);
-  multiply7 = eth.contract(info.abiDefinition).at(contractaddress);
-
-Now that we switch on confirmations and try:
-
-
-.. code-block:: js
-
-  eth.confirmTransactions(true);
-  multiply7.multiply.sendTransaction(6, { from: primary });
-
-
-The following custom confirmation message should appear on the console and 6 shall be multiplied by seven:
-
-
-.. code-block:: js
-
-  myMultiply7.multiply.sendTransaction(6);
-  NatSpec: Will multiply 6 by 7.
-  Confirm? [y/n] y
-
-
-Registering names for contracts
-++++++++++++++++++++++++++++++++++++++++
-
-And now we can go one step further and use the globalRegistrar name registry for contracts:
-
-
-.. code-block:: js
-
-  eth.confirmTransactions(true);
-  registrar.reserve.sendTransaction("multiply7", {from:primary});
-  registrar.setAddress.sendTransaction("multiply7", contractaddress, true, {from:primary});
-
-
-You need to wait for these 2 transactions to be confirmed.
-
-.. code-block:: js
-
-  miner.start(1); admin.sleepBlocks(2); miner.stop();
-
-You can check if they arrived:
-
-.. code-block:: js
-
-  registrar.owner("multiply7");
-
-Now the contract name is sufficient to use this contract from a Dapp.
-
-.. code-block:: js
-
-  contractaddress = registrar.addr("multiply7");
-  info = admin.getContractInfo(contractaddress);
-  multiply7 = eth.contract(info.abiDefinition).at(contractaddress);
-
-
-If info is only needed because of the Abi, then one could define this function:
-
-
-.. code-block:: js
-
-  getContract = function(name) {
-    contractaddress = registrar.addr(name);
-    info = admin.getContractInfo(contractaddress);
-    return eth.contract(info.abiDefinition).at(contractaddress);
-  }
-
-
-.. code-block:: js
-
-  web3.sha3(eth.getCode(registrar.addr("multiply7")))
-  51b68b0f44e8c6ef096797efbed04185fd4c4a639cd5ffe52e96076519c1385d
-
-Using bzz domain names
--------------------------
-
-Now that we know how to register names, let us see how to use them in practice
-
-.. code-block:: js
-
-  albumHash = bzz.upload("/Users/tron/Work/ethereum/go-ethereum/bzz/bzzdemo/",   "index.html")
-  bzz.register(primary, "album", albumHash)
-  miner.start(1); admin.sleepBlocks(1); miner.stop();
-  //mining needed if you are on a private chain
-  bzz.resolve("album")
-  admin.httpGet("bzz:/album/")
-
-
-you can also try
-
-.. code-block:: js
-
-  bzz.download("/album", "/tmp/album");
-  bzz.upload("/tmp/album", "index.html");
-
-
-And using the bzz URL's in the http module we can now try these (matching, fallbacks errors)
-
-.. code-block:: js
-
-  http.get("bzz://51b68b0f44e8c6ef.. .1385d/")
-  http.get("bzz://album/index.html")
-  http.get("bzz://album/index.css")
-
-
-As indicated above, we can force a content type manually to get at the raw content:
-
-
-.. code-block:: js
-
-  http.get("http://raw/album/?content\_type=\"text/plain\"")
-
-Changing registered name, managing versions, rollback
--------------------------------------------------------------
-
-Suppose we have registered the name @code{swarmpicture} as in
-
-
-.. code-block:: js
-
-  bzz.register(primary, "swarmpicture",     bzz.upload("bzz.demo/swarm-inside.png", "swarm-inside.png"))
-
-
-After some blocks are mined, this content will become accessible at
-
-.. code-block:: js
-
-   http://localhost:8500/swarmpicture/
-
-and the resolver should work too as:
-
-.. code-block:: js
-
-  bzz.resolve("swarmpicture")
-'0x58c604de89bf3ecbbbfc90948b273ae3f956e6106babd5e8bacb3615213d3c2e'
-
-
-Let us remember this version of "swarmpicture"
-
-.. code-block:: js
-
-  v1 = eth.blockNumber
-
-
-Now we realise that we have made a mistake and want to include the full logo in our site and se we re-register:
-
-.. code-block:: js
-
-  bzz.register(primary, "swarmpicture",    bzz.upload("bzz.demo/MSTR-Swarm-Logo.jpg", "MSTR-Swarm-Logo.jpg"))
-
-
-then mine some more @code{miner.start(); admin.sleepBlocks(1); miner.stop();} and then we can resolve as
-
-.. code-block:: js
-
-  bzz.resolve("swarmpicture")
-'0x8232b8259393019920d57737c1073c78a6cee18ffa8bfcfdc0cd378a732415a8'
-
-This new registration of "swarmpicture" is stored at a different block
-
-.. code-block:: js
-
-  v2 = eth.blockNumber
-
-
-The full historical record is addressable:
-
-.. code-block:: js
-
-   http://localhost:8500/swarmpicture;31/
-   http://localhost:8500/swarmpicture;32/
-
-And you can see it with the bzz-aware http client:
-
-
-.. code-block:: js
-
-    http.get("bzz://raw/swarmpicture:"+v1+"?content\_type=text/json") '{"entries":[{"path":"swarm-inside.png","hash":"a41a826e.. .28",  "contentType":"image/png","status":0},{"path":"", "hash":"a41a826e.. .28","contentType":"image/png","status":0}]}'
-
-    http.get("bzz://raw/swarmpicture:"+v2+"?content\_type=text/json") '{"entries":[{"path":"MSTR-Swarm-Logo.jpg","hash":"35e6a17f.. .1d", "contentType":"image/jpeg","status":0},{"path":"", "hash":"35e6a17f.. .1d","contentType":"image/jpeg","status":0}]}'
-
-
-
-
-Appendix - Deploying a Name Registry
-------------------------------------------
-
-mine some ether on a private chain
-++++++++++++++++++++++++++++++++++++++++
-
-.. code-block:: js
-
-  primary = eth.accounts[0];
-  balance = web3.fromWei(eth.getBalance(primary), "ether");
-
-  admin.miner.start(8);
-  admin.sleepBlocks(10);
-  admin.miner.stop()  ;
-
-
-mine transactions on a private chain
-+++++++++++++++++++++++++++++++++++++++
-
-.. code-block:: js
-
-  eth.getBlockTransactionCount("pending");
-  eth.getBlock("pending", true).transactions;
-
-  miner.start(1);
-  admin.sleepBlocks(eth.blockNumber+1);
-  miner.stop();
-
-  eth.getBlockTransactionCount("pending");
-
-
-create and deploy GlobalRegistrar, HashReg and UrlHint
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. code-block:: js
-
-  primary = eth.accounts[0];
-  globalRegistrarAddr = admin.setGlobalRegistrar(primary);
-  hashRegAddr = admin.setHashReg(primary);
-  urlHintAddr = admin.setUrlHint(primary);
-
-
-You need to mine or wait till the txs are all picked up.
-Initialise the registrar on the new address and check if the other registars are registered:
-
-
-.. code-block:: js
-
-  registrar = GlobalRegistrar.at(globalRegistrarAddr);
-  registrar.owner("HashReg");
-  registrar.owner("UrlHint");
-  registrar.addr("HashReg");
-  registrar.addr("UrlHint");
-
-
-Next time you only need to specify the address of the GlobalRegistrar (for the live chain it is encoded in the code)
-
-
-.. code-block:: js
-
-  admin.setGlobalRegistrar("0x6e332ff2d38e8d6f21bee5ab9a1073166382ce33")
-  registrar = GlobalRegistrar.at(GlobalRegistrarAddr);
-  registrar.owner("HashReg");
-  registrar.owner("UrlHint");
-  registrar.addr("HashReg");
-  registrar.addr("UrlHint");
-
-
+ENS documentation is coming. In the meanwhile, docs are:
+
+* ENS source code: https://github.com/ethereum/ens
+* ENS EIPs 137: https://github.com/ethereum/EIPs/issues/137
+* ENS EIPs 162: https://github.com/ethereum/EIPs/issues/162
+* ENS Ethereum Domain Name System, talk at devcon2: https://www.youtube.com/watch?v=pLDDbCZXvTE
