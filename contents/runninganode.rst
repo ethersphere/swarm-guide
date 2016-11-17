@@ -166,8 +166,9 @@ Open a text editor and write the following (be sure to include the correct BZZKE
     "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "difficulty": "0x4000",
     "alloc": {
-      "THE BZZKEY address starting with 0x eg. 0xcc8C048426978c5877212281b8a75F1B4E71a862": {
+      "THE BZZKEY address starting with 0x eg. 0x2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1": {
       "balance": "10000000000000000000"
+      }
     },
     "coinbase": "0x0000000000000000000000000000000000000000",
     "timestamp": "0x00",
