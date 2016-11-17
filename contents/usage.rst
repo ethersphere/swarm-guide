@@ -98,7 +98,7 @@ Manifests contain content-type information for the hashes they reference. In oth
 
 .. code-block:: js
 
-   http.get("http://localhost:8500/raw/hash/?content_type=\"text/plain\"")
+   GET http://localhost:8500/bzzr:/hash?content_type=\"text/plain\"")
 
 Path Matching on Manifests
 ---------------------------------
@@ -115,7 +115,7 @@ by pointing the browser to
 
 .. code-block:: js
 
-    http://localhost:8500/HASH/subdirectory/filename
+    http://localhost:8500/bzz:/HASH/subdirectory/filename
 
 .. note:: if the filename is @code{index.html} then it can be omitted.
 
@@ -140,12 +140,13 @@ bzzr (raw)
 
  entry whereas the bzz raw scheme simply serves the asset pointed to by the url. For the latter a content_type query parameter can be supplied if you know the mime you want otherwise it is a default octet stream.
 
-For instance if you have an image (not the manifest wrapping it) at hash ``abc123...ef`` then  ``bzzr://abc123...ef&content_type=text/json`` will properly serve it.
+For instance if you have an image (not the manifest wrapping it) at hash ``abc123...ef`` then  ``bzzr://abc123...ef?content_type=text/json`` will properly serve it.
 
 
 
 Swarm RPC API
-----------------------------
+========================
+
 
 Swarm exposes an RPC API under the ``bzz`` namespace. It offers the following methods:
 
@@ -187,7 +188,8 @@ Swarm also exposes an RPC API for the chequebook offering the followng methods:
 
 
 Ethereum Name Service
------------------------------------------
+========================
+
 
 It is the swarm hash of a piece of data that dictates routing. Therefore its role is somehwhat analogous to an IP address in the TCP/IP internet. Domain names can be registered on the blockchain and set to resolve to any swarm hash. The Ethereum Name Service is thus analogous to DNS (and no ICANN nor any name servers are needed).
 
