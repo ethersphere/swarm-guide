@@ -44,8 +44,8 @@ Then you must prepare your go environment as follows
 .. code-block:: none
 
   mkdir ~/go
-  export GOPATH=~/go
-  echo 'GOPATH=~/go' >> ~/.profile
+  export GOPATH="$HOME/go"
+  echo 'export GOPATH="$HOME/go"' >> ~/.profile
 
 Installing from source
 =======================
@@ -59,17 +59,32 @@ Once all prerequisites are met, download the go-ethereum source code
   git clone https://github.com/ethereum/go-ethereum
   cd go-ethereum
   git checkout develop
-  go get github.com/etherem/go-ethereum
+  go get github.com/ethereum/go-ethereum
 
-and finally compile the swarm daemon ``bzzd`` and the main go-ethereum client ``geth``
+and finally compile the swarm daemon ``bzzd`` and the main go-ethereum client ``geth`` and (optionally) the bzz uploader ``bzzup``
 
 .. code-block:: none
 
   go build ./cmd/bzzd
   go build ./cmd/geth
+  go build ./cmd/bzzup
 
 
 You can now run :command:`./bzzd` to start your swarm node.
+
+
+Updating your client
+=====================
+
+To update your client simply download the newest source code and recompile.
+
+.. code-block:: none
+
+  cd $GOPATH/src/github.com/ethereum/go-ethereum
+  git checkout develop
+  git pull
+  go build ./cmd/geth ./cmd/bzzd ./cmd/bzzup
+
 
 Running your swarm client
 ===========================
@@ -96,7 +111,7 @@ You will be prompted for a password:
   Passphrase:
   Repeat passphrase:
 
-and the output will be an address - the base address of the swarm node.
+Once you have specified the password (for example MYPASSWORD) the output will be an address - the base address of the swarm node.
 
 .. code-block:: none
 
@@ -113,13 +128,14 @@ and finally, launch geth on a private network (id 322)
 
 .. code-block:: none
 
-  ./geth --datadir $DATADIR \
+  nohup ./geth --datadir $DATADIR \
          --unlock 0 \
+         --password <(echo -n "MYPASSWORD") \
          --verbosity 6 \
          --networkid 322 \
          --nodiscover \
          --maxpeers 0 \
-         console 2>> $DATADIR/geth.log
+          2>> $DATADIR/geth.log &
 
 and launch the bzzd; connecting it to the geth node
 
@@ -128,9 +144,116 @@ and launch the bzzd; connecting it to the geth node
   ./bzzd --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --ethapi $DATADIR/geth.ipc \
-         --bzznoswap 2>> $DATADIR/bzz.log
+         --bzznoswap \
+         2>> $DATADIR/bzz.log < <(echo -n "MYPASSWORD") &
 
-At this verbosity level you should see plenty of output accumulating in the logfile. You can keep en eye on it using the command ``tail -f $DATADIR/bzz.log``.
+At this verbosity level you should see plenty of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/bzz.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will be empty.
+
+Running your client with SWAP enabled
+---------------------------------------
+
+The SWarm Accounting Protocol (SWAP) is enabled by default; we disabled it above by using the ``--noswap`` flag. However, activating SWAP requires more than just removing the ``--noswap`` flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
+
+Custom genesis block
+^^^^^^^^^^^^^^^^^^^^^^
+
+Open a text editor and write the following (be sure to include the correct BZZKEY)
+
+.. code-block:: none
+
+  {
+  "nonce": "0x0000000000000042",
+    "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "difficulty": "0x4000",
+    "alloc": {
+      "THE BZZKEY address starting with 0x eg. 0x2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1": {
+      "balance": "10000000000000000000"
+      }
+    },
+    "coinbase": "0x0000000000000000000000000000000000000000",
+    "timestamp": "0x00",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "extraData": "Custom Ethereum Genesis Block to test Swarm with SWAP",
+    "gasLimit": "0xffffffff"
+}
+
+Save the file as ``$DATADIR/genesis.json``.
+
+If you already have bzzd and geth running, kill the processes
+
+.. code-block:: none
+  
+  killall -s SIGKILL geth
+  killall -s SIGKILL bzzd
+
+and remove the old data from the $DATADIR and then reinitialise with the custom genesis block
+
+.. code-block:: none
+
+  rm -rf $DATADIR/geth $DATADIR/bzzd
+  ./geth --datadir $DATADIR init $DATADIR/genesis.json
+
+We are now ready to restart geth and bzzd using our custom genesis block
+
+.. code-block:: none
+
+  nohup ./geth --datadir $DATADIR \
+         --unlock 0 \
+         --mine \
+         --password <(echo -n "MYPASSWORD") \
+         --verbosity 6 \
+         --networkid 322 \
+         --nodiscover \
+         --maxpeers 0 \
+          2>> $DATADIR/geth.log &
+
+and launch the bzzd (with SWAP); connecting it to the geth node
+
+.. code-block:: none
+
+  ./bzzd --bzzaccount $BZZKEY \
+         --datadir $DATADIR \
+         --ethapi $DATADIR/geth.ipc \
+         2>> $DATADIR/bzz.log < <(echo -n "MYPASSWORD") &
+
+If all is successful you will see the message "Deploying new chequebook" on the bzz.log. Once the transaction is mined, SWAP is ready.
+
+Mining on your private chain
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The alternative is to earn your all your ether by mining on your private chain.
+You can start you geth node in mining mode using the ``--mine`` flag, or (in our case) we can start mining on an already running geth node by issuing the ``miner.start()`` command:
+
+.. code-block:: none
+  
+  ./geth --exec 'miner.start()' attach ipc:$DATADIR/geth.ipc 
+
+There will be an initial delay while the necessary DAG is generated. You can see the progress in the geth.log file. 
+After mining has started, you can see your balance increasing via ``eth.getBalance()``:
+
+.. code-block:: none
+
+  ./geth --exec 'eth.getBalance(eth.coinbase)' attach ipc:$DATADIR/geth.ipc
+  # or 
+  ./geth --exec 'eth.getBalance(eth.accounts[0])' attach ipc:$DATADIR/geth.ipc
+
+
+Once the balance is greater than 0 we can restart ``bzzd`` with swap enabled.
+
+.. code-block:: none
+  
+    killall bzzd
+    ./bzzd --bzzaccount $BZZKEY \
+         --datadir $DATADIR \
+         --ethapi $DATADIR/geth.ipc \
+         2>> $DATADIR/bzz.log < <(echo -n "MYPASSWORD") &
+
+Note: without a custom genesis block you will be mining with the default difficulty which may be too high to be practical (depending on your system). You can see the current difficulty with ``admin.nodeInfo``
+
+.. code-block:: none
+
+  ./geth --exec 'admin.nodeInfo' attach ipc:$DATADIR/geth.ipc | grep difficulty
+
 
 Command line options
 ========================
@@ -144,7 +267,7 @@ The bzzd swarm daemon has the following swarm specific command line options:
 
 ``--bzznoswap``
     Swarm SWAP disabled (default false).
-    The SWAP (Swarm accounting protocol) is switched off by default in the current release.
+    The SWAP (Swarm accounting protocol) is switched on by default in the current release.
 
 ``--bzznosync``
     Swarm Syncing disabled (default false)
@@ -155,7 +278,7 @@ The bzzd swarm daemon has the following swarm specific command line options:
     Useful if you run multiple swarm instances and want to expose their own http proxy.
 
 ``--bzzaccount value``
-    Swarm account key file
+    Swarm account key
     The base account that determines the node's swarm base address.
     This address determines which chunks are stored and retrieved at the node and therefore
     must not to be changed across sessions.
