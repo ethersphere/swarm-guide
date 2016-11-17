@@ -144,7 +144,8 @@ On a high level, nodes should provide the following services through a public ne
 
 
 Requests
-++++++++++++++++
+--------------
+
 When receiving a preimage that is not already present in its local storage, the node stores it locally. If the storage allocated by the node for the archive is full, the object accessed the longest time ago is discarded. Note that this policy implicitly results in storing the objects closer to the node's address, as - all else being equal - those are the ones which are most likely to be requested from this particular node, due to the lookup strategy detailed below.
 
 .. index::

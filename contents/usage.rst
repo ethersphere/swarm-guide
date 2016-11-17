@@ -122,28 +122,27 @@ by pointing the browser to
 Manifests in general
 --------------------------
 
-Although in our example above the manifest was essentially a file listing in a directory, there is no reason for a Manifest to take this form. Manifests simply match strings with swarm id's, and there is no requirement that the strings be of the form @code{path/to/file}. Indeed swarm treats @code{path/to/file} as just another identifying string and there is nothing special about the @code{/} character.
-
-@strong{However}, a browser will treat @code{/} as a special character. This is important to remember when specifying (relative) URL's in your Dapp.
-
-The bzz:// URL scheme
+bzz url schemes
 ========================
+
 To make it easier to access swarm content, we can use the bzz URL scheme. One of its primary merits is that it allows us to use human readable addresses instead of hashes. This is achieved by a name registration contract on the blockchain.
 
-http module for urls on the console
-----------------------------------------
-The in-console http client understands the bzz scheme if geth is started with swarm enabled. Syntax:
+bzz
+  the bzz scheme assumes a manifest and follows the path (the empty path if the url ends in the hash) and serves that content with content type specified in the manifest.
 
-.. code-block:: js
+  This generic scheme supports name resolution for domains registered on the Ethereum Name Service (ENS, see :ref:`Ethereum Name Service`)
 
-    http.get(url)
-    http.download(url, /path/to/save)
+bzzi (immutable)
+  The same as the generic scheme but there is no ENS domain resolution, the domain part of the path
+  needs to be valid hash
 
-The console http module is a very simple http client, that understands the bzz scheme if bzz is enabled.
+bzzr (raw)
 
-* `http.get(url)`
-* `http.download(url, /path/to/save)`
-* `http.loadScript(url)` should be same as JSRE.loadScript
+ entry whereas the bzz raw scheme simply serves the asset pointed to by the url. For the latter a content_type query parameter can be supplied if you know the mime you want otherwise it is a default octet stream.
+
+For instance if you have an image (not the manifest wrapping it) at hash ``abc123...ef`` then  ``bzzr://abc123...ef&content_type=text/json`` will properly serve it.
+
+
 
 Swarm RPC API
 ----------------------------
@@ -160,6 +159,10 @@ Swarm exposes an RPC API under the ``bzz`` namespace. It offers the following me
 
 ``bzz.get(bzzpath)``
   returns object with content, mime type, status code and content size
+
+``bzz.swapEnabled``
+
+``bzz.syncEnabled``
 
 ``bzz.resolve(domain)``
   returns content hash
@@ -182,7 +185,8 @@ Swarm also exposes an RPC API for the chequebook offering the followng methods:
 ``chequebook.``
 ``chequebook.``
 
-Name Registration for swarm content
+
+Ethereum Name Service
 -----------------------------------------
 
 It is the swarm hash of a piece of data that dictates routing. Therefore its role is somehwhat analogous to an IP address in the TCP/IP internet. Domain names can be registered on the blockchain and set to resolve to any swarm hash. The Ethereum Name Service is thus analogous to DNS (and no ICANN nor any name servers are needed).
