@@ -152,7 +152,7 @@ At this verbosity level you should see plenty of output accumulating in the logf
 Running your client with SWAP enabled
 ---------------------------------------
 
-The SWarm Accounting Protocol (SWAP) is enabled by default; we disabled it above by using the ``--noswap`` flag. However, activating SWAP requires more than just removing the ``--noswap`` flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
+The SWarm Accounting Protocol (SWAP) is enabled by default; we disabled it above by using the ``--bzznoswap`` flag. However, activating SWAP requires more than just removing the bzznoswap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
 
 Custom genesis block
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -198,8 +198,8 @@ We are now ready to restart geth and bzzd using our custom genesis block
 .. code-block:: none
 
   nohup ./geth --datadir $DATADIR \
-         --unlock 0 \
          --mine \
+         --unlock 0 \
          --password <(echo -n "MYPASSWORD") \
          --verbosity 6 \
          --networkid 322 \
