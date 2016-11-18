@@ -74,7 +74,7 @@ Such a swarm network is identified by its network id which is an arbitrary integ
 
 Swarm allows for :dfn:'upload and disappear' which means that any node can just upload content to the swarm and
 then is allowed to go offline. As long as nodes do not drop out or become unavailable, the content will still
-be accessible due to 'syncronisation' procedure in which node continuously pass along available data between each other.
+be accessible due to the 'synchronization' procedure in which node continuously pass along available data between each other.
 
 .. note::
   Uploaded content is not guaranteed to persist until storage insurance is implemented (expected in POC 0.4 by Q2). All participating nodes should consider  voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard swarm as safe storage until the incentive sy
@@ -118,10 +118,9 @@ When content is uploaded to swarm it is chopped up into pieces called chunks. Ea
 The current version of swarm implements a :dfn:`strictly content addressed distributed hash table` (DHT). Here 'strictly content addressed' means that the node(s) closest to the address of a chunk do not only serve information about the content but actually host the data. (Note that although it is part of the protocol, we cannot have any sort of guarantee that it will be preserved. this is a caveat worth stating again: no guarantee of permanence and persistence). In other words, in order to retrieve a piece of content (as a part of a larger collection/document) a chunk must reach its destination from the uploader to the storer when storing/uploading as well must be served back to a requester when retrieving/downloading.
 The viability of both hinges on the assumption that any node (uploader/requester) can 'reach' any other node (storer). This assumption is guaranteed with a special :dfn:`network topology` (called :dfn:`kademlia`), which offers (very low) constant time for lookup logarithmic in the network size.
 
-.. note:: there is noo such thing as delete/remove in swarm. Once data is uploaded, there is no way you can initiate
-her to r revoke it.
+.. note:: There is no such thing as delete/remove in swarm. Once data is uploaded there is no way you can initiate her to revoke it.
 
-Nodes cache content that they pass on at retrieval, resulting in an autoscaling elastic cloud: popular (oft-accessed) content is replicated throughout the network decreasing its retrieval latency. Caching also results in a :dfn:`maximum resource utilisation` in as much as nodes will fill their dedicated storage space with data passing through them. If capacity is reached least accessed chunks are purged by a garbage collection process. As a consequence, unpopular content will end up
+Nodes cache content that they pass on at retrieval, resulting in an auto scaling elastic cloud: popular (oft-accessed) content is replicated throughout the network decreasing its retrieval latency. Caching also results in a :dfn:`maximum resource utilisation` in as much as nodes will fill their dedicated storage space with data passing through them. If capacity is reached least accessed chunks are purged by a garbage collection process. As a consequence, unpopular content will end up
 getting deleted. Storage insurance (to be implemented in POC 0.4 expected by Q2 of 2017) will be used to protect important content from this fate.
 
 Swarm content access is centred around the notion of a manifest. A manifest file describes a document collection, e.g.,
