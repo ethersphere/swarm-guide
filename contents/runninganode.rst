@@ -58,16 +58,17 @@ Once all prerequisites are met, download the go-ethereum source code
   cd $GOPATH/src/github.com/ethereum
   git clone https://github.com/ethereum/go-ethereum
   cd go-ethereum
-  git checkout develop
+  git checkout master
   go get github.com/ethereum/go-ethereum
 
-and finally compile the swarm daemon ``bzzd`` and the main go-ethereum client ``geth`` and (optionally) the bzz uploader ``bzzup``
+and finally compile the swarm daemon ``bzzd`` and the main go-ethereum client ``geth`` and (optionally) the bzz uploader ``bzzup`` and bzzhash calculator ``bzzhash``
 
 .. code-block:: none
 
   go build ./cmd/bzzd
   go build ./cmd/geth
   go build ./cmd/bzzup
+  go build ./cmd/bzzhash
 
 
 You can now run :command:`./bzzd` to start your swarm node.
@@ -81,7 +82,7 @@ To update your client simply download the newest source code and recompile.
 .. code-block:: none
 
   cd $GOPATH/src/github.com/ethereum/go-ethereum
-  git checkout develop
+  git checkout master
   git pull
   go build ./cmd/geth ./cmd/bzzd ./cmd/bzzup
 
