@@ -90,6 +90,8 @@ To update your client simply download the newest source code and recompile.
 Running you own private swarm
 ******************************
 
+These instructions will lay out how to start a local, private, personal (singleton) swarm. Use this to familiarise yourself with the functioning of the client; upload and download and http proxy.
+
 Running your swarm client
 ===========================
 
