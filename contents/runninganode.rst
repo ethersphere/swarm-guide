@@ -176,7 +176,7 @@ Open a text editor and write the following (be sure to include the correct BZZKE
     "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "extraData": "Custom Ethereum Genesis Block to test Swarm with SWAP",
     "gasLimit": "0xffffffff"
-}
+  }
 
 Save the file as ``$DATADIR/genesis.json``.
 

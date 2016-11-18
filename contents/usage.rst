@@ -113,6 +113,7 @@ Uploading from the console
 It is possible to upload files from the bzzd console (without the need for bzzup). The console command is
 
 .. code-block:: none
+
     bzz.upload("/some/path/fileOrDirectory", "filename")
 
 The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path shall resolve to (often this would be index.html). Continuing form above (note bzzd.ipc instead of geth.ipc)
