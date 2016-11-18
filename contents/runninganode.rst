@@ -1,6 +1,6 @@
-********************
-Running a node
-********************
+*************************
+Installation and Updates
+*************************
 
 Installation
 =======================
@@ -86,6 +86,9 @@ To update your client simply download the newest source code and recompile.
   git pull
   go build ./cmd/geth ./cmd/bzzd ./cmd/bzzup
 
+******************************
+Running you own private swarm
+******************************
 
 Running your swarm client
 ===========================
@@ -146,14 +149,18 @@ and launch the bzzd; connecting it to the geth node
          --datadir $DATADIR \
          --ethapi $DATADIR/geth.ipc \
          --bzznoswap \
+         --maxpeers 0 \
          2>> $DATADIR/bzz.log < <(echo -n "MYPASSWORD") &
 
 At this verbosity level you should see plenty of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/bzz.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will be empty.
 
-Running your client with SWAP enabled
----------------------------------------
+.. note:: Following these instructions you are now running a single local swarm node, not connected to any other. 
 
-The SWarm Accounting Protocol (SWAP) is enabled by default; we disabled it above by using the ``--bzznoswap`` flag. However, activating SWAP requires more than just removing the bzznoswap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
+Testing SWAP on your private Swarm.
+---------------------------------------
+.. note:: Please: only test SWAP on a private network.
+
+The SWarm Accounting Protocol (SWAP) is disabled above by use of the ``--bzznoswap`` flag. If it is set to false, then SWAP will be enabled. However, activating SWAP requires more than just removing the bzznoswap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
 
 Custom genesis block
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -215,14 +222,17 @@ and launch the bzzd (with SWAP); connecting it to the geth node
   ./bzzd --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --ethapi $DATADIR/geth.ipc \
+         --maxpeers 0 \
          2>> $DATADIR/bzz.log < <(echo -n "MYPASSWORD") &
 
 If all is successful you will see the message "Deploying new chequebook" on the bzz.log. Once the transaction is mined, SWAP is ready.
 
+.. note:: Astute readers will notice that enabling SWAP while setting maxpeers to 0 seems futile. These instructions will be updated soon to allow you to run a private swap testnet with several peers.
+
 Mining on your private chain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The alternative is to earn your all your ether by mining on your private chain.
+The alternative to creating a custom genesis block is to earn your all your ether by mining on your private chain.
 You can start you geth node in mining mode using the ``--mine`` flag, or (in our case) we can start mining on an already running geth node by issuing the ``miner.start()`` command:
 
 .. code-block:: none
@@ -247,13 +257,20 @@ Once the balance is greater than 0 we can restart ``bzzd`` with swap enabled.
     ./bzzd --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --ethapi $DATADIR/geth.ipc \
+         --maxpeers 0 \
          2>> $DATADIR/bzz.log < <(echo -n "MYPASSWORD") &
 
-Note: without a custom genesis block you will be mining with the default difficulty which may be too high to be practical (depending on your system). You can see the current difficulty with ``admin.nodeInfo``
+Note: without a custom genesis block the mining difficulty may be too high to be practical (depending on your system). You can see the current difficulty with ``admin.nodeInfo``
 
 .. code-block:: none
 
   ./geth --exec 'admin.nodeInfo' attach ipc:$DATADIR/geth.ipc | grep difficulty
+
+********************************
+Connecting to the swarm testnet
+********************************
+
+Coming soon.
 
 
 Command line options
