@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 4
 
    introduction
+   installation
    runninganode
    usage
    api

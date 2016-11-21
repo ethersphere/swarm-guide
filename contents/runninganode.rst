@@ -1,98 +1,11 @@
-*************************
-Installation and Updates
-*************************
-
-Installation
-=======================
-Swarm is part of the Ethereum stack, the reference implementation is currently at POC (proof of concept) version 0.2.
-
-The source code is found on github: https://github.com/ethereum/go-ethereum/tree/swarm/
-
-Supported Platforms
-=========================
-
-Geth runs on all major platforms (linux, MacOSX, Windows, also raspberry pi, android OS, iOS).
-
-..  note::
-  This package has not been tested on platforms other than linux and OSX.
-
-Prerequisites
-================
-
-building the swarm daemon :command:`bzzd` requires the following packages:
-
-* go: https://golang.org
-* git: http://git.org
-
-
-Grab the relevant prerequisites and build from source.
-
-On linux (ubuntu/debian variants) use ``apt`` to install go and git
-
-.. code-block:: none
-
-  sudo apt install golang git
-
-while on Mac OSX you'd use :command:`brew`
-
-.. code-block:: none
-
-    brew install go git
-
-Then you must prepare your go environment as follows
-
-.. code-block:: none
-
-  mkdir ~/go
-  export GOPATH="$HOME/go"
-  echo 'export GOPATH="$HOME/go"' >> ~/.profile
-
-Installing from source
-=======================
-
-Once all prerequisites are met, download the go-ethereum source code
-
-.. code-block:: none
-
-  mkdir -p $GOPATH/src/github.com/ethereum
-  cd $GOPATH/src/github.com/ethereum
-  git clone https://github.com/ethereum/go-ethereum
-  cd go-ethereum
-  git checkout master
-  go get github.com/ethereum/go-ethereum
-
-and finally compile the swarm daemon ``bzzd`` and the main go-ethereum client ``geth`` and (optionally) the bzz uploader ``bzzup`` and bzzhash calculator ``bzzhash``
-
-.. code-block:: none
-
-  go build ./cmd/bzzd
-  go build ./cmd/geth
-  go build ./cmd/bzzup
-  go build ./cmd/bzzhash
-
-
-You can now run :command:`./bzzd` to start your swarm node.
-
-
-Updating your client
-=====================
-
-To update your client simply download the newest source code and recompile.
-
-.. code-block:: none
-
-  cd $GOPATH/src/github.com/ethereum/go-ethereum
-  git checkout master
-  git pull
-  go build ./cmd/geth ./cmd/bzzd ./cmd/bzzup
 
 ******************************
-Running you own private swarm
+Running the swarm client
 ******************************
 
-These instructions will lay out how to start a local, private, personal (singleton) swarm. Use this to familiarise yourself with the functioning of the client; upload and download and http proxy.
+These instructions will begin by laying out how to start a local, private, personal (singleton) swarm. Use this to familiarise yourself with the functioning of the client; upload and download and http proxy.
 
-Running your swarm client
+Preparation
 ===========================
 
 To start a basic swarm node we must start geth with an empty data directory on a private network and then connect the swarm daemon to this instance of geth.
@@ -130,7 +43,11 @@ We save it under the name ``BZZKEY``
 
   BZZKEY=2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 
-and finally, launch geth on a private network (id 322)
+
+Swarm in singleton mode
+===========================
+
+With the preparations complete, we can now launch our swarm client. To launch in singleton mode, start geth using ``--maxpeers 0``
 
 .. code-block:: none
 
@@ -151,18 +68,71 @@ and launch the bzzd; connecting it to the geth node
          --datadir $DATADIR \
          --ethapi $DATADIR/geth.ipc \
          --bzznoswap \
+         --verbosity 6 \
          --maxpeers 0 \
-         2>> $DATADIR/bzz.log < <(echo -n "MYPASSWORD") &
+         2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
 
-At this verbosity level you should see plenty of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/bzz.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will be empty.
+At this verbosity level you should see plenty of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/bzzd.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will not be set.
+
+You can change the verbosity level without restarting geth and bzzd via:
+
+.. code-block:: none
+
+  ./geth --exec web3.debug.verbosity(3) attach ipc:$DATADIR/geth.ipc 
+  ./geth --exec web3.debug.verbosity(3) attach ipc:$DATADIR/bzzd.ipc 
+
 
 .. note:: Following these instructions you are now running a single local swarm node, not connected to any other. 
 
+
+Connecting to the swarm testnet
+=================================
+
+Connecting bzzd only
+----------------------
+
+Set up your environment as you did for your private swarm (see above) and launch geth in singleton mode (maxpeers 0)
+
+.. code-block:: none
+
+  nohup ./geth --datadir $DATADIR \
+         --unlock 0 \
+         --password <(echo -n "MYPASSWORD") \
+         --verbosity 6 \
+         --networkid 322 \
+         --nodiscover \
+         --maxpeers 0 \
+          2>> $DATADIR/geth.log &
+
+Then launch the bzzd; connecting it to the geth node, but without the ``--maxpeers 0`` flag.
+
+.. code-block:: none
+
+  ./bzzd --bzzaccount $BZZKEY \
+         --datadir $DATADIR \
+         --ethapi $DATADIR/geth.ipc \
+         --bzznoswap \
+         --verbosity 6 \
+         2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
+
+The bzzd daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of geth. 
+
+Connecting bzzd and geth to the Ropsten testnet
+------------------------------------------------
+
+Instructions coming soon.
+
+
+
+Testing SWAP
+===============
+
+.. note:: Important! Please only test SWAP on a private network. 
+
 Testing SWAP on your private Swarm.
 ---------------------------------------
-.. note:: Please: only test SWAP on a private network.
 
-The SWarm Accounting Protocol (SWAP) is disabled above by use of the ``--bzznoswap`` flag. If it is set to false, then SWAP will be enabled. However, activating SWAP requires more than just removing the bzznoswap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
+The SWarm Accounting Protocol (SWAP) is disabled by use of the ``--bzznoswap`` flag. If it is set to false, then SWAP will be enabled. However, activating SWAP requires more than just removing the bzznoswap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
 
 Custom genesis block
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -223,11 +193,12 @@ and launch the bzzd (with SWAP); connecting it to the geth node
 
   ./bzzd --bzzaccount $BZZKEY \
          --datadir $DATADIR \
+         --verbosity 6 \
          --ethapi $DATADIR/geth.ipc \
          --maxpeers 0 \
-         2>> $DATADIR/bzz.log < <(echo -n "MYPASSWORD") &
+         2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
 
-If all is successful you will see the message "Deploying new chequebook" on the bzz.log. Once the transaction is mined, SWAP is ready.
+If all is successful you will see the message "Deploying new chequebook" on the bzzd.log. Once the transaction is mined, SWAP is ready.
 
 .. note:: Astute readers will notice that enabling SWAP while setting maxpeers to 0 seems futile. These instructions will be updated soon to allow you to run a private swap testnet with several peers.
 
@@ -258,9 +229,10 @@ Once the balance is greater than 0 we can restart ``bzzd`` with swap enabled.
     killall bzzd
     ./bzzd --bzzaccount $BZZKEY \
          --datadir $DATADIR \
+         --verbosity 6 \
          --ethapi $DATADIR/geth.ipc \
          --maxpeers 0 \
-         2>> $DATADIR/bzz.log < <(echo -n "MYPASSWORD") &
+         2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
 
 Note: without a custom genesis block the mining difficulty may be too high to be practical (depending on your system). You can see the current difficulty with ``admin.nodeInfo``
 
@@ -268,15 +240,12 @@ Note: without a custom genesis block the mining difficulty may be too high to be
 
   ./geth --exec 'admin.nodeInfo' attach ipc:$DATADIR/geth.ipc | grep difficulty
 
-********************************
-Connecting to the swarm testnet
-********************************
 
-Coming soon.
+Configuration
+=====================
 
-
-Command line options
-========================
+Command line options for bzzd
+==============================
 
 The bzzd swarm daemon has the following swarm specific command line options:
 
