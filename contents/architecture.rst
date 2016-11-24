@@ -20,7 +20,7 @@ There are 4 different layers of data units relevant to swarm:
    message
    storage layer
 
-The actual storage layer of swarm consists of two main components, the \:dfn:`localstore (LOC)` and the :dfn:`netstore (NET)`. The local store provides the interface to local computing resources utilised for storage. In particular we explicitly delineate an in-memory fast cache (:dfn:`memory store (MEM)`) and a persistent disk storage (:dfn:`dbstore (DBS)` possibly with its own cache system). The reason for this is that we can optimise the system by relying on certain properties of the memory store specific for our purpose, e.g., that keys are hashes, so no further hashing is needed, the keys can be directly mapped in a tree/trie structure.
+The actual storage layer of swarm consists of two main components, the :dfn:`localstore (LOC)` and the :dfn:`netstore (NET)`. The local store provides the interface to local computing resources utilised for storage. In particular we explicitly delineate an in-memory fast cache (:dfn:`memory store (MEM)`) and a persistent disk storage (:dfn:`dbstore (DBS)` possibly with its own cache system). The reason for this is that we can optimise the system by relying on certain properties of the memory store specific for our purpose, e.g., that keys are hashes, so no further hashing is needed, the keys can be directly mapped in a tree/trie structure.
 
 For disk storage, leveldb is used. Both components can easily be swapped by alternative solutions with minimal work.
 
@@ -36,14 +36,14 @@ The swarm manifest is a structure that defines a mapping between arbitrary paths
 
 The high level API to the manifests provides functionality to upload and download individual documents as files, collections (manifests) as directories. It also provides an interface to add documents to a collection on a path, delete a document from a collection. Note that deletion here only means that a new manifest is created in which the path in question is missing. There is no other notion of deletion in the swarm.
 
-API is the go implementation (and go API) for these high level functions. There is an http proxy interface as well as a RPC API for these functions. These all differ in there exact functionality due to inherent privilege differences or interface limitations.
-These are described in detail in :ref:`API`.
+API is the go implementation (and go API) for these high level functions. There is an http proxy interface as well as a RPC API for these functions. These all differ in their exact functionality due to inherent privilege differences or interface limitations.
+These are described in detail in :ref:`Usage`.
 
 .. index::
    API
-   HTTP proxye
+   HTTP proxy
 
-The Swarm Accounting Protocol (SWAP) component keeps track of requests between peers and implements the accounting protocol. It is described in detail in :ref:`Incentivisation`.
+The :ref:`SWAP -- Swarm Accounting Protocol` component keeps track of requests between peers and implements the accounting protocol. It is described in detail in :ref:`Incentivisation`.
 
 In what follows we describe the components in more detail.
 
@@ -250,7 +250,7 @@ This can be improved by simply automatically sending all relevant peers to a con
    self lookup
 
 Peer addresses
---------------------------------------q
+--------------------------------------
 
 Nodes in the network are identified by the hash the ethereum address of the swarm base account.
 The distance between two addresses is the MSB first numerical value of their XOR.
@@ -340,7 +340,11 @@ offline past peer)
 
 .. math::
   |proxBin(a)| < |proxBin(b)|
+
+.. math::
   || (proxBin(a) < proxBin(b) && |proxBin(a)| == |proxBin(b)|)
+
+.. math::
   || (proxBin(a) == proxBin(b) && lastChecked(a) < lastChecked(b))
 
 This has double role. Starting as naive node with empty db, this implements
@@ -357,3 +361,30 @@ BZZ protocol handler is registered on the p2p server.
 The protocol takes care of actually communicating the bzz protocol
 encoding and decoding requests for storage and retrieval, handling the protocol handshake
 dispaTching to netstore for handling the DHT logic, registering peers in the Kademlia  table via the hive logistic manager.
+
+.. note::
+      the bzz protocol is in a flux, as the components on the roadmap get implemented
+      and the protocol solifies, a detailed wire protocol spec will be provided
+
+
+
+Incentivisation
+===========================
+
+
+swap, swear & swindle
+-----------------------------
+
+SWAP -- Swarm Accounting Protocol
+-----------------------------------------------------------------------------------------------
+
+Swarm Accounting Protocol, Secured With Automated Payments
+
+
+SWEAR -- Storage With Enforced Archiving Rules or Swarm Enforcement And Registration
+--------------------------------------------------------------------------------------------------------
+
+
+SWINDLE -- Secured With INsurance Deposit Litigation and Escrow
+--------------------------------------------------------------------------------------------------------
+

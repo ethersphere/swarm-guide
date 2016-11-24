@@ -15,9 +15,7 @@ Contents:
    installation
    runninganode
    usage
-   api
    architecture
-..   related_projects
 
 
 This document is licensed under the @emph{Creative Commons Attribution License}. To

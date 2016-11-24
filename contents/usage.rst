@@ -2,32 +2,46 @@
 Usage
 *****************
 
-Using a local Swarm Instance
-================================
+Using swarm from the command line
+==================================
 
-Uploading a file or directory to your local swarm instance
+Uploading a file or directory  to the swarm
 ---------------------------------------------------------------
 
-Make sure you have compiled bzzup 
+Make sure you have compiled bzzup
 
 .. code-block:: none
-  
+
   cd $GOPATH/src/github.com/ethereum/go-ethereum
   go build ./cmd/bzzup
 
-The bzzup program makes it easy to upload files and directories to your local swarm instance. Usage:
+The bzzup program makes it easy to upload files and directories. Usage:
 
 .. code-block:: none
 
   ./bzzup /path/to/file/or/directory
 
+By default bzzup assumes that you are running your own swarm node with a local http proxy on the default port (8500).
+See :ref:`Running a node` to learn how to run a local node.
+It is possible to specify alternative proxy endpoints with the ``--bzzapi`` option.
+
+You can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
+
+.. note:: This treat is likely to disappear or be seriously restricted in the future.
+
+
+.. code-block:: none
+
+    bzzup --bzzapi http://swarm-gateways.net/ /path/to/file/or/directory
+
 Example: uploading a file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Issue the following command to upload the go-ethereum README file to your swarm
 
 .. code-block:: none
 
-  ./bzzup  $GOPATH/src/github.com/ethereum/go-ethereum/README.md 
+  ./bzzup  $GOPATH/src/github.com/ethereum/go-ethereum/README.md
 
 It produces the following output
 
@@ -45,7 +59,7 @@ It produces the following output
     ]
   }
 
-The hash beginning with "14355" is the swarm hash of the README.md file itself and the hash beginning with "1ff07" is the hash of a manifest that contains README.md as its only entry.  
+The hash beginning with "14355" is the swarm hash of the README.md file itself and the hash beginning with "1ff07" is the hash of a manifest that contains README.md as its only entry.
 
 You could then download this file from swarm by pointing your browser to
 
@@ -74,7 +88,7 @@ We can upload this directory with
 
   ./bzzup --recursive upload-test/
 
-The output should look something like 
+The output should look something like
 
 .. code-block:: none
 
@@ -107,67 +121,63 @@ You could then retrieve the files relative to the root manifest like so:
 
   http://localhost:8500/bzz:/6c64ae708609be4cc34027b38b1104f0ea8dafd5164343117ce421f7714b5e98/three/four
 
-Uploading from the console
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Content retrieval: hashes and manifests
+==============================================
 
-It is possible to upload files from the bzzd console (without the need for bzzup). The console command is
-
-.. code-block:: none
-
-    bzz.upload("/some/path/fileOrDirectory", "filename")
-
-The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path shall resolve to (often this would be index.html). Continuing form above (note bzzd.ipc instead of geth.ipc)
-
-.. code-block:: none
-
-    ./geth --exec 'bzz.upload("upload-test/", "one.txt")' attach ipc:$DATADIR/bzzd.ipc
-
-gives the output
-
-.. code-block:: none
-  
-        dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440
-
-If we open this HASH in a browser 
-
-.. code-block:: none
-
-  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/
-
-We see "one" because the empty path resolves to "one.txt". Other valid URLs are
-
-.. code-block:: none
-
-  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/one.txt
-  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/two
-  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/three/four  
-
-Downloading a file from your local swarm instance
+Retrieving content using the http proxy
 ---------------------------------------------------------
 
-As indicated above, your local swarm instance has an http interface running on port 8500 (by default). Downloading a file is thus a simple matter of pointing your browser to
+As indicated above, your local swarm instance has an http interface running on port 8500 (by default). Retrieving content is simple matter of pointing your browser to
 
 .. code-block:: none
 
     http://localhost:8500/bzz:/HASH
 
 where HASH is the id of a swarm manifest.
+This is the most common usecase whereby swarm can serve the web.
 
-Alternatively, you can use ``bzz.get(HASH)`` on the bzzd console (note bzzd.ipc instead of geth.ipc)
+Disregarding the clunky proxy part, it looks like http transfering content from servers, but in fact it is using swarm's serverless architecture.
 
-.. code-block:: none
+The general pattern is: <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
 
-    ./geth --exec 'bzz.get(HASH)' attach ipc:$DATADIR/bzzd.ipc
+The http proxy part can be eliminated if you register the appropriate scheme handler with your browser or you use Mist.
 
+Swarm offers 3 distinct url schemes:
+
+bzz url schemes
+--------------------
+
+bzz
+^^^^
+
+The bzz scheme assumes a manifest and follows the path (the empty path if the url ends in the hash) and serves that content with content type specified in the manifest.
+
+This generic scheme supports name resolution for domains registered on the Ethereum Name Service
+(ENS, see :ref:`Ethereum Name Service`). This is a read-only scheme meaning that it only supports GET requests and serves to retrieve content from swarm.
+
+bzzi (immutable)
+^^^^^^^^^^^^^^^^^^^^
+
+The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzzi url will always nececssarily address the exact same fixed immutable content.
+
+bzzr (raw)
+^^^^^^^^^^^^^^
+
+When responding to GET requests to the bzzr scheme, swarm does not assume a manifest just  serves the asset addressed by the url directly.
+
+The ``content_type`` query parameter can be supplied to specify the mime you want otherwise content is served as a default octet stream. For instance if you have an image (not the manifest wrapping it) at hash ``abc123...ef`` then  ``bzzr://abc123...ef?content_type=image/jpeg`` will properly serve it.
+
+Importantly and somewhat unusually for generic schemes, the raw scheme supports POST and PUT requests. This is a crucially important way in which swarm is different from the internet as we know it.
+
+The possibility to POST makes swarm an actual cloud service, bringing upload functionality to your browsing.
+
+In fact under the hood, the command line tool ``bzzup`` uses the http proxy with the bzz raw scheme.
 
 
 Manifests
-================
+----------------------
 
-In general Manifests declare a list of strings associated with swarm entries. Before we get into generalities however, let us begin with an introductory example.
-
-A Manifest example - directory trees
----------------------------------------
+In general manifests declare a list of strings associated with swarm hashes. Before we get into generalities however, let us begin with an introductory example.
 
 Suppose we had used ``bzzup`` (as described above) to upload a directory to swarm:
 
@@ -175,12 +185,9 @@ Suppose we had used ``bzzup`` (as described above) to upload a directory to swar
 
     ./bzzup --recursive /path/to/directory
 
-then the resulting hash points to a "manifest" - in this case a list of files within the directory along with their swarm hashes. Let us take a closer look.
+then the returned hash is actually the address of the manifest. The manifest in this case a list of files within the directory along with their swarm hashes. Let us take a closer look.
 
-The raw Manifest
------------------------
-
-We can see the retrieve the Manifest directly (instead of the files they refer to) by using the bzz-raw protocol ``bzzr``:
+We can see the retrieve the manifest directly (instead of the files they refer to) by using the bzz-raw protocol ``bzzr``:
 
 .. code-block:: none
 
@@ -204,10 +211,7 @@ In our example it contains a list of all files contained in /path/to/directory t
   "contentType":"text/plain"}]}
 
 
-A note on content type
-----------------------------
-
-Manifests contain content-type information for the hashes they reference. In other contexts, where content-type is not supplied or, when you suspect the information is wrong, it is possible in a raw query to specify the content-type manually in the search query.
+Manifests contain content-type information for the hashes they reference. In other contexts, where content-type is not supplied or, when you suspect the information is wrong, it is possible to specify the content-type manually in the search query.
 
 .. code-block:: js
 
@@ -216,7 +220,9 @@ Manifests contain content-type information for the hashes they reference. In oth
 Path Matching on Manifests
 ---------------------------------
 
-A useful feature of manifests is that Urls can be matched on the paths. In some sense this makes the manifest a routing table and so the manifest swarm entry acts as if it were a host.
+A useful feature of manifests is that urls can be matched on the paths.
+Directory trees, routing tables and database indexes all share this problem.
+In some sense this makes the manifest a routing table and so the manifest swarm entry acts as if it were a host.
 
 More concretely, continuing in our example, we can access the file
 
@@ -230,60 +236,63 @@ by pointing the browser to
 
     http://localhost:8500/bzz:/HASH/subdirectory/filename
 
-.. note:: if the filename is index.html then it can be omitted.
+manifest entries can specify an empty path, in which case the pointing to the hash of the manifest will serve that entry.
 
-Manifests in general
---------------------------
+The ``bzzup`` command line tool allows you to specify a path to a file that will be mapped to the empty path.
 
-bzz url schemes
+
+The HTTP API
+=========================
+
+What determines
+
+POST http://localhost:8500/bzzr:
+  The post request is the simplest upload method. Manifest is NOT created. You need be a member, so expect
+  to create first a photo of you.
+
+
+PUT http://localhost:8500/bzzr:/some/path
+  The PUT request modifies the manifest so that the uploaded asset's hash will be added to the collection addressed by context
+  under pass. Note that the manifest is NOT ACTUALLY modified. In essence the manifest is copied and updated and its new hash will replace.
+
+
+Swarm IPC API
 ========================
 
-To make it easier to access swarm content, we can use the bzz URL scheme. One of its primary merits is that it allows us to use human readable addresses instead of hashes. This is achieved by a name registration contract on the blockchain.
+Swarm exposes an RPC API under the ``bzz`` namespace.
 
-bzz
-  the bzz scheme assumes a manifest and follows the path (the empty path if the url ends in the hash) and serves that content with content type specified in the manifest.
+.. note:: Note that this is not the recommended way for users or dapps to interact with swarm.
+Given that this module offers local filesystem access, allowing dapps to use this module or exposing it via remote connections creates a major security risk. For this reason ``bzzd`` only exposes this api via local ipc (unlike geth not allowing websockets or http).
 
-  This generic scheme supports name resolution for domains registered on the Ethereum Name Service (ENS, see :ref:`Ethereum Name Service`)
+The API offers the following methods:
 
-bzzi (immutable)
-  The same as the generic scheme but there is no ENS domain resolution, the domain part of the path
-  needs to be valid hash
+``bzz.upload(localfspath, defaultfile)``
+  uploads the file or directory at ``localfspath``. The second optional argument specifies the path to the file which will be served when the empty path is matched. It is common to match the empty path to :file:`index.html`
 
-bzzr (raw)
-
- entry whereas the bzz raw scheme simply serves the asset pointed to by the url. For the latter a content_type query parameter can be supplied if you know the mime you want otherwise it is a default octet stream.
-
-For instance if you have an image (not the manifest wrapping it) at hash ``abc123...ef`` then  ``bzzr://abc123...ef?content_type=text/json`` will properly serve it.
-
-
-
-Swarm RPC API
-========================
-
-
-Swarm exposes an RPC API under the ``bzz`` namespace. It offers the following methods:
-
-``bzz.upload(localfspath, indexfile)``
-  returns content hash
+  it returns content hash of the manifest which can then be used to download it.
 
 ``bzz.download(bzzpath, localdirpath)``
+  it recursively downloads all the paths starting from the manifest at ``bzzpath`` and downloads them in a corresponding directory structure under ``localdirpath`` using the slashes in the paths to indicate subdirectories.
+
+  assuming ``dirpath.orig`` is the root of any aribitrary directory tree containing no soft links or special files,
+  uploading and downloading will result in identical data on your filesystem:
+
+  bzz.download(bzz.upload(dirpath.orig), dirpath.replica)
+  diff -r dirpath.orig dirpath.replica || echo "identical"
 
 ``bzz.put(content, contentType)``
-  returns content hash
+  can be used to push a raw data blob to swarm. Creates a manifest with an entry. This entry has the empty path and specifies the content type given as second argument.
+  It returns content hash of this manifest.
 
 ``bzz.get(bzzpath)``
-  returns object with content, mime type, status code and content size
+  It downloads the manifest at ``bzzpath`` and returns a reponse json object with content, mime type, status code and content size. This should only be used for small pieces of data, since the content gets instantiated in memory.
 
-``bzz.swapEnabled``
-
-``bzz.syncEnabled``
 
 ``bzz.resolve(domain)``
-  returns content hash
-  resolves the domain name to a content hash using ENS.
+  resolves the domain name to a content hash using ENS and returns that. If swarm is not connected to a blockchain it returns an error. Note that your eth backend needs to be syncronised in order to get uptodate domain resolution.
 
 ``bzz.info()``
-  information about the swarm node
+  returns information about the swarm node
 
 ``bzz.hive()``
   outputs the kademlia table in a human-friendly table format
@@ -293,15 +302,70 @@ Chequebook RPC API
 
 Swarm also exposes an RPC API for the chequebook offering the followng methods:
 
-``chequebook.``
-``chequebook.``
-``chequebook.``
-``chequebook.``
-``chequebook.``
+``chequebook.balance()``
+  Returns the balance of your swap chequebook contract in wei.
+  It errors if no chequebook is set.
 
+``chequebook.issue(beneficiary, value)``
+  Issues a cheque to beneficiary (an ethereum address) in the amount of value (given in wei). The json structure returned can be copied and sent to beneficiary who in turn can cash it using ``chequebook.cash(cheque)``.
+  It errors if no chequebook is set.
+
+``chequebook.cash(cheque)``
+  Cashes the cheque issued. Note that anyone can cash a cheque. Its success only depends on the cheque's validity and the solvency of the issuers chequbook contract up to the amount specified in the cheque. The tranasction is paid from your bzz base account.
+  Returns the transaction hash.
+  It errors if no chequebook is set or if your account has insufficient funds to send the transaction.
+
+``chequebook.deposit(amount)``
+  Transfers funds of amount  wei from your bzz base account to your swap chequebook contract.
+  It errors if no chequebook is set  or if your account has insufficient funds.
+
+
+Example use of the console
+------------------------------
+
+It is possible to upload files from the bzzd console (without the need for bzzup or an http proxy). The console command is
+
+.. code-block:: none
+
+    bzz.upload("/path/to/file/or/directory", "filename")
+
+The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Continuing form above (note ``bzzd.ipc`` instead of ``geth.ipc``)
+
+.. code-block:: none
+
+    ./geth --exec 'bzz.upload("upload-test/", "one.txt")' attach ipc:$DATADIR/bzzd.ipc
+
+gives the output
+
+.. code-block:: none
+
+        dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440
+
+If we open this HASH in a browser
+
+.. code-block:: none
+
+  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/
+
+We see "one" because the empty path resolves to "one.txt". Other valid URLs are
+
+.. code-block:: none
+
+  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/one.txt
+  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/two
+  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/three/four
+
+We only recommend using this API for testing purposes or command line scripts. Since they save on http file upload, their performance is somewhat better than using the http API.
+
+As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or ``bzz.download(HASH, /path/to/donwload/to)`` on the bzzd console (note ``bzzd.ipc`` instead of ``geth.ipc``)
+
+.. code-block:: none
+
+    ./geth --exec 'bzz.get(HASH)' attach ipc:$DATADIR/bzzd.ipc
+    ./geth --exec 'bzz.download(HASH, "/path/to/download/to")' attach ipc:$DATADIR/bzzd.ipc
 
 Ethereum Name Service
-========================
+=========================================
 
 
 It is the swarm hash of a piece of data that dictates routing. Therefore its role is somehwhat analogous to an IP address in the TCP/IP internet. Domain names can be registered on the blockchain and set to resolve to any swarm hash. The Ethereum Name Service is thus analogous to DNS (and no ICANN nor any name servers are needed).

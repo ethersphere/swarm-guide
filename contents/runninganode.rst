@@ -74,24 +74,103 @@ and launch the bzzd; connecting it to the geth node
 
 At this verbosity level you should see plenty of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/bzzd.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will not be set.
 
-You can change the verbosity level without restarting geth and bzzd via:
+You can change the verbosity level without restarting geth and bzzd via the console:
 
 .. code-block:: none
 
-  ./geth --exec web3.debug.verbosity(3) attach ipc:$DATADIR/geth.ipc 
-  ./geth --exec web3.debug.verbosity(3) attach ipc:$DATADIR/bzzd.ipc 
+  ./geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/geth.ipc
+  ./geth --exec "web3.debug.verbosity(3)"" attach ipc:$DATADIR/bzzd.ipc
 
 
-.. note:: Following these instructions you are now running a single local swarm node, not connected to any other. 
+.. note:: Following these instructions you are now running a single local swarm node, not connected to any other.
 
+
+Running a private swarm
+=============================
+
+You can extend your singleton node into a private swarm. First you fire up a number of ``bzzd`` instances, following the instructions above. You can keep the same datadir, since all node-specific into will reside under ``$DATADIR/bzz-$BZZKEY/``
+Make sure that you create an account for each instance of bzzd you want to run.
+For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
+
+Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` on the bzzd console. With a shell one-liner:
+
+.. code-block:: shell
+
+    geth --exec "admin.nodeInfo.enode" attach /path/to/bzzd.ipc
+
+Then you can for instance connect each node with one particular node (call it bootnode) by injecting ``admin.addPeer(enode)`` into the bzzd console (this has the same effect as if you created a :file:`static-nodes.json` file for devp2p:
+
+.. code-block:: shell
+
+    ./geth --exec "admin.addPeer($BOOTNODE)" attach /path/to/bzzd.ipc
+
+Fortunately there is also an easier shortcut for this, namely starting up nodes with the ``--bootnodes`` flag. The argument of the ``bootnode`` flag is an enode, when the node starts it contacts the bootnode which then can disseminate all the peer info to the nodes, so they can bootstrap their connections.
+
+.. code-block:: shell
+
+    ./geth --bootnodes $BOOTNODE attach /path/to/bzzd.ipc
+
+These relatively tedious steps of managing connectitons needs to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
+
+.. note::
+    Note that if you run several bzzd daemons locally on the same instance, you can use the same data directory, bzzd  will use a subirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory under datadir.
+
+In case you want to run several nodes locally and you are behind a firewall, connection between nodes using your external IP will likely not work. In this case, you need to substitute ``[::]`` (indicating localhost) for the IP address in the enode.
+
+To list all enodes of a local cluster:
+
+.. code-block:: shell
+
+    for i in `ls $DATADIR`; do ./geth --exec "console.log(admin.nodeInfo.enode)" attach $DATADIR/$i/bzzd.ipc; done > enodes.lst
+
+To change IP to localhost:
+
+.. code-block:: shell
+
+    cat enodes.lst | perl -pe 's/@[\d\.]+/@[::]/' > local-enodes.lst
+
+.. note::
+    Steps in this section are not necessary if you simply want to connect to the swarm testnet.
+    Since a bootnode to the testnet is set by default, your node will have a way to bootstrap its connections.
 
 Connecting to the swarm testnet
 =================================
 
+Swarm needs an ethereum blockchain for
+
+* domain name resolution using the Ethereum Name Service contract.
+* incentivisation
+
+If you do not care about domain resolution and run your swarm without SWAP (the default), then connecting to the blockchain
+is unnecessary. ``bzzd`` does not require the ``--ethapi`` flag.
+
+
 Connecting bzzd only
 ----------------------
 
-Set up your environment as you did for your private swarm (see above) and launch geth in singleton mode (maxpeers 0)
+
+Set up you environment as seen above, ie., make sure you have a data directory.
+
+..  note:  Even if you do not need the ethereum blockchain, you do need a swarm account, since it the basis of the
+    base address that your swarm node is going to use.
+
+.. code-block:: none
+
+  ./bzzd --bzzaccount $BZZKEY \
+         --datadir $DATADIR \
+         --bzznoswap \
+         --verbosity 6 \
+         2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
+
+Set up your environment as you did for your private swarm (see above) and launch ``geth`` in singleton mode (``maxpeers 0``)
+
+The ``bzzd`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
+
+Using the Ropsten testnet blockchain
+------------------------------------------------
+
+Then launch the bzzd; connecting it to the geth node. Notice that we leave but without the ``--maxpeers 0`` flag.
+
 
 .. code-block:: none
 
@@ -104,35 +183,18 @@ Set up your environment as you did for your private swarm (see above) and launch
          --maxpeers 0 \
           2>> $DATADIR/geth.log &
 
-Then launch the bzzd; connecting it to the geth node, but without the ``--maxpeers 0`` flag.
-
-.. code-block:: none
-
-  ./bzzd --bzzaccount $BZZKEY \
-         --datadir $DATADIR \
-         --ethapi $DATADIR/geth.ipc \
-         --bzznoswap \
-         --verbosity 6 \
-         2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
-
-The bzzd daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of geth. 
-
-Connecting bzzd and geth to the Ropsten testnet
-------------------------------------------------
-
-Instructions coming soon.
-
 
 
 Testing SWAP
 ===============
 
-.. note:: Important! Please only test SWAP on a private network. 
+.. note:: Important! Please only test SWAP on a private network.
 
 Testing SWAP on your private Swarm.
 ---------------------------------------
 
-The SWarm Accounting Protocol (SWAP) is disabled by use of the ``--bzznoswap`` flag. If it is set to false, then SWAP will be enabled. However, activating SWAP requires more than just removing the bzznoswap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
+The SWarm Accounting Protocol (SWAP) is disabled by use of the ``--bzznoswap`` flag. If it is set to false, then SWAP will be enabled. By default swap is disabled.
+However, activating SWAP requires more than just removing the bzznoswap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
 
 Custom genesis block
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -162,7 +224,7 @@ Save the file as ``$DATADIR/genesis.json``.
 If you already have bzzd and geth running, kill the processes
 
 .. code-block:: none
-  
+
   killall -s SIGKILL geth
   killall -s SIGKILL bzzd
 
@@ -209,23 +271,23 @@ The alternative to creating a custom genesis block is to earn your all your ethe
 You can start you geth node in mining mode using the ``--mine`` flag, or (in our case) we can start mining on an already running geth node by issuing the ``miner.start()`` command:
 
 .. code-block:: none
-  
-  ./geth --exec 'miner.start()' attach ipc:$DATADIR/geth.ipc 
 
-There will be an initial delay while the necessary DAG is generated. You can see the progress in the geth.log file. 
+   ./geth --exec 'miner.start()' attach ipc:$DATADIR/geth.ipc
+
+There will be an initial delay while the necessary DAG is generated. You can see the progress in the geth.log file.
 After mining has started, you can see your balance increasing via ``eth.getBalance()``:
 
 .. code-block:: none
 
   ./geth --exec 'eth.getBalance(eth.coinbase)' attach ipc:$DATADIR/geth.ipc
-  # or 
+  # or
   ./geth --exec 'eth.getBalance(eth.accounts[0])' attach ipc:$DATADIR/geth.ipc
 
 
 Once the balance is greater than 0 we can restart ``bzzd`` with swap enabled.
 
 .. code-block:: none
-  
+
     killall bzzd
     ./bzzd --bzzaccount $BZZKEY \
          --datadir $DATADIR \
@@ -277,6 +339,10 @@ The bzzd swarm daemon has the following swarm specific command line options:
     the chequebook contract is automatically deployed on the connected blockchain if it doesn't exist.
     it is recorded in the config file, hence specifying it is rarely needed.
 
+The rest of the flags are not swarm specific.
+
+.. code-block: js
+
 
 Configuration options
 ============================
@@ -290,6 +356,10 @@ The default location for the swarm configuration file is ``<datadir>/bzzd/bzz-<b
   $DATADIR/bzzd/bzz-$BZZKEY/config.json
 
 It is possible to specify a different config file when launching bzzd by using the `--bzzconfig` flag.
+
+.. note:: The status of this project warrants that there will be potentially a lot
+   of changes to these options.
+
 
 Main parameters
 -----------------------
@@ -501,7 +571,8 @@ You can set a separate account as beneficiary to which the cashed cheque payment
 
 Autodeployment of the chequebook can fail if the baseaccount has no funds and cannot pay for the transaction. Note that this can also happen if your blockchain is not synchronised. In this case you will see the log message:
 
-..  code-block::
+.. code-block:: shell
+
    [BZZ] SWAP unable to deploy new chequebook: unable to send chequebook     creation transaction: Account
     does not exist or account     balance too low..  .retrying in 10s
 
@@ -510,12 +581,14 @@ Autodeployment of the chequebook can fail if the baseaccount has no funds and ca
 Since no business is possible here, the connection is idle until at least one party has a contract. In fact, this is only enabled for a test phase.
 If we are not allowed to purchase chunks, then no outgoing requests are allowed. If we still try to download content that we dont have locally, the request will fail (unless we have credit with other peers).
 
-..  code-block::
+.. code-block:: shell
+
     [BZZ] netStore.startSearch: unable to send retrieveRequest to peer [<addr>]: [SWAP] <enode://23ae0e62..  ..  ..  8a4c6bc93b7d2aa4fb@195.228.155.76:30301> we cannot have debt (unable to buy)
 
 Once one of the nodes has funds (say after mining a bit), and also someone on the network is mining, then the autodeployment will eventually succeed:
 
-..  code-block::
+.. code-block:: shell
+
     [CHEQUEBOOK] chequebook deployed at 0x77de9813e52e3a..  .c8835ea7 (owner: 0xe10536ae628f7d6e319435ef9b429dcdc085e491)
     [CHEQUEBOOK] new chequebook initialised from 0x77de9813e52e3a..  .c8835ea7 (owner: 0xe10536ae628f7d6e319435ef9b429dcdc085e491)
     [BZZ] SWAP auto deposit ON for 0xe10536 -> 0x77de98: interval = 5m0s, threshold = 50000000000000, buffer = 100000000000000)
@@ -525,7 +598,8 @@ Once one of the nodes has funds (say after mining a bit), and also someone on th
 Once the node deployed a new chequebook, its address is set in the config file and all connections are reset with the new conditions. Purchase in one direction should be enabled. The logs from the point of view of the peer with no valid chequebook:
 
 
-..  code-block::
+.. code-block:: shell
+
     [CHEQUEBOOK] initialised inbox (0x9585..  .3bceee6c -> 0xa5df94be..  .bbef1e5) expected signer: 041e18592..  ..  ..  702cf5e73cf8d618
     [SWAP] <enode://23ae0e62..  ..  ..  8a4c6bc93b7d2aa4fb@195.228.155.76:30301>    set autocash to every 5m0s, max uncashed limit: 50000000000000
     [SWAP] <enode://23ae0e62..  ..  ..  8a4c6bc93b7d2aa4fb@195.228.155.76:30301>    autodeposit off (not buying)
@@ -537,7 +611,8 @@ Once the node deployed a new chequebook, its address is set in the config file a
 
 Depending on autodeposit settings, the chequebook will be regularly replenished:
 
-..  code-block::
+.. code-block:: shell
+
   [BZZ] SWAP auto deposit ON for 0x6d2c5b -> 0xefbb0c:
    interval = 5m0s, threshold = 50000000000000,
    buffer = 100000000000000)
@@ -548,14 +623,16 @@ The peer with no chequebook (yet) should not be allowed to download and thus ret
 The other peer however is able to pay, therefore this other peer can retrieve chunks from the first peer and pay for them. This in turn puts the first peer in positive, which they can then use both to (auto)deploy their own chequebook and to pay for retrieving data as well. If they do not deploy a chequebook for whatever reason, they can use their balance to pay for retrieving data, but only down to 0 balance; after that no more requests are allowed to go out. Again you will see:
 
 
-..  code-block::
+.. code-block:: shell
+
    [BZZ] netStore.startSearch: unable to send retrieveRequest to peer [aff89da0c6...623e5671c01]: [SWAP]  <enode://23ae0e62...8a4c6bc93b7d2aa4fb@195.228.155.76:30301> we cannot have debt (unable to buy)
 
 If a peer without a chequebook tries to send requests without paying, then the remote peer (who can see that they have no chequebook contract) interprets this as adverserial behaviour resulting in the peer being dropped.
 
 Following on in this example, we start mining and then restart the node. The second chequebook autodeploys, the peers sync their chains and reconnect and then if all goes smoothly the logs will show something like:
 
-..  code-block::
+.. code-block:: shell
+
     initialised inbox (0x95850c6..  .bceee6c -> 0xa5df94b..  .bef1e5) expected signer: 041e185925bb..  ..  ..  702cf5e73cf8d618
     [SWAP] <enode://23ae0e62..  ..  ..  8a4c6bc93b7d2aa4fb@195.228.155.76:30301> set autocash to every 5m0s, max uncashed limit: 50000000000000
     [SWAP] <enode://23ae0e62..  ..  ..  8a4c6bc93b7d2aa4fb@195.228.155.76:30301> set autodeposit to every 5m0s, pay at: 50000000000000, buffer: 100000000000000
@@ -565,7 +642,8 @@ Following on in this example, we start mining and then restart the node. The sec
 
 As part of normal operation, after a peer reaches a balance of ``PayAt`` (number of chunks), a cheque payment is sent via the protocol. Logs on the receiving end:
 
-..  code-block::
+.. code-block:: shell
+
     [CHEQUEBOOK] verify cheque: contract: 0x95850..  .eee6c, beneficiary: 0xe10536ae628..  .cdc085e491, amount: 868020000000000,signature: a7d52dc744b8..  ..  ..  f1fe2001 - sum: 866020000000000
     [CHEQUEBOOK] received cheque of 2000000000000 wei in inbox (0x95850..  .eee6c, uncashed: 42000000000000)
 
@@ -574,10 +652,11 @@ As part of normal operation, after a peer reaches a balance of ``PayAt`` (number
 
 The cheque is verified. If uncashed cheques have an outstanding balance of more than ``AutoCashThreshold``, the last cheque (with a cumulative amount) is cashed. This is done by sending a transaction containing the cheque to the remote peer's cheuebook contract. Therefore in order to cash a payment, your sender account (baseaddress) needs to have funds and the network should be mining.
 
-..  code-block::
+.. code-block:: shell
+
    [CHEQUEBOOK] cashing cheque (total: 104000000000000) on chequebook (0x95850c6..  .eee6c) sending to 0xa5df94be..  .e5aaz
 
-For further fine tuning of SWAP, see :ref:`SWAP parameters1.
+For further fine tuning of SWAP, see :ref:`SWAP parameters`.
 
 ..  index::
    AutoDepositBuffer, credit buffer
