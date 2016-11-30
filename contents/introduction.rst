@@ -77,7 +77,7 @@ then is allowed to go offline. As long as nodes do not drop out or become unavai
 be accessible due to the 'synchronization' procedure in which node continuously pass along available data between each other.
 
 .. note::
-  Uploaded content is not guaranteed to persist until storage insurance is implemented (expected in POC 0.4 by Q2). All participating nodes should consider  voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard swarm as safe storage until the incentive sy
+  Uploaded content is not guaranteed to persist until storage insurance is implemented (expected in POC 0.4 by Q2). All participating nodes should consider  voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard swarm as safe storage until the incentive system is functional.
 
 .. note::
   Swarm POC 0.2 uses no encryption. Upload of sensitive and private data is highly discouraged as there is no way to undo an upload. Users should refrain from uploading unencrypted sensitive data, in other words
