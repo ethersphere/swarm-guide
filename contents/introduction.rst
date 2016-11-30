@@ -72,7 +72,7 @@ Swarm nodes are also connected to an ethereum blockchain.
 Nodes running the same network id are supposed to connect to the same blockchain.
 Such a swarm network is identified by its network id which is an arbitrary integer.
 
-Swarm allows for :dfn:'upload and disappear' which means that any node can just upload content to the swarm and
+Swarm allows for :dfn:`upload and disappear` which means that any node can just upload content to the swarm and
 then is allowed to go offline. As long as nodes do not drop out or become unavailable, the content will still
 be accessible due to the 'synchronization' procedure in which node continuously pass along available data between each other.
 
