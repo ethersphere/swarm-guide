@@ -367,14 +367,14 @@ As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or 
 Ethereum Name Service
 =========================================
 
+ENS is the system that Swarm uses to permit content to be referred to by a human-readable name, such as "myname.eth". It operates analagously to the DNS system, translating human-readable names into machine identifiers - in this case, the swarm hash of the content you're referring to. By registering a name and setting it to resolve to the content hash of the root manifest of your site, users can access your site via a URL such as `bzz://mysite.eth/`.
 
-It is the swarm hash of a piece of data that dictates routing. Therefore its role is somehwhat analogous to an IP address in the TCP/IP internet. Domain names can be registered on the blockchain and set to resolve to any swarm hash. The Ethereum Name Service is thus analogous to DNS (and no ICANN nor any name servers are needed).
+Documentation on ENS is [available here](https://github.com/ethereum/ens/wiki). The complete set of steps to set up a domain are:
 
-Currently the domain name is any arbitrary string in that the contract does not impose any restrictions. Since this is used in the host part of the url in the bzz scheme, we recommend using wellformed domain names so that there is interoperability with restrictive url handler libs.
+ 1. Register a [.eth domain](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar) or a [.test domain](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar). .eth domains take a while to register, as they use an auction system, while .test domains can be registered immediately, but only persist for 28 days.
+ 2. [Configure a resolver for your new name](https://github.com/ethereum/ens/wiki/Interacting-with-the-ENS-registry#setting-a-names-resolver). You can deploy your own custom resolver, or use the publicly deployed one documented on that page.
+ 3. Set the content hash for your site on your new resolver, with `publicResolver.setHash(namehash('yoursite.eth'), hash, {from: eth.accounts[0], gas: 100000})`, replacing `hash` with the swarm hash of your root manifest.
+ 
+Whenever you modify your site, you only need to repeat the last step above, to update the content hash associated with your name.
 
-ENS documentation is coming. In the meanwhile, docs are:
-
-* ENS source code: https://github.com/ethereum/ens
-* ENS EIPs 137: https://github.com/ethereum/EIPs/issues/137
-* ENS EIPs 162: https://github.com/ethereum/EIPs/issues/162
-* ENS Ethereum Domain Name System, talk at devcon2: https://www.youtube.com/watch?v=pLDDbCZXvTE
+Note that the ENS system will let you register even invalid names - names with upper case characters, or prohibited unicode characters, for instance - but your browser will never resolve them. As a result, take care to make sure any domain you try to register is well-formed before registering it.
