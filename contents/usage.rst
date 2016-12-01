@@ -377,12 +377,14 @@ If you just want to set up ENS so that you can host your Swarm content on a doma
 
 First, you'll need to register a domain. You can do this by following the guide for either [registering a .eth domain](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar) or registering a [.test domain](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar). .eth domains take a while to register, as they use an auction system, while .test domains can be registered instantly, but only persist for 28 days. .eth domains are also restricted to being at least 7 characters long, while .test names may be of any length. If you're just wanting to test things out quickly, start with a .test domain.
 
-Next, set up a resolver for your new domain name. If you haven't already, download [ensutils.js](https://github.com/ethereum/ens/blob/master/ensutils.js), and start up a geth console connnected to the Ropsten test network (you can do this with `geth --testnet console` if you're running a recent version of geth. Inside the console, run:
+Next, set up a resolver for your new domain name. While it's possible to write and deploy your own custom resolver, for everyday use with Swarm, a general purpose one is provided, and is already deployed on the testnet.
+
+If you haven't already, download [ensutils.js](https://github.com/ethereum/ens/blob/master/ensutils.js), and start up a geth console connnected to the Ropsten test network (you can do this with `geth --testnet console` if you're running a recent version of geth). Inside the console, run:
 
     loadScript('/path/to/ensutils.js')
     ens.setResolver(namehash('myname.eth'), publicResolver.address, {from: eth.accounts[0], gas: 100000});
 
-Replace 'myname.eth' with the name you registered earlier. This will set up your name to use a general purpose public resolver that anyone can use.
+Replace 'myname.eth' with the name you registered earlier.
 
 Finally, after uploading your content to Swarm as detailed above, you can update your site with this command:
 
