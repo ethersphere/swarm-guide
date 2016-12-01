@@ -392,9 +392,13 @@ Finally, after uploading your content to Swarm as detailed above, you can update
 
 Again, replace 'myname.eth' with the name you registered, and replace the hash with the hash you got when uploading your content to swarm.
 
-After this has executed successfully, anyone running a Swarm client will be able to access the current version of your site on `bzz://myname.eth/`. You can check that everything's updated correctly with the following command:
+After this has executed successfully, anyone running a correctly configured and synchronised Swarm client will be able to access the current version of your site on `bzz://myname.eth/`. You can check that everything's updated correctly with the following command:
 
     getHash('myname.eth')
+    
+You can also check this in your bzzd console with:
+
+    bzz.resolve('myname.eth')
     
 If everything worked correctly, it will return the hash you specified when you called `setHash` earlier.
 
