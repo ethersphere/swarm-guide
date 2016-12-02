@@ -120,6 +120,8 @@ You could then retrieve the files relative to the root manifest like so:
 .. code-block:: none
 
   http://localhost:8500/bzz:/6c64ae708609be4cc34027b38b1104f0ea8dafd5164343117ce421f7714b5e98/three/four
+  
+if you'd like to be able to access your content via a human readable name like 'mysite.eth' intead of the long hex string above, see the section on :ref:`Ethereum Name Service` below.
 
 Content retrieval: hashes and manifests
 ==============================================
@@ -367,14 +369,39 @@ As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or 
 Ethereum Name Service
 =========================================
 
+ENS is the system that Swarm uses to permit content to be referred to by a human-readable name, such as "myname.eth". It operates analagously to the DNS system, translating human-readable names into machine identifiers - in this case, the swarm hash of the content you're referring to. By registering a name and setting it to resolve to the content hash of the root manifest of your site, users can access your site via a URL such as `bzz://mysite.eth/`.
 
-It is the swarm hash of a piece of data that dictates routing. Therefore its role is somehwhat analogous to an IP address in the TCP/IP internet. Domain names can be registered on the blockchain and set to resolve to any swarm hash. The Ethereum Name Service is thus analogous to DNS (and no ICANN nor any name servers are needed).
+Full documentation on ENS is [available here](https://github.com/ethereum/ens/wiki).
 
-Currently the domain name is any arbitrary string in that the contract does not impose any restrictions. Since this is used in the host part of the url in the bzz scheme, we recommend using wellformed domain names so that there is interoperability with restrictive url handler libs.
+If you just want to set up ENS so that you can host your Swarm content on a domain, here's a quick set of steps to get you started.
 
-ENS documentation is coming. In the meanwhile, docs are:
+First, you'll need to register a domain. You can do this by following the guide for either [registering a .eth domain](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar) or registering a [.test domain](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar). .eth domains take a while to register, as they use an auction system, while .test domains can be registered instantly, but only persist for 28 days. .eth domains are also restricted to being at least 7 characters long, while .test names may be of any length. If you're just wanting to test things out quickly, start with a .test domain.
 
-* ENS source code: https://github.com/ethereum/ens
-* ENS EIPs 137: https://github.com/ethereum/EIPs/issues/137
-* ENS EIPs 162: https://github.com/ethereum/EIPs/issues/162
-* ENS Ethereum Domain Name System, talk at devcon2: https://www.youtube.com/watch?v=pLDDbCZXvTE
+Next, set up a resolver for your new domain name. While it's possible to write and deploy your own custom resolver, for everyday use with Swarm, a general purpose one is provided, and is already deployed on the testnet.
+
+If you haven't already, download [ensutils.js](https://github.com/ethereum/ens/blob/master/ensutils.js), and start up a geth console connnected to the Ropsten test network (you can do this with `geth --testnet console` if you're running a recent version of geth). Inside the console, run:
+
+    loadScript('/path/to/ensutils.js')
+    ens.setResolver(namehash('myname.eth'), publicResolver.address, {from: eth.accounts[0], gas: 100000});
+
+Replace 'myname.eth' with the name you registered earlier.
+
+Finally, after uploading your content to Swarm as detailed above, you can update your site with this command:
+
+    publicResolver.setHash(namehash('myname.eth'), '0x6c64ae708609be4cc34027b38b1104f0ea8dafd5164343117ce421f7714b5e98', {from: eth.accounts[0], gas: 100000})
+
+Again, replace 'myname.eth' with the name you registered, and replace the hash with the hash you got when uploading your content to swarm.
+
+After this has executed successfully, anyone running a correctly configured and synchronised Swarm client will be able to access the current version of your site on `bzz://myname.eth/`. You can check that everything's updated correctly with the following command:
+
+    getHash('myname.eth')
+    
+You can also check this in your bzzd console with:
+
+    bzz.resolve('myname.eth')
+    
+If everything worked correctly, it will return the hash you specified when you called `setHash` earlier.
+
+Each time you update your site's content afterwards, you only need to repeat this last step to update the mapping between the name you own and the content you want it to point to. Anyone visiting your site by its name will always see the version you most recently updated using `setHash`, above.
+
+Note that the ENS system will let you register even invalid names - names with upper case characters, or prohibited unicode characters, for instance - but your browser will never resolve them. As a result, take care to make sure any domain you try to register is well-formed before registering it.
