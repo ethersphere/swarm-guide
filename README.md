@@ -6,5 +6,5 @@ To compile the html,
 
 ```shell
 cd swarm-guide
-make `html
+make html
 ```
