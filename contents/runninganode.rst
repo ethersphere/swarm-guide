@@ -67,19 +67,20 @@ and launch the bzzd; connecting it to the geth node
   ./bzzd --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --ethapi $DATADIR/geth.ipc \
-         --bzznoswap \
          --verbosity 6 \
          --maxpeers 0 \
          2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
 
-At this verbosity level you should see plenty of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/bzzd.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will not be set.
+.. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply remove the --ethapi flag from bzzd. 
+
+At this verbosity level you should see plenty(!) of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/bzzd.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will not be set.
 
 You can change the verbosity level without restarting geth and bzzd via the console:
 
 .. code-block:: none
 
   ./geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/geth.ipc
-  ./geth --exec "web3.debug.verbosity(3)"" attach ipc:$DATADIR/bzzd.ipc
+  ./geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/bzzd.ipc
 
 
 .. note:: Following these instructions you are now running a single local swarm node, not connected to any other.
@@ -92,11 +93,11 @@ You can extend your singleton node into a private swarm. First you fire up a num
 Make sure that you create an account for each instance of bzzd you want to run.
 For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
 
-Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` on the bzzd console. With a shell one-liner:
+Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the bzzd console. With a shell one-liner:
 
 .. code-block:: shell
 
-    geth --exec "admin.nodeInfo.enode" attach /path/to/bzzd.ipc
+    geth --exec "console.log(admin.nodeInfo.enode)" attach /path/to/bzzd.ipc
 
 Then you can for instance connect each node with one particular node (call it bootnode) by injecting ``admin.addPeer(enode)`` into the bzzd console (this has the same effect as if you created a :file:`static-nodes.json` file for devp2p:
 
@@ -104,16 +105,12 @@ Then you can for instance connect each node with one particular node (call it bo
 
     ./geth --exec "admin.addPeer($BOOTNODE)" attach /path/to/bzzd.ipc
 
-Fortunately there is also an easier shortcut for this, namely starting up nodes with the ``--bootnodes`` flag. The argument of the ``bootnode`` flag is an enode, when the node starts it contacts the bootnode which then can disseminate all the peer info to the nodes, so they can bootstrap their connections.
+Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start bzzd. 
 
-.. code-block:: shell
-
-    ./geth --bootnodes $BOOTNODE attach /path/to/bzzd.ipc
-
-These relatively tedious steps of managing connectitons needs to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
+These relatively tedious steps of managing connections needs to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
 
 .. note::
-    Note that if you run several bzzd daemons locally on the same instance, you can use the same data directory, bzzd  will use a subirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory under datadir.
+    Note that if you run several bzzd daemons locally on the same instance, you can use the same data directory ($DATADIR), each bzzd  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
 
 In case you want to run several nodes locally and you are behind a firewall, connection between nodes using your external IP will likely not work. In this case, you need to substitute ``[::]`` (indicating localhost) for the IP address in the enode.
 
@@ -121,7 +118,7 @@ To list all enodes of a local cluster:
 
 .. code-block:: shell
 
-    for i in `ls $DATADIR`; do ./geth --exec "console.log(admin.nodeInfo.enode)" attach $DATADIR/$i/bzzd.ipc; done > enodes.lst
+    for i in `ls $DATADIR | grep -v keystore`; do ./geth --exec "console.log(admin.nodeInfo.enode)" attach $DATADIR/$i/bzzd.ipc; done > enodes.lst
 
 To change IP to localhost:
 
@@ -138,51 +135,50 @@ Connecting to the swarm testnet
 
 Swarm needs an ethereum blockchain for
 
-* domain name resolution using the Ethereum Name Service contract.
-* incentivisation
+* domain name resolution using the Ethereum Name Service (ENS) contract.
+* incentivisation (for example: SWAP)
 
-If you do not care about domain resolution and run your swarm without SWAP (the default), then connecting to the blockchain
-is unnecessary. ``bzzd`` does not require the ``--ethapi`` flag.
+If you do not care about domain resolution and run your swarm without SWAP (the default), then connecting to the blockchain is unnecessary. Hence ``bzzd`` does not require the ``--ethapi`` flag.
 
 
-Connecting bzzd only
-----------------------
+Connecting bzzd only (no blockchain)
+-------------------------------------
 
 
 Set up you environment as seen above, ie., make sure you have a data directory.
 
-..  note:  Even if you do not need the ethereum blockchain, you do need a swarm account, since it the basis of the
-    base address that your swarm node is going to use.
+..  note::  Even though you do not need the ethereum blockchain, you will need geth to generate a swarm account ($BZZKEY), since this account determines the base address that your swarm node is going to use.  
 
 .. code-block:: none
 
   ./bzzd --bzzaccount $BZZKEY \
          --datadir $DATADIR \
-         --bzznoswap \
          --verbosity 6 \
          2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
 
-Set up your environment as you did for your private swarm (see above) and launch ``geth`` in singleton mode (``maxpeers 0``)
-
 The ``bzzd`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
 
-Using the Ropsten testnet blockchain
-------------------------------------------------
+Using bzzd together with the Ropsten testnet blockchain
+--------------------------------------------------------
 
-Then launch the bzzd; connecting it to the geth node. Notice that we leave but without the ``--maxpeers 0`` flag.
-
-
+Run a geth node connected to the Ropsten testnet 
 .. code-block:: none
 
   nohup ./geth --datadir $DATADIR \
          --unlock 0 \
          --password <(echo -n "MYPASSWORD") \
-         --verbosity 6 \
-         --networkid 322 \
-         --nodiscover \
-         --maxpeers 0 \
+         --testnet \
           2>> $DATADIR/geth.log &
 
+Then launch the bzzd; connecting it to the geth node (--ethapi). 
+
+
+.. code-block:: none
+
+  ./bzzd --bzzaccount $BZZKEY \
+         --datadir $DATADIR \
+         --ethapi $DATADIR/geth.ipc \
+         2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
 
 
 Testing SWAP
@@ -190,11 +186,11 @@ Testing SWAP
 
 .. note:: Important! Please only test SWAP on a private network.
 
-Testing SWAP on your private Swarm.
----------------------------------------
+Testing SWAP on your private blockchain.
+-----------------------------------------
 
-The SWarm Accounting Protocol (SWAP) is disabled by use of the ``--bzznoswap`` flag. If it is set to false, then SWAP will be enabled. By default swap is disabled.
-However, activating SWAP requires more than just removing the bzznoswap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
+The SWarm Accounting Protocol (SWAP) is disabled by default. Use of the ``--swap`` flag to enable it. If it is set to true, then SWAP will be enabled. 
+However, activating SWAP requires more than just adding the --swap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
 
 Custom genesis block
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -254,6 +250,7 @@ and launch the bzzd (with SWAP); connecting it to the geth node
 .. code-block:: none
 
   ./bzzd --bzzaccount $BZZKEY \
+         --swap \
          --datadir $DATADIR \
          --verbosity 6 \
          --ethapi $DATADIR/geth.ipc \
@@ -290,6 +287,7 @@ Once the balance is greater than 0 we can restart ``bzzd`` with swap enabled.
 
     killall bzzd
     ./bzzd --bzzaccount $BZZKEY \
+         --swap \
          --datadir $DATADIR \
          --verbosity 6 \
          --ethapi $DATADIR/geth.ipc \
@@ -316,8 +314,8 @@ The bzzd swarm daemon has the following swarm specific command line options:
     Swarm config file path (datadir/bzz)
     The swarm config file is a json encoded format, the setting in there are documented in the following section
 
-``--bzznoswap``
-    Swarm SWAP disabled (default false).
+``--swap``
+    Swarm SWAP enabled (default false).
     The SWAP (Swarm accounting protocol) is switched on by default in the current release.
 
 ``--bzznosync``

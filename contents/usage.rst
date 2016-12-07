@@ -32,7 +32,7 @@ You can use one of the public gateways as a proxy, in which case you can upload 
 
 .. code-block:: none
 
-    bzzup --bzzapi http://swarm-gateways.net/ /path/to/file/or/directory
+    bzzup --bzzapi http://swarm-gateways.net /path/to/file/or/directory
 
 Example: uploading a file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
