@@ -80,7 +80,7 @@ You can change the verbosity level without restarting geth and bzzd via the cons
 .. code-block:: none
 
   ./geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/geth.ipc
-  ./geth --exec "web3.debug.verbosity(3)"" attach ipc:$DATADIR/bzzd.ipc
+  ./geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/bzzd.ipc
 
 
 .. note:: Following these instructions you are now running a single local swarm node, not connected to any other.
@@ -105,11 +105,7 @@ Then you can for instance connect each node with one particular node (call it bo
 
     ./geth --exec "admin.addPeer($BOOTNODE)" attach /path/to/bzzd.ipc
 
-Fortunately there is also an easier short-cut for this, namely starting up nodes with the ``--bootnodes`` flag. The argument of the ``bootnode`` flag is an enode, when the node starts it contacts the bootnode which then can disseminate all the peer info to the nodes, so they can bootstrap their connections.
-
-.. code-block:: shell
-
-    ./geth --bootnodes $BOOTNODE attach /path/to/bzzd.ipc
+Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start bzzd. 
 
 These relatively tedious steps of managing connections needs to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
 
@@ -157,7 +153,6 @@ Set up you environment as seen above, ie., make sure you have a data directory.
 
   ./bzzd --bzzaccount $BZZKEY \
          --datadir $DATADIR \
-         --bzznoswap \
          --verbosity 6 \
          2>> $DATADIR/bzzd.log < <(echo -n "MYPASSWORD") &
 
