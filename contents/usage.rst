@@ -285,11 +285,11 @@ The easiest option is to register a [.test domain](https://github.com/ethereum/e
 
 We will be sending transactions on Ropsten, so if you have not already done so, get yourself some ropsten testnet ether. You can get some for free [here](http://faucet.ropsten.be:3001/).
 
-Before being able to send transaction, you will need to unlock your account using `personal.unlockAccount(account, 'password')` i.e.
+Before being able to send transaction, you will need to unlock your account using `personal.unlockAccount(account)` i.e.
 
 .. code-block:: none
 
-  personal.unlockAccount(eth.accounts[0], "")
+  personal.unlockAccount(eth.accounts[0])
 
 Then, still inside the geth console (with ensutils.js loaded) type the following (replacing MYNAME with the name you wish to register):
 
@@ -301,8 +301,7 @@ The output will be a transaction hash. Once this transaction is mined on the tes
 
 .. code-block:: none
 
-  eth.accounts[0]
-  ens.owner(namehash('MYNAME.test'))
+  eth.accounts[0] == ens.owner(namehash('MYNAME.test'))
 
 1b. Registering a .eth domain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
