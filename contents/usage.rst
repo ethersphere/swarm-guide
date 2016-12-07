@@ -388,20 +388,20 @@ Replace 'myname.eth' with the name you registered earlier.
 
 Finally, after uploading your content to Swarm as detailed above, you can update your site with this command:
 
-    publicResolver.setHash(namehash('myname.eth'), '0x6c64ae708609be4cc34027b38b1104f0ea8dafd5164343117ce421f7714b5e98', {from: eth.accounts[0], gas: 100000})
+    publicResolver.setContent(namehash('myname.eth'), '0x6c64ae708609be4cc34027b38b1104f0ea8dafd5164343117ce421f7714b5e98', {from: eth.accounts[0], gas: 100000})
 
 Again, replace 'myname.eth' with the name you registered, and replace the hash with the hash you got when uploading your content to swarm.
 
 After this has executed successfully, anyone running a correctly configured and synchronised Swarm client will be able to access the current version of your site on `bzz://myname.eth/`. You can check that everything's updated correctly with the following command:
 
-    getHash('myname.eth')
+    getContent('myname.eth')
     
 You can also check this in your bzzd console with:
 
     bzz.resolve('myname.eth')
     
-If everything worked correctly, it will return the hash you specified when you called `setHash` earlier.
+If everything worked correctly, it will return the hash you specified when you called `setContent` earlier.
 
-Each time you update your site's content afterwards, you only need to repeat this last step to update the mapping between the name you own and the content you want it to point to. Anyone visiting your site by its name will always see the version you most recently updated using `setHash`, above.
+Each time you update your site's content afterwards, you only need to repeat this last step to update the mapping between the name you own and the content you want it to point to. Anyone visiting your site by its name will always see the version you most recently updated using `setContent`, above.
 
 Note that the ENS system will let you register even invalid names - names with upper case characters, or prohibited unicode characters, for instance - but your browser will never resolve them. As a result, take care to make sure any domain you try to register is well-formed before registering it.
