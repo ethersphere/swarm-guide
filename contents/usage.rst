@@ -254,13 +254,13 @@ by pointing the browser to
 
 Moreover, manifest entries can specify (assign a hash to) the empty path, in which case the URL pointing to the hash of the manifest will serve that entry. In other words, if the manifest at HASH assigns the hash of the file 'swarm.html' to the empty path, then the swarm.html page will be served directly at ``bzz:/HASH``.
 
-The ``bzzup`` command line tool (soon will) allow(s) you to specify a path to a file that will be mapped to the empty path.
+The ``bzzup`` command line tool (soon will) allow(s) you to specify a file that will be mapped to the empty path.
 
 .. code-block:: none
 
   ./bzzup --recursive /path/to/directory --manifest-root=/path/to/directory/index.html
 
-In the meantime, you can connect to the bzzd console using the ``bzz.upload`` command. Here you can specify the file to be assigned to the empty path as the second argument. See the section :ref:`Swarm IPC API` below.
+In the meantime, you can connect to the bzzd console and use the ``bzz.upload`` command where. You can specify the file to be assigned to the empty path as the (optional) second argument. See the section :ref:`Swarm IPC API` below.
 
 Ethereum Name Service
 ======================
