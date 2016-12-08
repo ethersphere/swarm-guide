@@ -339,8 +339,6 @@ The bzzd swarm daemon has the following swarm specific command line options:
 
 The rest of the flags are not swarm specific.
 
-.. code-block: js
-
 
 Configuration options
 ============================
