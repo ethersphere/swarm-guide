@@ -260,7 +260,7 @@ The ``bzzup`` command line tool (soon will) allow(s) you to specify a file that 
 
   ./bzzup --recursive /path/to/directory --manifest-root=/path/to/directory/index.html
 
-In the meantime, you can connect to the bzzd console and use the ``bzz.upload`` command where. You can specify the file to be assigned to the empty path as the (optional) second argument. See the section :ref:`Swarm IPC API` below.
+In the meantime, you can connect to the bzzd console and use the ``bzz.upload`` command. You can specify the file to be assigned to the empty path as the (optional) second argument. See the section :ref:`Swarm IPC API` below.
 
 Ethereum Name Service
 ======================
