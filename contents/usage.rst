@@ -22,7 +22,7 @@ The bzzup program makes it easy to upload files and directories. Usage:
   ./bzzup /path/to/file/or/directory
 
 By default bzzup assumes that you are running your own swarm node with a local http proxy on the default port (8500).
-See :ref:`Running a node` to learn how to run a local node.
+See :ref:`Running the swarm client` to learn how to run a local node.
 It is possible to specify alternative proxy endpoints with the ``--bzzapi`` option.
 
 You can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
@@ -140,7 +140,9 @@ This is the most common usecase whereby swarm can serve the web.
 
 Disregarding the clunky proxy part, it looks like http transfering content from servers, but in fact it is using swarm's serverless architecture.
 
-The general pattern is: <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
+The general pattern is:
+
+  <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
 
 The http proxy part can be eliminated if you register the appropriate scheme handler with your browser or you use Mist.
 
@@ -195,22 +197,34 @@ We can see the retrieve the manifest directly (instead of the files they refer t
 
     wget -O - "http://localhost:8500/bzzr:/HASH"
 
-In our example it contains a list of all files contained in /path/to/directory together with their swarm ids (hashes) as well as their content-types. It may look like this: (whitespace added here to make it legible)
+In our example it contains a list of all files contained in /path/to/directory together with their swarm ids (hashes) as well as their content-types. It may look something like this:
 
 .. code-block:: js
 
-  {"entries":[{"hash":"HASH-for-fileA1",
-  "path":"directoryA/fileA1",
-  "contentType":"text/plain"},
-  {"hash":"HASH-for-fileB2",
-  "path":"directoryA/directoryB/fileB2",
-  "contentType":"text/plain"},
-  {"hash":"HASH-for-fileB1",
-  "path":"directoryA/directoryB/fileB1",
-  "contentType":"text/plain"},
-  {"hash":"HASH-for-fileC1",
-  "path":"directoryA/directoryC/fileC1",
-  "contentType":"text/plain"}]}
+  {
+  "entries":[
+    {
+      "hash":"HASH-for-fileA1",
+      "path":"directoryA/fileA1",
+      "contentType":"text/plain"
+    },
+    {
+      "hash":"HASH-for-fileB2",
+      "path":"directoryA/directoryB/fileB2",
+      "contentType":"text/plain"
+    },
+    {
+      "hash":"HASH-for-fileB1",
+      "path":"directoryA/directoryB/fileB1",
+      "contentType":"text/plain"
+    },
+    {
+      "hash":"HASH-for-fileC1",
+      "path":"directoryA/directoryC/fileC1",
+      "contentType":"text/plain"
+    }
+    ]
+  }
 
 
 Manifests contain content-type information for the hashes they reference. In other contexts, where content-type is not supplied or, when you suspect the information is wrong, it is possible to specify the content-type manually in the search query.
