@@ -22,7 +22,7 @@ The bzzup program makes it easy to upload files and directories. Usage:
   ./bzzup /path/to/file/or/directory
 
 By default bzzup assumes that you are running your own swarm node with a local http proxy on the default port (8500).
-See :ref:`Running a node` to learn how to run a local node.
+See :ref:`Running the swarm client` to learn how to run a local node.
 It is possible to specify alternative proxy endpoints with the ``--bzzapi`` option.
 
 You can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
@@ -140,7 +140,9 @@ This is the most common usecase whereby swarm can serve the web.
 
 Disregarding the clunky proxy part, it looks like http transfering content from servers, but in fact it is using swarm's serverless architecture.
 
-The general pattern is: <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
+The general pattern is:
+
+  <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
 
 The http proxy part can be eliminated if you register the appropriate scheme handler with your browser or you use Mist.
 
@@ -195,29 +197,41 @@ We can see the retrieve the manifest directly (instead of the files they refer t
 
     wget -O - "http://localhost:8500/bzzr:/HASH"
 
-In our example it contains a list of all files contained in /path/to/directory together with their swarm ids (hashes) as well as their content-types. It may look like this: (whitespace added here to make it legible)
+In our example it contains a list of all files contained in /path/to/directory together with their swarm ids (hashes) as well as their content-types. It may look something like this (whitespace added): 
 
 .. code-block:: js
 
-  {"entries":[{"hash":"HASH-for-fileA1",
-  "path":"directoryA/fileA1",
-  "contentType":"text/plain"},
-  {"hash":"HASH-for-fileB2",
-  "path":"directoryA/directoryB/fileB2",
-  "contentType":"text/plain"},
-  {"hash":"HASH-for-fileB1",
-  "path":"directoryA/directoryB/fileB1",
-  "contentType":"text/plain"},
-  {"hash":"HASH-for-fileC1",
-  "path":"directoryA/directoryC/fileC1",
-  "contentType":"text/plain"}]}
+  {
+  "entries":[
+    {
+      "hash": "HASH-for-fileA1",
+      "path": "directoryA/fileA1",
+      "contentType": "text/plain"
+    },
+    {
+      "hash": "HASH-for-fileB2",
+      "path": "directoryA/directoryB/fileB2",
+      "contentType": "text/plain"
+    },
+    {
+      "hash": "HASH-for-fileB1",
+      "path": "directoryA/directoryB/fileB1",
+      "contentType": "text/plain"
+    },
+    {
+      "hash": "HASH-for-fileC1",
+      "path": "directoryA/directoryC/fileC1",
+      "contentType": "text/plain"
+    }
+    ]
+  }
 
 
 Manifests contain content-type information for the hashes they reference. In other contexts, where content-type is not supplied or, when you suspect the information is wrong, it is possible to specify the content-type manually in the search query.
 
-.. code-block:: js
+.. code-block:: none
 
-   GET http://localhost:8500/bzzr:/HASH?content_type=\"text/plain\"")
+   http://localhost:8500/bzzr:/HASH?content_type="text/plain"
 
 Path Matching on Manifests
 ---------------------------------
@@ -238,24 +252,29 @@ by pointing the browser to
 
     http://localhost:8500/bzz:/HASH/subdirectory/filename
 
-manifest entries can specify an empty path, in which case the pointing to the hash of the manifest will serve that entry.
+Moreover, manifest entries can specify (assign a hash to) the empty path, in which case the URL pointing to the hash of the manifest will serve that entry. In other words, if the manifest at HASH assigns the hash of the file 'swarm.html' to the empty path, then the swarm.html page will be served directly at ``bzz:/HASH``.
 
-The ``bzzup`` command line tool allows you to specify a path to a file that will be mapped to the empty path.
+The ``bzzup`` command line tool (soon will) allow(s) you to specify a file that will be mapped to the empty path.
 
+.. code-block:: none
+
+  ./bzzup --recursive /path/to/directory --manifest-root=/path/to/directory/index.html
+
+In the meantime, you can connect to the bzzd console and use the ``bzz.upload`` command. You can specify the file to be assigned to the empty path as the (optional) second argument. See the section :ref:`Swarm IPC API` below.
 
 Ethereum Name Service
 ======================
 
 ENS is the system that Swarm uses to permit content to be referred to by a human-readable name, such as "myname.eth". It operates analogously to the DNS system, translating human-readable names into machine identifiers - in this case, the swarm hash of the content you're referring to. By registering a name and setting it to resolve to the content hash of the root manifest of your site, users can access your site via a URL such as `bzz://mysite.eth/`.
 
-Full documentation on ENS is [available here](https://github.com/ethereum/ens/wiki).
+Full documentation on ENS is `available here <https://github.com/ethereum/ens/wiki>`.
 
 If you just want to set up ENS so that you can host your Swarm content on a domain, here's a quick set of steps to get you started.
 
 Content Retrieval using ENS 
 ----------------------------
 
-The default configuration of swarm is to use names registered on the Ropsten testnet. In order for you to be able to resolve names to swarm hashes, all that needs to happen is that your bzzd is connected to a geth node synced on the Ropsten testnet. See section "Running the swarm client" [here](./runninganode.html#using-bzzd-together-with-the-ropsten-testnet-blockchain)
+The default configuration of swarm is to use names registered on the Ropsten testnet. In order for you to be able to resolve names to swarm hashes, all that needs to happen is that your bzzd is connected to a geth node synced on the Ropsten testnet. See section "Running the swarm client" `here <./runninganode.html#using-bzzd-together-with-the-ropsten-testnet-blockchain>`
 
 Registering names for your swarm content
 ----------------------------------------
@@ -266,7 +285,7 @@ There are several steps involved in registering a new name and assigning a swarm
 
 1. Preparation
 ^^^^^^^^^^^^^^^
-The first step to take is to download [ensutils.js](https://github.com/ethereum/ens/blob/master/ensutils.js) ([direct link](https://raw.githubusercontent.com/ethereum/ens/master/ensutils.js)). 
+The first step to take is to download `ensutils.js <https://github.com/ethereum/ens/blob/master/ensutils.js>` (`direct link <https://raw.githubusercontent.com/ethereum/ens/master/ensutils.js>`). 
 You should of course have geth running and connected to ropsten (`geth --testnet`). Connect to the geth console:
 
 .. code-block:: none
@@ -281,9 +300,9 @@ Note: You can leave the console at any time by pressing ctrl+D
 
 1a. Registering a .test domain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The easiest option is to register a [.test domain](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar). These domains can be registered by anyone at any time, but they automatically expire after 28 days.
+The easiest option is to register a `.test domain <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar>`. These domains can be registered by anyone at any time, but they automatically expire after 28 days.
 
-We will be sending transactions on Ropsten, so if you have not already done so, get yourself some ropsten testnet ether. You can get some for free [here](http://faucet.ropsten.be:3001/).
+We will be sending transactions on Ropsten, so if you have not already done so, get yourself some ropsten testnet ether. You can get some for free `here <http://faucet.ropsten.be:3001/>`.
 
 Before being able to send transaction, you will need to unlock your account using `personal.unlockAccount(account)` i.e.
 
@@ -297,6 +316,8 @@ Then, still inside the geth console (with ensutils.js loaded) type the following
 
   testRegistrar.register(web3.sha3('MYNAME'), eth.accounts[0], {from: eth.accounts[0]});
 
+.. note:: Warning: do not register names with UPPER CASE letters. The ENS will let you register them, but your browser will never resolve them.
+
 The output will be a transaction hash. Once this transaction is mined on the testnet you can verify that the name MYNAME.test belongs to you:
 
 .. code-block:: none
@@ -308,9 +329,9 @@ The output will be a transaction hash. Once this transaction is mined on the tes
 
 Registering a .eth domain is more involved. If you're just wanting to test things out quickly, start with a .test domain.
 The .eth domains take a while to register, as they use an auction system, (while .test domains can be registered instantly, but only persist for 28 days). Further, .eth domains are also restricted to being at least 7 characters long.
-For complete documentation [see here](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar).
+For complete documentation `see here <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar>`.
 
-Just as when registering a .test domain, you will need testnet ether and you must unlock your account. Then you may [start bidding on a domain](https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar).
+Just as when registering a .test domain, you will need testnet ether and you must unlock your account. Then you may `start bidding on a domain <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar>`.
 
 
 2. Setting up a resolver
@@ -415,7 +436,7 @@ The API offers the following methods:
   It returns content hash of this manifest.
 
 ``bzz.get(bzzpath)``
-  It downloads the manifest at ``bzzpath`` and returns a reponse json object with content, mime type, status code and content size. This should only be used for small pieces of data, since the content gets instantiated in memory.
+  It downloads the manifest at ``bzzpath`` and returns a response json object with content, mime type, status code and content size. This should only be used for small pieces of data, since the content gets instantiated in memory.
 
 
 ``bzz.resolve(domain)``
@@ -450,8 +471,11 @@ Swarm also exposes an RPC API for the chequebook offering the followng methods:
   It errors if no chequebook is set  or if your account has insufficient funds.
 
 
-Example use of the console
+Example: use of the console
 ------------------------------
+
+Uploading content
+^^^^^^^^^^^^^^^^^^
 
 It is possible to upload files from the bzzd console (without the need for bzzup or an http proxy). The console command is
 
@@ -459,13 +483,23 @@ It is possible to upload files from the bzzd console (without the need for bzzup
 
     bzz.upload("/path/to/file/or/directory", "filename")
 
-The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Continuing form above (note ``bzzd.ipc`` instead of ``geth.ipc``)
+The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Proceeding as in the example above (:ref:`Example: Uploading a directory`). Prepare some files:
+
+.. code-block:: none
+
+  mkdir upload-test
+  echo "one" > upload-test/one.txt
+  echo "two" > upload-test/two
+  mkdir upload-test/three
+  echo "four" > upload-test/three/four
+
+Then execute the ``bzz.upload`` command on the bzzd console: (note ``bzzd.ipc`` instead of ``geth.ipc``)
 
 .. code-block:: none
 
     ./geth --exec 'bzz.upload("upload-test/", "one.txt")' attach ipc:$DATADIR/bzzd.ipc
 
-gives the output
+We get the output:
 
 .. code-block:: none
 
@@ -487,7 +521,10 @@ We see "one" because the empty path resolves to "one.txt". Other valid URLs are
 
 We only recommend using this API for testing purposes or command line scripts. Since they save on http file upload, their performance is somewhat better than using the http API.
 
-As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or ``bzz.download(HASH, /path/to/donwload/to)`` on the bzzd console (note ``bzzd.ipc`` instead of ``geth.ipc``)
+Downloading content
+^^^^^^^^^^^^^^^^^^^^
+
+As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or ``bzz.download(HASH, /path/to/download/to)`` on the bzzd console (note ``bzzd.ipc`` instead of ``geth.ipc``)
 
 .. code-block:: none
 
