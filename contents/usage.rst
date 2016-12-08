@@ -267,14 +267,18 @@ Ethereum Name Service
 
 ENS is the system that Swarm uses to permit content to be referred to by a human-readable name, such as "myname.eth". It operates analogously to the DNS system, translating human-readable names into machine identifiers - in this case, the swarm hash of the content you're referring to. By registering a name and setting it to resolve to the content hash of the root manifest of your site, users can access your site via a URL such as `bzz://mysite.eth/`.
 
-Full documentation on ENS is `available here <https://github.com/ethereum/ens/wiki>`.
+Full documentation on ENS is `available here`_.
+
+.. _available here: https://github.com/ethereum/ens/wiki
 
 If you just want to set up ENS so that you can host your Swarm content on a domain, here's a quick set of steps to get you started.
 
 Content Retrieval using ENS 
 ----------------------------
 
-The default configuration of swarm is to use names registered on the Ropsten testnet. In order for you to be able to resolve names to swarm hashes, all that needs to happen is that your bzzd is connected to a geth node synced on the Ropsten testnet. See section "Running the swarm client" `here <./runninganode.html#using-bzzd-together-with-the-ropsten-testnet-blockchain>`
+The default configuration of swarm is to use names registered on the Ropsten testnet. In order for you to be able to resolve names to swarm hashes, all that needs to happen is that your bzzd is connected to a geth node synced on the Ropsten testnet. See section "Running the swarm client" `here`_.
+
+.. _here: ./runninganode.html#using-bzzd-together-with-the-ropsten-testnet-blockchain
 
 Registering names for your swarm content
 ----------------------------------------
@@ -285,7 +289,12 @@ There are several steps involved in registering a new name and assigning a swarm
 
 1. Preparation
 ^^^^^^^^^^^^^^^
-The first step to take is to download `ensutils.js <https://github.com/ethereum/ens/blob/master/ensutils.js>` (`direct link <https://raw.githubusercontent.com/ethereum/ens/master/ensutils.js>`). 
+The first step to take is to download `ensutils.js`_ (`direct link`_). 
+
+.. _ensutils.js: https://github.com/ethereum/ens/blob/master/ensutils.js
+
+.. _direct link:  https://raw.githubusercontent.com/ethereum/ens/master/ensutils.js
+
 You should of course have geth running and connected to ropsten (`geth --testnet`). Connect to the geth console:
 
 .. code-block:: none
@@ -300,9 +309,13 @@ Note: You can leave the console at any time by pressing ctrl+D
 
 1a. Registering a .test domain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The easiest option is to register a `.test domain <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar>`. These domains can be registered by anyone at any time, but they automatically expire after 28 days.
+The easiest option is to register a `.test domain`_. These domains can be registered by anyone at any time, but they automatically expire after 28 days.
 
-We will be sending transactions on Ropsten, so if you have not already done so, get yourself some ropsten testnet ether. You can get some for free `here <http://faucet.ropsten.be:3001/>`.
+.. _.test domain:  https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar
+
+We will be sending transactions on Ropsten, so if you have not already done so, get yourself some ropsten testnet ether. You can `get some for free here`_.
+
+.. _get some for free here:  http://faucet.ropsten.be:3001/
 
 Before being able to send transaction, you will need to unlock your account using `personal.unlockAccount(account)` i.e.
 
@@ -329,9 +342,13 @@ The output will be a transaction hash. Once this transaction is mined on the tes
 
 Registering a .eth domain is more involved. If you're just wanting to test things out quickly, start with a .test domain.
 The .eth domains take a while to register, as they use an auction system, (while .test domains can be registered instantly, but only persist for 28 days). Further, .eth domains are also restricted to being at least 7 characters long.
-For complete documentation `see here <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar>`.
+For complete documentation `see here`_.
 
-Just as when registering a .test domain, you will need testnet ether and you must unlock your account. Then you may `start bidding on a domain <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar>`.
+.. _see here: https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar
+
+Just as when registering a .test domain, you will need testnet ether and you must unlock your account. Then you may `start bidding on a domain`_.
+
+.. _start bidding on a domain:  https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar
 
 
 2. Setting up a resolver
