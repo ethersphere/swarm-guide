@@ -229,9 +229,9 @@ In our example it contains a list of all files contained in /path/to/directory t
 
 Manifests contain content-type information for the hashes they reference. In other contexts, where content-type is not supplied or, when you suspect the information is wrong, it is possible to specify the content-type manually in the search query.
 
-.. code-block:: js
+.. code-block:: none
 
-   GET http://localhost:8500/bzzr:/HASH?content_type=\"text/plain\"")
+   http://localhost:8500/bzzr:/HASH?content_type="text/plain"
 
 Path Matching on Manifests
 ---------------------------------
