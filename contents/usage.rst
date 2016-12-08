@@ -471,8 +471,11 @@ Swarm also exposes an RPC API for the chequebook offering the followng methods:
   It errors if no chequebook is set  or if your account has insufficient funds.
 
 
-Example use of the console
+Example: use of the console
 ------------------------------
+
+Uploading content
+^^^^^^^^^^^^^^^^^^
 
 It is possible to upload files from the bzzd console (without the need for bzzup or an http proxy). The console command is
 
@@ -480,15 +483,23 @@ It is possible to upload files from the bzzd console (without the need for bzzup
 
     bzz.upload("/path/to/file/or/directory", "filename")
 
-The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Continuing the example above (:ref:`Example: Uploading a directory`):
+The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Proceeding as in the example above (:ref:`Example: Uploading a directory`). Prepare some files:
+
+.. code-block:: none
+
+  mkdir upload-test
+  echo "one" > upload-test/one.txt
+  echo "two" > upload-test/two
+  mkdir upload-test/three
+  echo "four" > upload-test/three/four
+
+Then execute the ``bzz.upload`` command on the bzzd console: (note ``bzzd.ipc`` instead of ``geth.ipc``)
 
 .. code-block:: none
 
     ./geth --exec 'bzz.upload("upload-test/", "one.txt")' attach ipc:$DATADIR/bzzd.ipc
 
-(note ``bzzd.ipc`` instead of ``geth.ipc``)
-
-We get the output
+We get the output:
 
 .. code-block:: none
 
@@ -509,6 +520,9 @@ We see "one" because the empty path resolves to "one.txt". Other valid URLs are
   http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/three/four
 
 We only recommend using this API for testing purposes or command line scripts. Since they save on http file upload, their performance is somewhat better than using the http API.
+
+Downloading content
+^^^^^^^^^^^^^^^^^^^^
 
 As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or ``bzz.download(HASH, /path/to/download/to)`` on the bzzd console (note ``bzzd.ipc`` instead of ``geth.ipc``)
 
