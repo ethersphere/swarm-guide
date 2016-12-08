@@ -197,31 +197,31 @@ We can see the retrieve the manifest directly (instead of the files they refer t
 
     wget -O - "http://localhost:8500/bzzr:/HASH"
 
-In our example it contains a list of all files contained in /path/to/directory together with their swarm ids (hashes) as well as their content-types. It may look something like this:
+In our example it contains a list of all files contained in /path/to/directory together with their swarm ids (hashes) as well as their content-types. It may look something like this (whitespace added): 
 
 .. code-block:: js
 
   {
   "entries":[
     {
-      "hash":"HASH-for-fileA1",
-      "path":"directoryA/fileA1",
-      "contentType":"text/plain"
+      "hash": "HASH-for-fileA1",
+      "path": "directoryA/fileA1",
+      "contentType": "text/plain"
     },
     {
-      "hash":"HASH-for-fileB2",
-      "path":"directoryA/directoryB/fileB2",
-      "contentType":"text/plain"
+      "hash": "HASH-for-fileB2",
+      "path": "directoryA/directoryB/fileB2",
+      "contentType": "text/plain"
     },
     {
-      "hash":"HASH-for-fileB1",
-      "path":"directoryA/directoryB/fileB1",
-      "contentType":"text/plain"
+      "hash": "HASH-for-fileB1",
+      "path": "directoryA/directoryB/fileB1",
+      "contentType": "text/plain"
     },
     {
-      "hash":"HASH-for-fileC1",
-      "path":"directoryA/directoryC/fileC1",
-      "contentType":"text/plain"
+      "hash": "HASH-for-fileC1",
+      "path": "directoryA/directoryC/fileC1",
+      "contentType": "text/plain"
     }
     ]
   }
@@ -252,10 +252,15 @@ by pointing the browser to
 
     http://localhost:8500/bzz:/HASH/subdirectory/filename
 
-manifest entries can specify an empty path, in which case the pointing to the hash of the manifest will serve that entry.
+Moreover, manifest entries can specify (assign a hash to) the empty path, in which case the URL pointing to the hash of the manifest will serve that entry. In other words, if the manifest at HASH assigns the hash of the file 'swarm.html' to the empty path, then the swarm.html page will be served directly at ``bzz:/HASH``.
 
-The ``bzzup`` command line tool allows you to specify a path to a file that will be mapped to the empty path.
+The ``bzzup`` command line tool (soon will) allow(s) you to specify a path to a file that will be mapped to the empty path.
 
+.. code-block:: none
+
+  ./bzzup --recursive /path/to/directory --manifest-root=/path/to/directory/index.html
+
+In the meantime, you can connect to the bzzd console using the ``bzz.upload`` command. Here you can specify the file to be assigned to the empty path as the second argument. See the section :ref:`Swarm IPC API` below.
 
 Ethereum Name Service
 ======================
@@ -310,6 +315,8 @@ Then, still inside the geth console (with ensutils.js loaded) type the following
 .. code-block:: none
 
   testRegistrar.register(web3.sha3('MYNAME'), eth.accounts[0], {from: eth.accounts[0]});
+
+.. note:: Warning: do not register names with UPPER CASE letters. The ENS will let you register them, but your browser will never resolve them.
 
 The output will be a transaction hash. Once this transaction is mined on the testnet you can verify that the name MYNAME.test belongs to you:
 
