@@ -436,7 +436,7 @@ The API offers the following methods:
   It returns content hash of this manifest.
 
 ``bzz.get(bzzpath)``
-  It downloads the manifest at ``bzzpath`` and returns a reponse json object with content, mime type, status code and content size. This should only be used for small pieces of data, since the content gets instantiated in memory.
+  It downloads the manifest at ``bzzpath`` and returns a response json object with content, mime type, status code and content size. This should only be used for small pieces of data, since the content gets instantiated in memory.
 
 
 ``bzz.resolve(domain)``
@@ -480,13 +480,15 @@ It is possible to upload files from the bzzd console (without the need for bzzup
 
     bzz.upload("/path/to/file/or/directory", "filename")
 
-The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Continuing form above (note ``bzzd.ipc`` instead of ``geth.ipc``)
+The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Continuing the example above (:ref:`Example: Uploading a directory`):
 
 .. code-block:: none
 
     ./geth --exec 'bzz.upload("upload-test/", "one.txt")' attach ipc:$DATADIR/bzzd.ipc
 
-gives the output
+(note ``bzzd.ipc`` instead of ``geth.ipc``)
+
+We get the output
 
 .. code-block:: none
 
@@ -508,7 +510,7 @@ We see "one" because the empty path resolves to "one.txt". Other valid URLs are
 
 We only recommend using this API for testing purposes or command line scripts. Since they save on http file upload, their performance is somewhat better than using the http API.
 
-As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or ``bzz.download(HASH, /path/to/donwload/to)`` on the bzzd console (note ``bzzd.ipc`` instead of ``geth.ipc``)
+As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or ``bzz.download(HASH, /path/to/download/to)`` on the bzzd console (note ``bzzd.ipc`` instead of ``geth.ipc``)
 
 .. code-block:: none
 
