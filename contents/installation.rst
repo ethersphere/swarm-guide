@@ -19,7 +19,7 @@ Geth runs on all major platforms (linux, MacOSX, Windows, also raspberry pi, and
 Prerequisites
 ================
 
-building the swarm daemon :command:`bzzd` requires the following packages:
+building the swarm daemon :command:`swarm` requires the following packages:
 
 * go: https://golang.org
 * git: http://git.org
@@ -61,17 +61,15 @@ Once all prerequisites are met, download the go-ethereum source code
   git checkout master
   go get github.com/ethereum/go-ethereum
 
-and finally compile the swarm daemon ``bzzd`` and the main go-ethereum client ``geth`` and (optionally) the bzz uploader ``bzzup`` and bzzhash calculator ``bzzhash``
+and finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``geth``.
 
 .. code-block:: none
 
-  go build ./cmd/bzzd
-  go build ./cmd/geth
-  go build ./cmd/bzzup
-  go build ./cmd/bzzhash
+  go install -v ./cmd/geth
+  go install -v ./cmd/swarm
 
 
-You can now run :command:`./bzzd` to start your swarm node.
+You can now run :command:`swarm` to start your swarm node.
 
 
 Updating your client
@@ -84,4 +82,6 @@ To update your client simply download the newest source code and recompile.
   cd $GOPATH/src/github.com/ethereum/go-ethereum
   git checkout master
   git pull
-  go build ./cmd/geth ./cmd/bzzd ./cmd/bzzup
+  go install -v ./cmd/geth
+  go install -v ./cmd/swarm
+

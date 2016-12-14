@@ -8,20 +8,20 @@ Using swarm from the command line
 Uploading a file or directory  to the swarm
 ---------------------------------------------------------------
 
-Make sure you have compiled bzzup
+Make sure you have compiled the swarm command
 
 .. code-block:: none
 
   cd $GOPATH/src/github.com/ethereum/go-ethereum
-  go build ./cmd/bzzup
+  go install ./cmd/swarm
 
-The bzzup program makes it easy to upload files and directories. Usage:
+The `swarm up` subcommand makes it easy to upload files and directories. Usage:
 
 .. code-block:: none
 
-  ./bzzup /path/to/file/or/directory
+  swarm up /path/to/file/or/directory
 
-By default bzzup assumes that you are running your own swarm node with a local http proxy on the default port (8500).
+By default this assumes that you are running your own swarm node with a local http proxy on the default port (8500).
 See :ref:`Running the swarm client` to learn how to run a local node.
 It is possible to specify alternative proxy endpoints with the ``--bzzapi`` option.
 
@@ -32,7 +32,7 @@ You can use one of the public gateways as a proxy, in which case you can upload 
 
 .. code-block:: none
 
-    bzzup --bzzapi http://swarm-gateways.net /path/to/file/or/directory
+    swarm up --bzzapi http://swarm-gateways.net /path/to/file/or/directory
 
 Example: uploading a file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -41,36 +41,54 @@ Issue the following command to upload the go-ethereum README file to your swarm
 
 .. code-block:: none
 
-  ./bzzup  $GOPATH/src/github.com/ethereum/go-ethereum/README.md
+  swarm up  $GOPATH/src/github.com/ethereum/go-ethereum/README.md
 
 It produces the following output
 
 .. code-block:: none
 
-  uploading file /home/swarm/go/src/github.com/ethereum/go-ethereum/README.md (16340 bytes)
-  uploading manifest
+  I1214 15:04:43.011654 upload.go:171] uploading file README.md (166 bytes)
+  I1214 15:04:48.167952 upload.go:180] uploading manifest
+  d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
+
+The first two lines are just debug logs, you can make them vanish by redirecting standard error to a file.
+
+.. code-block:: shell
+
+  swarm up README.md 2> up.log
+  d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
+
+The hash returned is the swarm hash of a manifest that contains the README.md file as its only entry. So by default both the primary content and the manifest is uploaded.
+You can access this file from swarm by pointing your browser to
+
+.. code-block:: none
+
+  http://localhost:8500/bzz:/d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
+
+The manifest makes sure you could retrieve the file with the correct mime type.
+
+You may wish to only upload the content and maybe include it in a custom index, or it is handled as a datablob known and used only by some application that knows its mimetype. For this you can set `--manifest=false`:
+
+.. code-block:: none
+
+  swarm --manifest=false --bzzapi http://swarm-gateways.net/ up sw\^3.pdf 2> up.log
   {
-    "hash": "1ff07d819f3c35674c4effc1072de7c8efcb9fb27cc77781f53b990d6b28eb0f",
     "entries": [
       {
-        "hash": "14355f4c0e81fb29395d129d338533bddca38129eec7b502242125fa711a4b46",
-        "contentType": "text/markdown; charset=utf-8"
+        "hash": "6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5",
+        "contentType": "application/pdf"
       }
     ]
   }
 
-The hash beginning with "14355" is the swarm hash of the README.md file itself and the hash beginning with "1ff07" is the hash of a manifest that contains README.md as its only entry.
 
-You could then download this file from swarm by pointing your browser to
-
-.. code-block:: none
-
-  http://localhost:8500/bzz:/1ff07d819f3c35674c4effc1072de7c8efcb9fb27cc77781f53b990d6b28eb0f
+This option supresses automatic manifest upload, instead upon uploading the file, it displays the manifest.
+As you see the single entry is the file itself, while the manifest contains the content type that will be given to the browser. The manifest here acts as an extension of the primary content with metadata. In future, other HTTP headers will also be supported.
 
 Example: Uploading a directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Uploading directories is achieved with ``bzzup --recursive``.
+Uploading directories is achieved with ``swarm --recursive up``.
 
 Let us create some test files
 
@@ -86,7 +104,7 @@ We can upload this directory with
 
 .. code-block:: none
 
-  ./bzzup --recursive upload-test/
+  swarm --recursive up upload-test/
 
 The output should look something like
 
@@ -120,7 +138,7 @@ You could then retrieve the files relative to the root manifest like so:
 .. code-block:: none
 
   http://localhost:8500/bzz:/6c64ae708609be4cc34027b38b1104f0ea8dafd5164343117ce421f7714b5e98/three/four
-  
+
 if you'd like to be able to access your content via a human readable name like 'mysite.eth' intead of the long hex string above, see the section on :ref:`Ethereum Name Service` below.
 
 Content retrieval: hashes and manifests
@@ -133,7 +151,7 @@ As indicated above, your local swarm instance has an http interface running on p
 
 .. code-block:: none
 
-    http://localhost:8500/bzz:/HASH
+    GET http://localhost:8500/bzz:/HASH
 
 where HASH is the id of a swarm manifest.
 This is the most common usecase whereby swarm can serve the web.
@@ -141,6 +159,8 @@ This is the most common usecase whereby swarm can serve the web.
 Disregarding the clunky proxy part, it looks like http transfering content from servers, but in fact it is using swarm's serverless architecture.
 
 The general pattern is:
+
+.. code-block:: none
 
   <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
 
@@ -154,28 +174,50 @@ bzz url schemes
 bzz
 ^^^^
 
-The bzz scheme assumes a manifest and follows the path (the empty path if the url ends in the hash) and serves that content with content type specified in the manifest.
+Example:
+
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz:/theswarm.test
+
+The bzz scheme assumes  that the domain part of the url points to a manifest. When retrieving the asset adderessed by the url, the manifest entries are matched against the url path. The entry with the longest matching path is retrieved and served with the content type specified in the corresponding manifest entry.
 
 This generic scheme supports name resolution for domains registered on the Ethereum Name Service
 (ENS, see :ref:`Ethereum Name Service`). This is a read-only scheme meaning that it only supports GET requests and serves to retrieve content from swarm.
 
+
 bzzi (immutable)
 ^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzzi:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
 The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzzi url will always nececssarily address the exact same fixed immutable content.
 
 bzzr (raw)
 ^^^^^^^^^^^^^^
 
+.. code-block:: none
+
+    GET http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+
+
 When responding to GET requests to the bzzr scheme, swarm does not assume a manifest just  serves the asset addressed by the url directly.
 
-The ``content_type`` query parameter can be supplied to specify the mime you want otherwise content is served as a default octet stream. For instance if you have an image (not the manifest wrapping it) at hash ``abc123...ef`` then  ``bzzr://abc123...ef?content_type=image/jpeg`` will properly serve it.
+The ``content_type`` query parameter can be supplied to specify the mime you want otherwise content is served as a default octet stream. For instance if you have a pdf document (not the manifest wrapping it) at hash ``6a182226...`` then the following url will properly serve it.
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzzr:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content-type=application/pdf
+
 
 Importantly and somewhat unusually for generic schemes, the raw scheme supports POST and PUT requests. This is a crucially important way in which swarm is different from the internet as we know it.
 
 The possibility to POST makes swarm an actual cloud service, bringing upload functionality to your browsing.
 
-In fact under the hood, the command line tool ``bzzup`` uses the http proxy with the bzz raw scheme.
+In fact the command line tool ``swarm up`` uses the http proxy with the bzz raw scheme under the hood.
 
 
 Manifests
@@ -183,55 +225,91 @@ Manifests
 
 In general manifests declare a list of strings associated with swarm hashes. Before we get into generalities however, let us begin with an introductory example.
 
-Suppose we had used ``bzzup`` (as described above) to upload a directory to swarm:
+
+This is demonstrated by the following example.
+Let's create directory containing the two orange papers and an html index file listing the two pdf documents.
 
 .. code-block:: none
 
-    ./bzzup --recursive /path/to/directory
+  $ ls -1 orange-papers/
+  index.html
+  smash.pdf
+  sw^3.pdf
 
-then the returned hash is actually the address of the manifest. The manifest in this case a list of files within the directory along with their swarm hashes. Let us take a closer look.
+  $ cat orange-papers/index.html
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+    </head>
+    <body>
+      <ul>
+        <li>
+          <a href="./sw^3.pdf">Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for swarm.</a>  May 2016
+        </li>
+        <li>
+          <a href="./smash.pdf">Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for swarm secured by masked audit secret hash.</a> May 2016
+        </li>
+      </ul>
+    </body>
+  </html>
+
+We now use the ``swarm up`` command to upload the directory to swarm to create a mini virtual site.
+
+.. code-block:: none
+
+  swarm --recursive --defaultpath orange-papers/index.html --bzzapi http://swarm-gateways.net/ up orange-papers/ 2> up.log
+  2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+
+The returned hash is the hash of this manifest:
+
+.. code-block:: none
+
+  # swarm --manifest=false --recursive --defaultpath orange-papers/index.html --bzzapi http://swarm-gateways.net/ up orange-papers/ 2> up.log
+  {
+    "entries": [
+      {
+        "hash": "4b3a73e43ae5481960a5296a08aaae9cf466c9d5427e1eaa3b15f600373a048d",
+        "contentType": "text/html; charset=utf-8"
+      },
+      {
+        "hash": "4b3a73e43ae5481960a5296a08aaae9cf466c9d5427e1eaa3b15f600373a048d",
+        "contentType": "text/html; charset=utf-8",
+        "path": "index.html"
+      },
+      {
+        "hash": "69b0a42a93825ac0407a8b0f47ccdd7655c569e80e92f3e9c63c28645df3e039",
+        "contentType": "application/pdf",
+        "path": "smash.pdf"
+      },
+      {
+        "hash": "6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5",
+        "contentType": "application/pdf",
+        "path": "sw^3.pdf"
+      }
+    ]
+  }
 
 We can see the retrieve the manifest directly (instead of the files they refer to) by using the bzz-raw protocol ``bzzr``:
 
 .. code-block:: none
 
-    wget -O - "http://localhost:8500/bzzr:/HASH"
-
-In our example it contains a list of all files contained in /path/to/directory together with their swarm ids (hashes) as well as their content-types. It may look something like this (whitespace added): 
-
-.. code-block:: js
-
-  {
-  "entries":[
-    {
-      "hash": "HASH-for-fileA1",
-      "path": "directoryA/fileA1",
-      "contentType": "text/plain"
-    },
-    {
-      "hash": "HASH-for-fileB2",
-      "path": "directoryA/directoryB/fileB2",
-      "contentType": "text/plain"
-    },
-    {
-      "hash": "HASH-for-fileB1",
-      "path": "directoryA/directoryB/fileB1",
-      "contentType": "text/plain"
-    },
-    {
-      "hash": "HASH-for-fileC1",
-      "path": "directoryA/directoryC/fileC1",
-      "contentType": "text/plain"
-    }
-    ]
-  }
-
+    wget -O - "http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d"
 
 Manifests contain content-type information for the hashes they reference. In other contexts, where content-type is not supplied or, when you suspect the information is wrong, it is possible to specify the content-type manually in the search query.
 
 .. code-block:: none
 
-   http://localhost:8500/bzzr:/HASH?content_type="text/plain"
+   http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain"
+
+Now you can also check that the manifest hashes to the content (in fact swarm does it for you):
+
+.. code-block:: none
+
+   $ wget -O- http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain" > manifest.json
+
+   $ swarm hash manifest.json
+   2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
 Path Matching on Manifests
 ---------------------------------
@@ -240,52 +318,59 @@ A useful feature of manifests is that urls can be matched on the paths.
 Directory trees, routing tables and database indexes all share this problem.
 In some sense this makes the manifest a routing table and so the manifest swarm entry acts as if it were a host.
 
-More concretely, continuing in our example, we can access the file
+More concretely, continuing in our example, when we request:
 
 .. code-block:: none
 
-    /path/to/directory/subdirectory/filename
+  GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/sw^3.pdf
 
-by pointing the browser to
+swarm first retrieves the document at the domain, which is the manifest above. The url path ``sw^3`` is matched against the entries. In this case a perfect match is found and the document at 6a182226... is served as a pdf.
 
-.. code-block:: none
-
-    http://localhost:8500/bzz:/HASH/subdirectory/filename
-
-Moreover, manifest entries can specify (assign a hash to) the empty path, in which case the URL pointing to the hash of the manifest will serve that entry. In other words, if the manifest at HASH assigns the hash of the file 'swarm.html' to the empty path, then the swarm.html page will be served directly at ``bzz:/HASH``.
-
-The ``bzzup`` command line tool (soon will) allow(s) you to specify a file that will be mapped to the empty path.
+As you see the manifest contains 4 entries, although our directory contained only 3. The extra entry is there because of the ``--defaultpath orange-papers/index.html`` option to ``swarm up``, which associates the empty path with the file you give as its argument. This makes it possible to have a default page served when the url path is empty.
+This feature essentially implements the most common webserver rewrite rules used to set the landing page of a site served when the url only contains the domain. So when you request
 
 .. code-block:: none
 
-  ./bzzup --recursive /path/to/directory --manifest-root=/path/to/directory/index.html
+  GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
-In the meantime, you can connect to the bzzd console and use the ``bzz.upload`` command. You can specify the file to be assigned to the empty path as the (optional) second argument. See the section :ref:`Swarm IPC API` below.
+you get served the index page (with content type ``text/html``) at ``4b3a73e43ae5481960a5296a08aaae9cf466c9d5427e1eaa3b15f600373a048d``.
 
 Ethereum Name Service
 ======================
 
-ENS is the system that Swarm uses to permit content to be referred to by a human-readable name, such as "myname.eth". It operates analogously to the DNS system, translating human-readable names into machine identifiers - in this case, the swarm hash of the content you're referring to. By registering a name and setting it to resolve to the content hash of the root manifest of your site, users can access your site via a URL such as `bzz://mysite.eth/`.
+ENS is the system that Swarm uses to permit content to be referred to by a human-readable name, such as "orangepapers.eth". It operates analogously to the DNS system, translating human-readable names into machine identifiers - in this case, the swarm hash of the content you're referring to. By registering a name and setting it to resolve to the content hash of the root manifest of your site, users can access your site via a URL such as `bzz://orange-papers.eth/`.
+
+If we take our earlier example and set the hash 2477cc85... as the content hash for the domain `` orangepapers.eth``, we can request:
+
+.. code-block:: none
+
+  GET http://localhost:8500/bzz:/orange-papers.eth/sw^3.pdf
+
+and get served the same as with:
+
+.. code-block:: none
+
+  GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/sw^3.pdf
 
 Full documentation on ENS is `available here <https://github.com/ethereum/ens/wiki>`_.
 
 If you just want to set up ENS so that you can host your Swarm content on a domain, here's a quick set of steps to get you started.
 
-Content Retrieval using ENS 
+Content Retrieval using ENS
 ----------------------------
 
-The default configuration of swarm is to use names registered on the Ropsten testnet. In order for you to be able to resolve names to swarm hashes, all that needs to happen is that your bzzd is connected to a geth node synced on the Ropsten testnet. See section "Running the swarm client" `here <./runninganode.html#using-bzzd-together-with-the-ropsten-testnet-blockchain>`_.
+The default configuration of swarm is to use names registered on the Ropsten testnet. In order for you to be able to resolve names to swarm hashes, all that needs to happen is that your swarm client is connected to a geth node synced on the Ropsten testnet. See section "Running the swarm client" `here <./runninganode.html#using-swarm-together-with-the-ropsten-testnet-blockchain>`_.
 
 Registering names for your swarm content
 ----------------------------------------
 
-There are several steps involved in registering a new name and assigning a swarm hash to it. To start off, you'll need to register a domain, then you need to assign a resolver to the domain and then you add the swarm hash to the resolver. 
+There are several steps involved in registering a new name and assigning a swarm hash to it. To start off, you'll need to register a domain, then you need to assign a resolver to the domain and then you add the swarm hash to the resolver.
 
 .. note:: The ENS system will let you register even invalid names - names with upper case characters, or prohibited unicode characters, for instance - but your browser will never resolve them. As a result, take care to make sure any domain you try to register is well-formed before registering it
 
-1. Preparation
+Preparation
 ^^^^^^^^^^^^^^^
-The first step to take is to download `ensutils.js <https://github.com/ethereum/ens/blob/master/ensutils.js>`_ (`direct link <https://raw.githubusercontent.com/ethereum/ens/master/ensutils.js>`_). 
+The first step to take is to download `ensutils.js <https://github.com/ethereum/ens/blob/master/ensutils.js>`_ (`direct link <https://raw.githubusercontent.com/ethereum/ens/master/ensutils.js>`_).
 
 You should of course have geth running and connected to ropsten (`geth --testnet`). Connect to the geth console:
 
@@ -301,7 +386,7 @@ Once inside the console, run:
 
 Note: You can leave the console at any time by pressing ctrl+D
 
-1a. Registering a .test domain
+Registering a .test domain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The easiest option is to register a `.test domain <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar>`_. These domains can be registered by anyone at any time, but they automatically expire after 28 days.
 
@@ -328,7 +413,7 @@ The output will be a transaction hash. Once this transaction is mined on the tes
 
   eth.accounts[0] == ens.owner(namehash('MYNAME.test'))
 
-1b. Registering a .eth domain
+Registering a .eth domain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Registering a .eth domain is more involved. If you're just wanting to test things out quickly, start with a .test domain.
@@ -366,7 +451,7 @@ Quick Reference:
 
 For info on how to increase your bids, check the current highest bid, check when an auction ends, check if a name is available in the first place and more please consult `the official documentation <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar>`_.
 
-2. Setting up a resolver
+Setting up a resolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The next step is to set up a resolver for your new domain name. While it's possible to write and deploy your own custom resolver, for everyday use with Swarm, a general purpose one is provided, and is already deployed on the testnet.
@@ -380,7 +465,7 @@ On the geth (testnet) console:
     ens.setResolver(namehash('MYNAME.test'), publicResolver.address, {from: eth.accounts[0], gas: 100000});
 
 
-3. Registering a swarm hash on the publicResolver
+Registering a swarm hash on the publicResolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Finally, after uploading your content to Swarm as detailed above, you can update your site with this command:
@@ -389,7 +474,7 @@ Finally, after uploading your content to Swarm as detailed above, you can update
 
     publicResolver.setContent(namehash('MYNAME.test'), 'HASH', {from: eth.accounts[0], gas: 100000})
 
-Again, replace 'MYNAME.test' with the name you registered, and replace 'HASH' with the hash you got when uploading your content to swarm, starting with 0x. 
+Again, replace 'MYNAME.test' with the name you registered, and replace 'HASH' with the hash you got when uploading your content to swarm, starting with 0x.
 
 
 After this has executed successfully, anyone running a correctly configured and synchronised Swarm client will be able to access the current version of your site on `bzz://MYNAME.test/`.
@@ -398,7 +483,7 @@ After this has executed successfully, anyone running a correctly configured and 
 
   http://localhost:8500/bzz:/MYNAME.test
 
-4. Looking up names in the ENS manually
+Looking up names in the ENS manually
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 After registering your names and swarm hashes, you can check that everything is updated correctly by looking up the name manually.
@@ -408,16 +493,16 @@ Connect to the geth console and load ensutils.js just as before. Then type
 .. code-block:: none
 
     getContent('MYNAME.test')
-    
-You can also check this in your bzzd console with:
+
+You can also check this in your swarm console with:
 
 .. code-block:: none
 
     bzz.resolve('MYNAME.test')
-    
+
 If everything worked correctly, it will return the hash you specified when you called `setContent` earlier.
 
-5. Updating your content
+Updating your content
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Each time you update your site's content afterwards, you only need to repeat the last step to update the mapping between the name you own and the content you want it to point to. Anyone visiting your site by its name will always see the version you most recently updated using `setHash`, above.
@@ -427,13 +512,22 @@ Each time you update your site's content afterwards, you only need to repeat the
     publicResolver.setContent(namehash('MYNAME.test'), 'NEWHASH', {from: eth.accounts[0], gas: 100000})
 
 
+
+
 The HTTP API
 =========================
 
+GET http://localhost:8500/bzz:/domain/some/path
+  retrieve document at domain/some/path allowing domain to resolve via :ref:`The Ethereum Name Service`
+
+GET http://localhost:8500/bzzi:/HASH/some/path
+  retrieve document at HASH/some/path where HASH is a valid swarm hash
+
+GET http://localhost:8500/bzzr:/some/path
+  retrieve the raw content at domain/some/path allowing domain to resolve via :ref:`The Ethereum Name Service`
 
 POST http://localhost:8500/bzzr:
-  The post request is the simplest upload method. Direct upload of files - no manifest is created. 
-
+  The post request is the simplest upload method. Direct upload of files - no manifest is created.
 
 PUT http://localhost:8500/bzzr:/some/path
   The PUT request modifies the manifest so that the uploaded asset's hash will be added to the collection addressed by context under pass. Note that the manifest is NOT ACTUALLY modified. In essence the manifest is copied and updated and its new hash will replace.
@@ -444,8 +538,7 @@ Swarm IPC API
 
 Swarm exposes an RPC API under the ``bzz`` namespace.
 
-.. note:: Note that this is not the recommended way for users or dapps to interact with swarm.
-Given that this module offers local filesystem access, allowing dapps to use this module or exposing it via remote connections creates a major security risk. For this reason ``bzzd`` only exposes this api via local ipc (unlike geth not allowing websockets or http).
+.. note:: Note that this is not the recommended way for users or dapps to interact with swarm and is only meant for debugging ad testing purposes. Given that this module offers local filesystem access, allowing dapps to use this module or exposing it via remote connections creates a major security risk. For this reason ``swarm`` only exposes this api via local ipc (unlike geth not allowing websockets or http).
 
 The API offers the following methods:
 
@@ -469,7 +562,6 @@ The API offers the following methods:
 
 ``bzz.get(bzzpath)``
   It downloads the manifest at ``bzzpath`` and returns a response json object with content, mime type, status code and content size. This should only be used for small pieces of data, since the content gets instantiated in memory.
-
 
 ``bzz.resolve(domain)``
   resolves the domain name to a content hash using ENS and returns that. If swarm is not connected to a blockchain it returns an error. Note that your eth backend needs to be syncronised in order to get uptodate domain resolution.
@@ -509,7 +601,7 @@ Example: use of the console
 Uploading content
 ^^^^^^^^^^^^^^^^^^
 
-It is possible to upload files from the bzzd console (without the need for bzzup or an http proxy). The console command is
+It is possible to upload files from the swarm console (without the need for swarm command or an http proxy). The console command is
 
 .. code-block:: none
 
@@ -525,7 +617,7 @@ The command returns the root hash of a manifest. The second argument is optional
   mkdir upload-test/three
   echo "four" > upload-test/three/four
 
-Then execute the ``bzz.upload`` command on the bzzd console: (note ``bzzd.ipc`` instead of ``geth.ipc``)
+Then execute the ``bzz.upload`` command on the swarm console: (note ``bzzd.ipc`` instead of ``geth.ipc``)
 
 .. code-block:: none
 
@@ -556,7 +648,7 @@ We only recommend using this API for testing purposes or command line scripts. S
 Downloading content
 ^^^^^^^^^^^^^^^^^^^^
 
-As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or ``bzz.download(HASH, /path/to/download/to)`` on the bzzd console (note ``bzzd.ipc`` instead of ``geth.ipc``)
+As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or ``bzz.download(HASH, /path/to/download/to)`` on the swarm console (note ``bzzd.ipc`` instead of ``geth.ipc``)
 
 .. code-block:: none
 
