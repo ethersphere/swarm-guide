@@ -380,6 +380,8 @@ You should of course have geth running and connected to ropsten (`geth --testnet
 
 Once inside the console, run:
 
+.. code-block:: none
+
     loadScript('/path/to/ensutils.js')
 
 Note: You can leave the console at any time by pressing ctrl+D
@@ -391,7 +393,7 @@ The easiest option is to register a `.test domain <https://github.com/ethereum/e
 We will be sending transactions on Ropsten, so if you have not already done so, get yourself some ropsten testnet ether. You can `get some for free here <http://faucet.ropsten.be:3001/>`_.
 
 
-Before being able to send transaction, you will need to unlock your account using `personal.unlockAccount(account)` i.e.
+Before being able to send transaction, you will need to unlock your account using ``personal.unlockAccount(account)`` i.e.
 
 .. code-block:: none
 
@@ -420,7 +422,34 @@ For complete documentation `see here <https://github.com/ethereum/ens/wiki/Regis
 
 Just as when registering a .test domain, you will need testnet ether and you must unlock your account. Then you may `start bidding on a domain <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar>`_.
 
+Quick Reference:
 
+1. Prepare:
+
+.. code-block:: js
+
+  personal.unlockAccount(eth.accounts[0])
+  loadScript('/path/to/ensutils.js')
+
+2. Make a bid:
+
+.. code-block:: js
+
+  bid = ethRegistrar.shaBid(web3.sha3('myname'), eth.accounts[0], web3.toWei(1, 'ether'), web3.sha3('secret'));
+ 
+3. Reveal your bid:
+
+.. code-block:: js
+
+  ethRegistrar.unsealBid(web3.sha3('myname'), eth.accounts[0], web3.toWei(1, 'ether'), web3.sha3('secret'), {from: eth.accounts[0], gas: 500000});
+
+4. Finalise:
+
+.. code-block:: js
+
+  ethRegistrar.finalizeAuction(web3.sha3('myname'), {from: eth.accounts[0], gas: 500000});
+
+For info on how to increase your bids, check the current highest bid, check when an auction ends, check if a name is available in the first place and more please consult `the official documentation <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar>`_.
 
 Setting up a resolver
 ^^^^^^^^^^^^^^^^^^^^^^^^^

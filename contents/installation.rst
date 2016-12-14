@@ -71,6 +71,10 @@ and finally compile the swarm daemon ``swarm`` and the main go-ethereum client `
 
 You can now run :command:`swarm` to start your swarm node.
 
+.. code-block:: none
+  
+  cd $GOPATH/bin
+  ./swarm
 
 Updating your client
 =====================
