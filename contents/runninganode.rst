@@ -153,7 +153,6 @@ Set up you environment as seen above, ie., make sure you have a data directory.
 
   swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
-         --verbosity 6 \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
 The ``swarm`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
@@ -162,6 +161,7 @@ Using swarm together with the Ropsten testnet blockchain
 --------------------------------------------------------
 
 Run a geth node connected to the Ropsten testnet
+
 .. code-block:: none
 
   nohup geth --datadir $DATADIR \
