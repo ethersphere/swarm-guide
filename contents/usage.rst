@@ -32,7 +32,7 @@ You can use one of the public gateways as a proxy, in which case you can upload 
 
 .. code-block:: none
 
-    swarm up --bzzapi http://swarm-gateways.net /path/to/file/or/directory
+    swarm --bzzapi http://swarm-gateways.net up /path/to/file/or/directory
 
 Example: uploading a file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -436,7 +436,7 @@ Quick Reference:
 .. code-block:: js
 
   bid = ethRegistrar.shaBid(web3.sha3('myname'), eth.accounts[0], web3.toWei(1, 'ether'), web3.sha3('secret'));
- 
+
 3. Reveal your bid:
 
 .. code-block:: js

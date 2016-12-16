@@ -60,7 +60,7 @@ With the preparations complete, we can now launch our swarm client. To launch in
          --maxpeers 0 \
           2>> $DATADIR/geth.log &
 
-and launch the swarm; connecting it to the geth node
+and launch the swarm; connecting it to the geth node. For consistency, let's use the same network id 322  as geth.
 
 .. code-block:: none
 
@@ -69,6 +69,7 @@ and launch the swarm; connecting it to the geth node
          --ethapi $DATADIR/geth.ipc \
          --verbosity 6 \
          --maxpeers 0 \
+         --networkid 322 \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
 .. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply remove the --ethapi flag from swarm.
@@ -186,7 +187,7 @@ Then launch the swarm; connecting it to the geth node (--ethapi).
 Adding enodes manually
 ------------------------
 
-Eventually automatic node discovery will be working for swarm nodes. Until then you can start off the connection process by adding a few peers manually using the ``admin.addPeer`` console command. 
+Eventually automatic node discovery will be working for swarm nodes. Until then you can start off the connection process by adding a few peers manually using the ``admin.addPeer`` console command.
 
 .. code-block:: none
 
@@ -297,7 +298,7 @@ We are now ready to restart geth and swarm using our custom genesis block
          --maxpeers 0 \
           2>> $DATADIR/geth.log &
 
-and launch the swarm (with SWAP); connecting it to the geth node
+and launch the swarm (with SWAP); connecting it to the geth node. For consistency let's use the same network id  322 for the swarm private network.
 
 .. code-block:: none
 
@@ -307,6 +308,7 @@ and launch the swarm (with SWAP); connecting it to the geth node
          --verbosity 6 \
          --ethapi $DATADIR/geth.ipc \
          --maxpeers 0 \
+         --networkid 322 \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
 If all is successful you will see the message "Deploying new chequebook" on the swarm.log. Once the transaction is mined, SWAP is ready.
