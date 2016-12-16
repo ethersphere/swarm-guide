@@ -164,6 +164,12 @@ The ``swarm`` daemon will seek out and connect to other swarm nodes. It manages 
 Using swarm together with the Ropsten testnet blockchain
 --------------------------------------------------------
 
+In case you don't yet have an account, run
+
+.. code-block:: none
+
+  geth --datadir $DATADIR --testnet account new
+
 Run a geth node connected to the Ropsten testnet
 
 .. code-block:: none
@@ -181,6 +187,7 @@ Then launch the swarm; connecting it to the geth node (--ethapi).
 
   swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
+         --keystore $DATADIR/testnet/keystore \
          --ethapi $DATADIR/geth.ipc \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
