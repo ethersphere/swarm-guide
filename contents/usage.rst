@@ -210,7 +210,7 @@ The ``content_type`` query parameter can be supplied to specify the mime you wan
 
 .. code-block:: none
 
-    GET http://localhost:8500/bzzr:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content-type=application/pdf
+    GET http://localhost:8500/bzzr:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content_type=application/pdf
 
 
 Importantly and somewhat unusually for generic schemes, the raw scheme supports POST and PUT requests. This is a crucially important way in which swarm is different from the internet as we know it.
@@ -296,7 +296,7 @@ We can see the retrieve the manifest directly (instead of the files they refer t
 
     wget -O - "http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d"
 
-Manifests contain content-type information for the hashes they reference. In other contexts, where content-type is not supplied or, when you suspect the information is wrong, it is possible to specify the content-type manually in the search query.
+Manifests contain content_type information for the hashes they reference. In other contexts, where content_type is not supplied or, when you suspect the information is wrong, it is possible to specify the content_type manually in the search query.
 
 .. code-block:: none
 
