@@ -530,8 +530,9 @@ POST http://localhost:8500/bzzr:
   The post request is the simplest upload method. Direct upload of files - no manifest is created.
   It returns the hash of the uploaded file
 
-PUT http://localhost:8500/bzzr:/HASH/some/path
-  The PUT request modifies the manifest so that the uploaded asset's hash will be added to the collection addressed by context under pass. Note that the manifest is NOT ACTUALLY modified. In essence the manifest is copied and the copy is updated.
+PUT http://localhost:8500/bzzr:/HASH|domain/some/path
+  The PUT request publishes the uploaded asset to the manifest. 
+  It looks for the manifest by domain or hash, makes a copy of it and updates its collection with the new asset.
   It returns the hash of the newly created manifest.
 
 Swarm IPC API
