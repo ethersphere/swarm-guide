@@ -472,7 +472,7 @@ Hash (SHA3)
    The hash function used by the chunker (base hash algo of bzzhash): SHA3 or SHA256
    This option will be removed in a later release.
 
-Syncronisation parameters
+Synchronisation parameters
 -------------------------------
 ..  index::
    syncronisation
