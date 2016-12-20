@@ -20,7 +20,7 @@ then make a new account using this directory
 
 .. code-block:: none
 
-  geth --datadir $DATADIR account new
+  $GOPATH/bin/geth --datadir $DATADIR account new
 
 You will be prompted for a password:
 
@@ -51,7 +51,7 @@ With the preparations complete, we can now launch our swarm client. To launch in
 
 .. code-block:: none
 
-  nohup geth --datadir $DATADIR \
+  nohup $GOPATH/bin/geth --datadir $DATADIR \
          --unlock 0 \
          --password <(echo -n "MYPASSWORD") \
          --verbosity 6 \
