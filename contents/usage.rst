@@ -523,15 +523,17 @@ GET http://localhost:8500/bzz:/domain/some/path
 GET http://localhost:8500/bzzi:/HASH/some/path
   retrieve document at HASH/some/path where HASH is a valid swarm hash
 
-GET http://localhost:8500/bzzr:/some/path
+GET http://localhost:8500/bzzr:/domain/some/path
   retrieve the raw content at domain/some/path allowing domain to resolve via :ref:`The Ethereum Name Service`
 
 POST http://localhost:8500/bzzr:
   The post request is the simplest upload method. Direct upload of files - no manifest is created.
+  It returns the hash of the uploaded file
 
-PUT http://localhost:8500/bzzr:/some/path
-  The PUT request modifies the manifest so that the uploaded asset's hash will be added to the collection addressed by context under pass. Note that the manifest is NOT ACTUALLY modified. In essence the manifest is copied and updated and its new hash will replace.
-
+PUT http://localhost:8500/bzzr:/HASH|domain/some/path
+  The PUT request publishes the uploaded asset to the manifest. 
+  It looks for the manifest by domain or hash, makes a copy of it and updates its collection with the new asset.
+  It returns the hash of the newly created manifest.
 
 Swarm IPC API
 ========================
