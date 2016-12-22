@@ -44,146 +44,19 @@ We save it under the name ``BZZKEY``
   BZZKEY=2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 
 
-Swarm in singleton mode
-===========================
-
-With the preparations complete, we can now launch our swarm client. To launch in singleton mode, start geth using ``--maxpeers 0``
-
-.. code-block:: none
-
-  nohup geth --datadir $DATADIR \
-         --unlock 0 \
-         --password <(echo -n "MYPASSWORD") \
-         --verbosity 6 \
-         --networkid 322 \
-         --nodiscover \
-         --maxpeers 0 \
-          2>> $DATADIR/geth.log &
-
-and launch the swarm; connecting it to the geth node. For consistency, let's use the same network id 322  as geth.
-
-.. code-block:: none
-
-  swarm --bzzaccount $BZZKEY \
-         --datadir $DATADIR \
-         --ethapi $DATADIR/geth.ipc \
-         --verbosity 6 \
-         --maxpeers 0 \
-         --networkid 322 \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
-
-.. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply remove the --ethapi flag from swarm.
-
-At this verbosity level you should see plenty(!) of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/swarm.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will not be set.
-
-You can change the verbosity level without restarting geth and swarm via the console:
-
-.. code-block:: none
-
-  geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/geth.ipc
-  geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/bzzd.ipc
+With the preparations complete, we can now launch our swarm client. In what follows we detail a few ways you might want to use swarm.
 
 
-.. note:: Following these instructions you are now running a single local swarm node, not connected to any other.
-
-If you want to run all these instructions in a single script, you can wrap them in something like
-
-.. code-block:: bash
-
-  #!/bin/bash
-
-  # Working directory
-  cd /tmp
-
-  # Preparation
-  DATADIR=/tmp/BZZ/`date +%s`
-  mkdir -p $DATADIR
-  read -s -p "Enter Password. It will be stored in $DATADIR/my-password: " MYPASSWORD && echo $MYPASSWORD > $DATADIR/my-password
-  echo
-  BZZKEY=$($GOPATH/bin/geth --datadir $DATADIR --password $DATADIR/my-password account new | awk -F"{|}" '{print $2}')
-
-  echo "Your account is ready: "$BZZKEY
-
-  # Run geth in the background
-  nohup $GOPATH/bin/geth --datadir $DATADIR \
-      --unlock 0 \
-      --password <(cat $DATADIR/my-password) \
-      --verbosity 6 \
-      --networkid 322 \
-      --nodiscover \
-      --maxpeers 0 \
-      2>> $DATADIR/geth.log &
-
-  echo "geth is running in the background, you can check its logs at "$DATADIR"/geth.log"
-
-  # Now run swarm in the background
-  $GOPATH/bin/swarm \
-      --bzzaccount $BZZKEY \
-      --datadir $DATADIR \
-      --ethapi $DATADIR/geth.ipc \
-      --verbosity 6 \
-      --maxpeers 0 \
-      --bzznetworkid 322 \
-      &> $DATADIR/swarm.log < <(cat $DATADIR/my-password) &
-
-
-  echo "swarm is running in the background, you can check its logs at "$DATADIR"/swarm.log"
-
-  # Cleaning up
-  # You need to perform this feature manually
-  # USE THESE COMMANDS AT YOUR OWN RISK!
-  ##
-  # kill -9 $(ps aux | grep swarm | grep bzzaccount | awk '{print $2}')
-  # kill -9 $(ps aux | grep geth | grep datadir | awk '{print $2}')
-  # rm -rf /tmp/BZZ
-
-
-Running a private swarm
-=============================
-
-You can extend your singleton node into a private swarm. First you fire up a number of ``swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific into will reside under ``$DATADIR/bzz-$BZZKEY/``
-Make sure that you create an account for each instance of swarm you want to run.
-For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
-
-Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the swarm console. With a shell one-liner:
-
-.. code-block:: shell
-
-    geth --exec "console.log(admin.nodeInfo.enode)" attach /path/to/bzzd.ipc
-
-Then you can for instance connect each node with one particular node (call it bootnode) by injecting ``admin.addPeer(enode)`` into the swarm console (this has the same effect as if you created a :file:`static-nodes.json` file for devp2p:
-
-.. code-block:: shell
-
-    geth --exec "admin.addPeer($BOOTNODE)" attach /path/to/bzzd.ipc
-
-Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start swarm.
-
-These relatively tedious steps of managing connections needs to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
-
-.. note::
-    Note that if you run several swarm daemons locally on the same instance, you can use the same data directory ($DATADIR), each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
-
-In case you want to run several nodes locally and you are behind a firewall, connection between nodes using your external IP will likely not work. In this case, you need to substitute ``[::]`` (indicating localhost) for the IP address in the enode.
-
-To list all enodes of a local cluster:
-
-.. code-block:: shell
-
-    for i in `ls $DATADIR | grep -v keystore`; do geth --exec "console.log(admin.nodeInfo.enode)" attach $DATADIR/$i/bzzd.ipc; done > enodes.lst
-
-To change IP to localhost:
-
-.. code-block:: shell
-
-    cat enodes.lst | perl -pe 's/@[\d\.]+/@[::]/' > local-enodes.lst
-
-.. note::
-    Steps in this section are not necessary if you simply want to connect to the swarm testnet.
-    Since a bootnode to the testnet is set by default, your node will have a way to bootstrap its connections.
+* connecting to the swarm testnet without blockchain
+* connecting to the swarm testnet and connecting to the Ropsten blockchain
+* using swarm in singleton mode for local testing
+* launching a private swarm
+* testing SWAP accounting with a private Swarm
 
 Connecting to the swarm testnet
 =================================
+
+
 
 .. note::
     IMPORTANT: Automatic connection to the testnet is currently not working properly for all users. This issue is being fixed right now. In the meantime, please add a few enodes manually to bootstrap your node. See "Adding enodes manually" below.
@@ -290,6 +163,147 @@ Where ENODE is one of the following:
     enode://1e5521a0abd3816a7df9d519286f228fbf66e0eab65fd687b71e3ca7e591308f3d861d40bb09222d3db584fc6e64e42814005c17c8b220971c15fc7cfc34007b@13.74.157.139:30431
     enode://21652a2773916870108700353eec4cf5eb1c68e343bc18a511e2b47c8251b49130e92e50310993e0cf816647edc0af28e46906590babbff0d76a719ece529951@13.74.157.139:30432
     enode://cd816aac2ba313f4c1a8426dea6fcc47f3a4893f1f653da0f5692f6716e5f84ed52f682f01cac79a9ff39cfc03d6abb27b049d570106abbf5867d950f4553e46@13.74.157.139:30433
+
+
+
+
+Swarm in singleton mode
+===========================
+
+To launch in singleton mode, start geth using ``--maxpeers 0``
+
+.. code-block:: none
+
+  nohup geth --datadir $DATADIR \
+         --unlock 0 \
+         --password <(echo -n "MYPASSWORD") \
+         --verbosity 6 \
+         --networkid 322 \
+         --nodiscover \
+         --maxpeers 0 \
+          2>> $DATADIR/geth.log &
+
+and launch the swarm; connecting it to the geth node. For consistency, let's use the same network id 322  as geth.
+
+.. code-block:: none
+
+  swarm --bzzaccount $BZZKEY \
+         --datadir $DATADIR \
+         --ethapi $DATADIR/geth.ipc \
+         --verbosity 6 \
+         --maxpeers 0 \
+         --networkid 322 \
+         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+
+.. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply remove the --ethapi flag from swarm.
+
+At this verbosity level you should see plenty(!) of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/swarm.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will not be set.
+
+You can change the verbosity level without restarting geth and swarm via the console:
+
+.. code-block:: none
+
+  geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/geth.ipc
+  geth --exec "web3.debug.verbosity(3)" attach ipc:$DATADIR/bzzd.ipc
+
+
+.. note:: Following these instructions you are now running a single local swarm node, not connected to any other.
+
+
+Running a private swarm
+=============================
+
+You can extend your singleton node into a private swarm. First you fire up a number of ``swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific into will reside under ``$DATADIR/bzz-$BZZKEY/``
+Make sure that you create an account for each instance of swarm you want to run.
+For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
+
+Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the swarm console. With a shell one-liner:
+
+.. code-block:: shell
+
+    geth --exec "console.log(admin.nodeInfo.enode)" attach /path/to/bzzd.ipc
+
+Then you can for instance connect each node with one particular node (call it bootnode) by injecting ``admin.addPeer(enode)`` into the swarm console (this has the same effect as if you created a :file:`static-nodes.json` file for devp2p:
+
+.. code-block:: shell
+
+    geth --exec "admin.addPeer($BOOTNODE)" attach /path/to/bzzd.ipc
+
+Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start swarm.
+
+These relatively tedious steps of managing connections needs to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
+
+.. note::
+    Note that if you run several swarm daemons locally on the same instance, you can use the same data directory ($DATADIR), each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
+
+In case you want to run several nodes locally and you are behind a firewall, connection between nodes using your external IP will likely not work. In this case, you need to substitute ``[::]`` (indicating localhost) for the IP address in the enode.
+
+To list all enodes of a local cluster:
+
+.. code-block:: shell
+
+    for i in `ls $DATADIR | grep -v keystore`; do geth --exec "console.log(admin.nodeInfo.enode)" attach $DATADIR/$i/bzzd.ipc; done > enodes.lst
+
+To change IP to localhost:
+
+.. code-block:: shell
+
+    cat enodes.lst | perl -pe 's/@[\d\.]+/@[::]/' > local-enodes.lst
+
+.. note::
+    Steps in this section are not necessary if you simply want to connect to the swarm testnet.
+    Since a bootnode to the testnet is set by default, your node will have a way to bootstrap its connections.
+
+If you want to run all these instructions in a single script, you can wrap them in something like
+
+.. code-block:: bash
+
+  #!/bin/bash
+
+  # Working directory
+  cd /tmp
+
+  # Preparation
+  DATADIR=/tmp/BZZ/`date +%s`
+  mkdir -p $DATADIR
+  read -s -p "Enter Password. It will be stored in $DATADIR/my-password: " MYPASSWORD && echo $MYPASSWORD > $DATADIR/my-password
+  echo
+  BZZKEY=$($GOPATH/bin/geth --datadir $DATADIR --password $DATADIR/my-password account new | awk -F"{|}" '{print $2}')
+
+  echo "Your account is ready: "$BZZKEY
+
+  # Run geth in the background
+  nohup $GOPATH/bin/geth --datadir $DATADIR \
+      --unlock 0 \
+      --password <(cat $DATADIR/my-password) \
+      --verbosity 6 \
+      --networkid 322 \
+      --nodiscover \
+      --maxpeers 0 \
+      2>> $DATADIR/geth.log &
+
+  echo "geth is running in the background, you can check its logs at "$DATADIR"/geth.log"
+
+  # Now run swarm in the background
+  $GOPATH/bin/swarm \
+      --bzzaccount $BZZKEY \
+      --datadir $DATADIR \
+      --ethapi $DATADIR/geth.ipc \
+      --verbosity 6 \
+      --maxpeers 0 \
+      --bzznetworkid 322 \
+      &> $DATADIR/swarm.log < <(cat $DATADIR/my-password) &
+
+
+  echo "swarm is running in the background, you can check its logs at "$DATADIR"/swarm.log"
+
+  # Cleaning up
+  # You need to perform this feature manually
+  # USE THESE COMMANDS AT YOUR OWN RISK!
+  ##
+  # kill -9 $(ps aux | grep swarm | grep bzzaccount | awk '{print $2}')
+  # kill -9 $(ps aux | grep geth | grep datadir | awk '{print $2}')
+  # rm -rf /tmp/BZZ
 
 
 Testing SWAP
