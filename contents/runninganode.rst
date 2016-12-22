@@ -64,13 +64,13 @@ and launch the swarm; connecting it to the geth node. For consistency, let's use
 
 .. code-block:: none
 
-  swarm --bzzaccount $BZZKEY \
+  $GOPATH/bin/swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --ethapi $DATADIR/geth.ipc \
          --verbosity 6 \
          --maxpeers 0 \
-         --networkid 322 \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+         --bzznetworkid 322 \
+         &> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
 .. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply remove the --ethapi flag from swarm.
 
