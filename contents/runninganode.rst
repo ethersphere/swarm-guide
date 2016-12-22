@@ -12,6 +12,8 @@ To start a basic swarm node we must start geth with an empty data directory on a
 
 First set aside an empty temporary directory to be the data store
 
+..  note:: If you followed the installation instructions from this guide, you will find your executables in the $GOPATH/bin directory. Make sure to move your files into an executable $PATH, or include $GOPATH/bin directory on it.
+
 .. code-block:: none
 
    DATADIR=/tmp/BZZ/`date +%s`
