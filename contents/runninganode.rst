@@ -115,7 +115,7 @@ Then launch the swarm; connecting it to the geth node (--ethapi).
   swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --keystore $DATADIR/testnet/keystore \
-         --ethapi $DATADIR/geth.ipc \
+         --ethapi $DATADIR/testnet/geth.ipc \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
 Adding enodes manually
