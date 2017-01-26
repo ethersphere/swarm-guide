@@ -195,10 +195,10 @@ and launch the swarm; connecting it to the geth node. For consistency, let's use
          --ethapi $DATADIR/geth.ipc \
          --verbosity 6 \
          --maxpeers 0 \
-         --networkid 322 \
+         --bzznetworkid 322 \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
-.. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply remove the --ethapi flag from swarm.
+.. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply change the ethapi flag to ``--ethapi ''`` (an empty string).
 
 At this verbosity level you should see plenty(!) of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/swarm.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will not be set.
 
@@ -383,7 +383,7 @@ and launch the swarm (with SWAP); connecting it to the geth node. For consistenc
          --verbosity 6 \
          --ethapi $DATADIR/geth.ipc \
          --maxpeers 0 \
-         --networkid 322 \
+         --bzznetworkid 322 \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
 If all is successful you will see the message "Deploying new chequebook" on the swarm.log. Once the transaction is mined, SWAP is ready.
