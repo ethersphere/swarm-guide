@@ -530,7 +530,7 @@ POST http://localhost:8500/bzzr:
   The post request is the simplest upload method. Direct upload of files - no manifest is created.
   It returns the hash of the uploaded file
 
-PUT http://localhost:8500/bzzr:/HASH|domain/some/path
+PUT http://localhost:8500/bzz:/HASH|domain/some/path
   The PUT request publishes the uploaded asset to the manifest. 
   It looks for the manifest by domain or hash, makes a copy of it and updates its collection with the new asset.
   It returns the hash of the newly created manifest.
