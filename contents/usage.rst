@@ -574,6 +574,47 @@ The API offers the following methods:
 ``bzz.hive()``
   outputs the kademlia table in a human-friendly table format
 
+Mounting Swarm
+--------------
+Another way of intracting with Swarm is by mounting it as a local filesystem using Fuse (a.k.a swarmfs). There are three IPC api's which help in doing this.
+
+.. note:: Fuse needs to be installed on your Operating System for these commands to work. Windows is not supported by Fuse, so these command will work only in Linux, Mac OS and FreeBSD. For installation instruction for your OS, see "Installing FUSE" section below.
+  
+
+``swarmfs.mount(HASH|domain, mountpoint))``
+  mounts swarm contents represented by a swarm hash or a ens domain name to the specified local directory. The local directory has to be writable and should be empty.
+  Once this command is succesfull, you should see the contents in the local directory. The HASH is mounted in a rw mode, which means any change insie the directory will be automatically reflected in swarm. Ex: if you copy a file from somewhere else in to mountpoint, it is equvivalent of using a "swarm up <file>" command.    
+
+``swarmfs.unmount(mountpoint)``
+  This command unmounts the HASH|domain mounted in the specified mountpoint. If the device is busy, unmounting fails. In that case make sure you exit the process that is using the directory and try unmounting again.
+
+``swarmfs.listmounts()``
+  For every active mount, this command display three things. The mountpoint, start HASH supplied and the latest HASH. Since the HASH is mounted in rw mode, when ever there is a change to the file system (adding file, removing file etc), a new HASH is computed. This hash is called the latest HASH.
+
+Installing FUSE
+^^^^^^^^^^^^^^^
+
+1. Linux (Ubuntu)
+
+.. code-block:: none
+
+	sudo apt-get install fuse
+	sudo modprobe fuse
+	sudo chown <username>:<groupname> /etc/fuse.conf  
+	sudo chown <username>:<groupname> /dev/fuse
+
+2. Mac OS
+
+   Either install the latest package from https://osxfuse.github.io/ or use brew as below
+
+.. code-block:: none
+
+	brew update
+	brew install caskroom/cask/brew-cask
+	brew cask install osxfuse
+
+
+
 Chequebook RPC API
 ------------------------------
 
