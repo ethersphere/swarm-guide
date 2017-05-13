@@ -118,8 +118,6 @@ Distributed Preimage Archive
 
 DPA serves as a fast, redundant store optimized for speedy retrieval and long-term reliability. Since the key is derived from the preimage, there is no sense in which we can talk about multiple or alternative values for keys, the store is immutable.
 
-.. contents:: contents
-
 High-level design
 ------------------------------------
 
