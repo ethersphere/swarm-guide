@@ -47,6 +47,51 @@ Then you must prepare your go environment as follows
   export GOPATH="$HOME/go"
   echo 'export GOPATH="$HOME/go"' >> ~/.profile
 
+
+
+Ubuntu
+================
+
+The Ubuntu repositories carry an old version of Go.
+
+Ubuntu users can use the 'gophers' PPA to install an up to date version of Go (version 1.7 or later is preferred). See https://launchpad.net/~gophers/+archive/ubuntu/archive for more information. Note that this PPA requires adding /usr/lib/go-1.X/bin to the executable PATH.
+
+Other distros
+
+Download the latest distribution
+
+.. code-block:: none
+
+  curl -O https://storage.googleapis.com/golang/go1.7.3.linux-amd64.tar.gz
+
+Unpack it to the /usr/local (might require sudo)
+
+.. code-block:: none
+
+  tar -C /usr/local -xzf go1.7.3.linux-amd64.tar.gz
+
+Set GOPATH and PATH
+
+For Go to work properly, you need to set the following two environment variables:
+
+Setup a go folder 
+
+.. code-block:: none
+
+  mkdir -p ~/go; echo "export GOPATH=$HOME/go" >> ~/.bashrc
+
+Update your path 
+
+.. code-block:: none
+
+  echo "export PATH=$PATH:$HOME/go/bin:/usr/local/go/bin" >> ~/.bashrc
+
+Read the environment variables into current session: 
+
+.. code-block:: none
+
+  source ~/.bashrc
+
 Installing from source
 =======================
 
