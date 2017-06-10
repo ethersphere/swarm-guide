@@ -1,6 +1,6 @@
 
 ******************************
-Running the swarm client
+Connecting to Swarm (Advanced)
 ******************************
 
 These instructions will begin by laying out how to start a local, private, personal (singleton) swarm. Use this to familiarise yourself with the functioning of the client; upload and download and http proxy.
@@ -789,5 +789,3 @@ For further fine tuning of SWAP, see :ref:`SWAP parameters`.
    AutoDepositThreshold: autodeposit threshold
    AutoCashInterval, autocash interval
    AutoCashBuffer, autocash target credit buffer
-
-
