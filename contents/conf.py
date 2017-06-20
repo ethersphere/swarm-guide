@@ -55,7 +55,7 @@ master_doc = 'index'
 project = u'swarm'
 # copyright = u'2015, ΞTHΞЯSPHΞЯΞ'
 copyright = u'2016, ΞTHΞRSPHΞRΞ'
-author = u'viktor trón, áron fischer, nick johnson, dániel a. nagy, zsolt felföldi'
+author = u'viktor trón, áron fischer, nick johnson, dániel a. nagy, zsolt felföldi, stan destinatis'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

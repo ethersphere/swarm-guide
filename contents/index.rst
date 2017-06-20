@@ -13,6 +13,7 @@ Contents:
 
    introduction
    installation
+   simpleuser
    runninganode
    usage
    architecture
@@ -27,4 +28,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
