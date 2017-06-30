@@ -68,7 +68,7 @@ Swarm needs an ethereum blockchain for
 * domain name resolution using the Ethereum Name Service (ENS) contract.
 * incentivisation (for example: SWAP)
 
-If you do not care about domain resolution and run your swarm without SWAP (the default), then connecting to the blockchain is unnecessary. Hence ``swarm`` does not require the ``--ethapi`` flag.
+If you do not care about domain resolution and run your swarm without SWAP (the default), then connecting to the blockchain is unnecessary. Hence ``swarm`` does not require either the ``--ens-api`` or ``--swap-api`` flags.
 
 
 Connecting swarm only (no blockchain)
@@ -83,7 +83,7 @@ Set up you environment as seen above, ie., make sure you have a data directory.
 
   swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
-         --ethapi '' \
+         --ens-api '' \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
 The ``swarm`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
@@ -107,7 +107,7 @@ Run a geth node connected to the Ropsten testnet
          --testnet \
           2>> $DATADIR/geth.log &
 
-Then launch the swarm; connecting it to the geth node (--ethapi).
+Then launch the swarm; connecting it to the geth node (--ens-api).
 
 
 .. code-block:: none
@@ -115,7 +115,7 @@ Then launch the swarm; connecting it to the geth node (--ethapi).
   swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --keystore $DATADIR/testnet/keystore \
-         --ethapi $DATADIR/testnet/geth.ipc \
+         --ens-api $DATADIR/testnet/geth.ipc \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
 Adding enodes manually
@@ -167,13 +167,13 @@ and launch the swarm; connecting it to the geth node. For consistency, let's use
 
   swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
-         --ethapi $DATADIR/geth.ipc \
+         --ens-api $DATADIR/geth.ipc \
          --verbosity 4 \
          --maxpeers 0 \
          --bzznetworkid 322 \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
-.. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply change the ethapi flag to ``--ethapi ''`` (an empty string).
+.. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply change the ens-api flag to ``--ens-api ''`` (an empty string).
 
 At this verbosity level you should see plenty(!) of output accumulating in the logfiles. You can keep an eye on the output by using the command ``tail -f $DATADIR/swarm.log`` and ``tail -f $DATADIR/geth.log``. Note: if doing this from another terminal you will have to specify the path manually because $DATADIR will not be set.
 
@@ -266,7 +266,7 @@ If you want to run all these instructions in a single script, you can wrap them 
   $GOPATH/bin/swarm \
       --bzzaccount $BZZKEY \
       --datadir $DATADIR \
-      --ethapi $DATADIR/geth.ipc \
+      --ens-api $DATADIR/geth.ipc \
       --verbosity 6 \
       --maxpeers 0 \
       --bzznetworkid 322 \
@@ -354,9 +354,10 @@ and launch the swarm (with SWAP); connecting it to the geth node. For consistenc
 
   swarm --bzzaccount $BZZKEY \
          --swap \
+         --swap-api $DATADIR/geth.ipc \
          --datadir $DATADIR \
          --verbosity 6 \
-         --ethapi $DATADIR/geth.ipc \
+         --ens-api $DATADIR/geth.ipc \
          --maxpeers 0 \
          --bzznetworkid 322 \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
@@ -392,9 +393,10 @@ Once the balance is greater than 0 we can restart ``swarm`` with swap enabled.
     killall swarm
     swarm --bzzaccount $BZZKEY \
          --swap \
+         --swap-api $DATADIR/geth.ipc \
          --datadir $DATADIR \
          --verbosity 6 \
-         --ethapi $DATADIR/geth.ipc \
+         --ens-api $DATADIR/geth.ipc \
          --maxpeers 0 \
          2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
 
