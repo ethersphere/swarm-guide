@@ -62,13 +62,14 @@ Download the latest distribution
 
 .. code-block:: none
 
-  curl -O https://storage.googleapis.com/golang/go1.7.3.linux-amd64.tar.gz
+  curl -O https://storage.googleapis.com/golang/go1.8.3.linux-amd64.tar.gz
 
 Unpack it to the /usr/local (might require sudo)
 
 .. code-block:: none
 
-  tar -C /usr/local -xzf go1.7.3.linux-amd64.tar.gz
+ tar -C /usr/local -xzf go1.8.3.linux-amd64.tar.gz
+
 
 Set GOPATH and PATH
 
