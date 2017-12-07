@@ -1,3 +1,4 @@
+.. _run_swarm_client:
 
 ******************************
 Connecting to Swarm (Advanced)
@@ -17,6 +18,7 @@ First set aside an empty temporary directory to be the data store
 .. code-block:: none
 
    DATADIR=/tmp/BZZ/`date +%s`
+   mkdir $DATADIR
 
 then make a new account using this directory
 
@@ -46,14 +48,14 @@ We save it under the name ``BZZKEY``
   BZZKEY=2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 
 
-With the preparations complete, we can now launch our swarm client. In what follows we detail a few ways you might want to use swarm.
+With these preparations complete, we can now launch our swarm client. In what follows we detail a few ways you might want to use swarm.
 
 
-* connecting to the swarm testnet without blockchain
-* connecting to the swarm testnet and connecting to the Ropsten blockchain
-* using swarm in singleton mode for local testing
-* launching a private swarm
-* testing SWAP accounting with a private Swarm
+* Connecting to the swarm testnet without blockchain
+* Connecting to the swarm testnet and connecting to the Ropsten blockchain
+* Using swarm in singleton mode for local testing
+* Launching a private swarm
+* Testing SWAP accounting with a private Swarm
 
 Connecting to the swarm testnet
 =================================
@@ -65,19 +67,21 @@ Connecting to the swarm testnet
 
 Swarm needs an ethereum blockchain for
 
-* domain name resolution using the Ethereum Name Service (ENS) contract.
-* incentivisation (for example: SWAP)
+* Domain name resolution using the Ethereum Name Service (ENS) contract.
+* Incentivisation (for example: SWAP)
 
-If you do not care about domain resolution and run your swarm without SWAP (the default), then connecting to the blockchain is unnecessary. Hence ``swarm`` does not require either the ``--ens-api`` or ``--swap-api`` flags.
+If you do not care about domain resolution and run your swarm without SWAP (the default), then connecting to the blockchain is unnecessary. ``swarm`` per default tries to connect to the blockchain via ``geth``'s IPC endpoint (usually $DATADIR/geth.ipc). Thus, to start ``swarm`` with no domain resolution, the ``--ens-api`` option should be set to ``""`` (empty string). The ``--swap-api`` flag should only be set if SWAP is enabled.
 
 
 Connecting swarm only (no blockchain)
 -------------------------------------
 
 
-Set up you environment as seen above, ie., make sure you have a data directory.
+Set up your environment as seen above, ie., make sure you have a data directory.
 
 ..  note::  Even though you do not need the ethereum blockchain, you will need geth to generate a swarm account ($BZZKEY), since this account determines the base address that your swarm node is going to use.
+
+In the following examples, swarm's output will be written to a log file. These instructions are for getting familiar with swarm and employ a syntax to speed up this documentation a bit (e.g. automatic password entry). Note though that the password will remain in plain text in your shell's history.
 
 .. code-block:: none
 
@@ -161,7 +165,7 @@ To launch in singleton mode, start geth using ``--maxpeers 0``
          --maxpeers 0 \
           2>> $DATADIR/geth.log &
 
-and launch the swarm; connecting it to the geth node. For consistency, let's use the same network id 322  as geth.
+and launch the swarm; connecting it to the geth node. For consistency, let's use the same network id 322 as geth.
 
 .. code-block:: none
 
@@ -186,51 +190,6 @@ You can change the verbosity level without restarting geth and swarm via the con
 
 
 .. note:: Following these instructions you are now running a single local swarm node, not connected to any other.
-
-
-Running a private swarm
-=============================
-
-You can extend your singleton node into a private swarm. First you fire up a number of ``swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific into will reside under ``$DATADIR/bzz-$BZZKEY/``
-Make sure that you create an account for each instance of swarm you want to run.
-For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
-
-Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the swarm console. With a shell one-liner:
-
-.. code-block:: shell
-
-    geth --exec "console.log(admin.nodeInfo.enode)" attach /path/to/bzzd.ipc
-
-Then you can for instance connect each node with one particular node (call it bootnode) by injecting ``admin.addPeer(enode)`` into the swarm console (this has the same effect as if you created a :file:`static-nodes.json` file for devp2p:
-
-.. code-block:: shell
-
-    geth --exec "admin.addPeer($BOOTNODE)" attach /path/to/bzzd.ipc
-
-Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start swarm.
-
-These relatively tedious steps of managing connections needs to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
-
-.. note::
-    Note that if you run several swarm daemons locally on the same instance, you can use the same data directory ($DATADIR), each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
-
-In case you want to run several nodes locally and you are behind a firewall, connection between nodes using your external IP will likely not work. In this case, you need to substitute ``[::]`` (indicating localhost) for the IP address in the enode.
-
-To list all enodes of a local cluster:
-
-.. code-block:: shell
-
-    for i in `ls $DATADIR | grep -v keystore`; do geth --exec "console.log(admin.nodeInfo.enode)" attach $DATADIR/$i/bzzd.ipc; done > enodes.lst
-
-To change IP to localhost:
-
-.. code-block:: shell
-
-    cat enodes.lst | perl -pe 's/@[\d\.]+/@[::]/' > local-enodes.lst
-
-.. note::
-    Steps in this section are not necessary if you simply want to connect to the swarm testnet.
-    Since a bootnode to the testnet is set by default, your node will have a way to bootstrap its connections.
 
 If you want to run all these instructions in a single script, you can wrap them in something like
 
@@ -283,6 +242,51 @@ If you want to run all these instructions in a single script, you can wrap them 
   # kill -9 $(ps aux | grep geth | grep datadir | awk '{print $2}')
   # rm -rf /tmp/BZZ
 
+Running a private swarm
+=============================
+
+You can extend your singleton node into a private swarm. First you fire up a number of ``swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific into will reside under ``$DATADIR/bzz-$BZZKEY/``
+Make sure that you create an account for each instance of swarm you want to run.
+For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
+
+Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the swarm console. With a shell one-liner:
+
+.. code-block:: shell
+
+    geth --exec "console.log(admin.nodeInfo.enode)" attach /path/to/bzzd.ipc
+
+Then you can for instance connect each node with one particular node (call it bootnode) by injecting ``admin.addPeer(enode)`` into the swarm console (this has the same effect as if you created a :file:`static-nodes.json` file for devp2p:
+
+.. code-block:: shell
+
+    geth --exec "admin.addPeer($BOOTNODE)" attach /path/to/bzzd.ipc
+
+Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start swarm.
+
+These relatively tedious steps of managing connections need to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
+
+.. note::
+    Note that if you run several swarm daemons locally on the same instance, you can use the same data directory ($DATADIR), each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
+
+In case you want to run several nodes locally and you are behind a firewall, connection between nodes using your external IP will likely not work. In this case, you need to substitute ``[::]`` (indicating localhost) for the IP address in the enode.
+
+To list all enodes of a local cluster:
+
+.. code-block:: shell
+
+    for i in `ls $DATADIR | grep -v keystore`; do geth --exec "console.log(admin.nodeInfo.enode)" attach $DATADIR/$i/bzzd.ipc; done > enodes.lst
+
+To change IP to localhost:
+
+.. code-block:: shell
+
+    cat enodes.lst | perl -pe 's/@[\d\.]+/@[::]/' > local-enodes.lst
+
+.. note::
+    Steps in this section are not necessary if you simply want to connect to the swarm testnet.
+    Since a bootnode to the testnet is set by default, your node will have a way to bootstrap its connections.
+
+
 
 Testing SWAP
 ===============
@@ -292,7 +296,7 @@ Testing SWAP
 Testing SWAP on your private blockchain.
 -----------------------------------------
 
-The SWarm Accounting Protocol (SWAP) is disabled by default. Use of the ``--swap`` flag to enable it. If it is set to true, then SWAP will be enabled.
+The SWarm Accounting Protocol (SWAP) is disabled by default. Set the ``--swap`` flag to enable it. If it is set to true, then SWAP will be enabled.
 However, activating SWAP requires more than just adding the --swap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
 
 Custom genesis block
@@ -369,8 +373,8 @@ If all is successful you will see the message "Deploying new chequebook" on the 
 Mining on your private chain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The alternative to creating a custom genesis block is to earn your all your ether by mining on your private chain.
-You can start you geth node in mining mode using the ``--mine`` flag, or (in our case) we can start mining on an already running geth node by issuing the ``miner.start()`` command:
+The alternative to creating a custom genesis block is to earn all your ether by mining on your private chain.
+You can start your geth node in mining mode using the ``--mine`` flag, or (in our case) we can start mining on an already running geth node by issuing the ``miner.start()`` command:
 
 .. code-block:: none
 
@@ -413,233 +417,185 @@ Configuration
 Command line options for swarm
 ==============================
 
-The swarm swarm daemon has the following swarm specific command line options:
+The Swarm executable supports the following configuration options:
 
+* Configuration file
+* Environment variables
+* Command line
 
-``--bzzconfig value``
-    Swarm config file path (datadir/bzz)
-    The swarm config file is a json encoded format, the setting in there are documented in the following section
+Options provided via command line override options from the environment variables, which will override options in the config file. If an option is not explicitly provided, a default will be chosen.
 
-``--swap``
-    Swarm SWAP enabled (default false).
-    The SWAP (Swarm accounting protocol) is switched on by default in the current release.
+In order to keep the set of flags and variables manageable, only a subset of all available configuration options are available via command line and environment variables. Some are only available through a TOML configuration file.
 
-``--bzznosync``
-    Swarm Syncing disabled (default false)
-    This option will be deprecated. It is only for testing.
+.. note:: Swarm reuses code from ethereum, specifically some p2p networking protocol and other common parts. To this end, it accepts a number of environment variables which are actually from the ``geth`` environment. Refer to the geth documentation for reference on these flags.
 
-``--bzzport value``
-    Swarm local http api port (default 8500)
-    Useful if you run multiple swarm instances and want to expose their own http proxy.
+This is the list of flags inherited from ``geth``:
 
-``--bzzaccount value``
-    Swarm account key
-    The base account that determines the node's swarm base address.
-    This address determines which chunks are stored and retrieved at the node and therefore
-    must not to be changed across sessions.
+.. code-block:: none
 
-``--chequebook value``
-    chequebook contract address
-    the chequebook contract is automatically deployed on the connected blockchain if it doesn't exist.
-    it is recorded in the config file, hence specifying it is rarely needed.
+  --identity
+  --bootnodes
+  --datadir
+  --keystore
+  --nodiscover
+  --v5disc
+  --netrestrict
+  --nodekey
+  --nodekeyhex
+  --maxpeers
+  --nat
+  --ipcdisable
+  --ipcpath
+  --password
 
-The rest of the flags are not swarm specific.
-
+The following table illustrates the list of all configuration options and how they can be provided.
 
 Configuration options
 ============================
 
-This section lists all the options you can set in the swarm configuration file.
+.. note:: `swarm` can be executed with the *dumpconfig* command, which prints a default configuration to STDOUT, and thus can be redirected to a file as a template for the config file.
 
-The default location for the swarm configuration file is ``<datadir>/swarm/bzz-<baseaccount>/config.json``. Thus continuing from the previous section, the configuration file would be
+A TOML configuration file is organized in sections. The below list of available configuration options is organized according to these sections. The sections correspond to `Go` modules, so need to be respected in order for file configuration to work properly. See `<https://github.com/naoina/toml>`_ for the TOML parser and encoder library for Golang, and `<https://github.com/toml-lang/toml>`_ for further information on TOML.
 
-.. code-block:: none
 
-  $DATADIR/swarm/bzz-$BZZKEY/config.json
+General configuration parameters 
+--------------------------------
 
-It is possible to specify a different config file when launching swarm by using the `--bzzconfig` flag.
+.. csv-table:: 
+   :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
+   :widths: 10, 5, 5, 15, 55
+
+   "n/a","--config","n/a","n/a","Path to config file in TOML format"
+   "Contract","--chequebook","SWARM_CHEQUEBOOK_ADDR","0x0000000000000000000000000000000000000000","Swap chequebook contract address"
+   "EnsRoot","--ens-addr","SWARM_ENS_ADDR", "ens.TestNetAddress","Ethereum Name Service contract address"
+   "EnsApi","--ens-api","SWARM_ENS_API","<$GETH_DATADIR>/geth.ipc","Ethereum Name Service API address"
+   "Path","--datadir","GETH_DATADIR","<$GETH_DATADIR>/swarm","Path to the geth configuration directory"
+   "ListenAddr","--httpaddr","SWARM_LISTEN_ADDR", "127.0.0.1","Swarm listen address"
+   "Port","--bzzport","SWARM_PORT", "8500","Port to run the http proxy server"
+   "PublicKey","n/a","n/a", "n/a","Public key of swarm base account"
+   "BzzKey","n/a","n/a", "n/a","Swarm node base address (:math:`hash(PublicKey)hash(PublicKey))`. This is used to decide storage based on radius and routing by kademlia."
+   "NetworkId","--bzznetworkid","SWARM_NETWORK_ID","3","Network ID"
+   "SwapEnabled","--swap","SWARM_SWAP_ENABLE","false","Enable SWAP"
+   "SyncEnabled","--sync","SWARM_SYNC_ENABLE","true","Disable swarm node synchronization. This option will be deprecated. It is only for testing."
+   "SwapApi","--swap-api","SWARM_SWAP_API","","URL of the Ethereum API provider to use to settle SWAP payments"
+   "Cors","--corsdomain","SWARM_CORS", "","Domain on which to send Access-Control-Allow-Origin header (multiple domains can be supplied separated by a ',')"
+   "BzzAccount","--bzzaccount","SWARM_ACCOUNT", "","Swarm account key"
+   "BootNodes","--boot-nodes","SWARM_BOOTNODES","","Boot nodes"
+
+
+Storage parameters 
+------------------
+
+.. csv-table:: 
+   :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
+   :widths: 10, 5, 5, 15, 55
+
+   "ChunkDbPath","n/a","n/a","<$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/chunks","Path to leveldb chunk DB"
+   "DbCapacity","n/a","n/a","5000000","DB capacity, number of chunks (5M is roughly 20-25GB)"
+   "CacheCapacity","n/a","n/a","5000","Cache capacity, number of recent chunks cached in memory"
+   "Radius","n/a","n/a","0","Storage Radius: minimum proximity order (number of identical prefix bits of address key) for chunks to warrant storage. Given a storage radius :math:`r` and total number of chunks in the network :math:`n`, the node stores :math:`n*2^{-r}` chunks minimum. If you allow :math:`b` bytes for guaranteed storage and the chunk storage size is :math:`c`, your radius should be set to :math:`int(log_2(nc/b))`"
+
+
+Chunker parameters 
+------------------
+
+.. csv-table:: 
+   :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
+   :widths: 10, 5, 5, 15, 55
+
+   "Branches","n/a","n/a","128","Number of branches in bzzhash merkle tree. :math:`Branches*ByteSize(Hash)` gives the datasize of chunks"
+   "Hash","n/a","n/a","SHA3","Hash: The hash function used by the chunker (base hash algo of bzzhash): SHA3 or SHA256.This option will be removed in a later release."
+   
+   
+Hive parameters 
+---------------
+
+.. csv-table::
+   :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
+   :widths: 10, 5, 5, 15, 55
+
+   "CallInterval","n/a","n/a","3000000000","Time elapsed before attempting to connect to the most needed peer"
+   "KadDbPath","n/a","n/a","<$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/","Kademblia DB path, json file path storing the known bzz peers used to bootstrap kademlia table."
+
+
+Kademlia parameters 
+-------------------
+
+.. csv-table:: 
+   :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
+   :widths: 10, 5, 5, 15, 55
+
+   "MaxProx","n/a","n/a","8","highest Proximity order (i.e., Maximum number of identical prefix bits of address key) considered distinct. Given the total number of nodes in the network :math:`N`, MaxProx should be larger than :math:`log_2(N/ProxBinSize)`), safely :math:`log_2(N)`."
+   "ProxBinSize","n/a","n/a","2","Number of most proximate nodes lumped together in the most proximate kademlia bin"
+   "BuckerSize","n/a","n/a","4","maximum number of active peers in a kademlia proximity bin. If new peer is added, the worst peer in the bin is dropped."
+   "PurgeInterval","n/a","n/a","151200000000000"
+   "InitialRetryInterval","n/a","n/a","42000000"
+   "MaxIdleInterval","n/a","n/a","42000000000"
+   "ConnRetryExp","n/a","n/a","2"
+
+.. _swap_params:
+
+SWAP profile parameters 
+-----------------------
+These parameters are likely to change in POC 0.3
+
+.. csv-table::
+   :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
+   :widths: 10, 5, 5, 15, 55
+
+   "BuyAt","n/a","n/a","20000000000","(:math:`2*10^{10}` wei), highest accepted price per chunk in wei"
+   "SellAt","n/a","n/a","20000000000","(:math:`2*10^{10}` wei) offered price per chunk in wei"
+   "PayAt","n/a","n/a","100","Maximum number of chunks served without receiving a cheque. Debt tolerance."
+   "DropAtMaximum","n/a","n/a","10000","Number of chunks served without receiving a cheque. Debt tolerance."
+
+SWAP strategy parameters 
+------------------------
+These parameters are likely to change in POC 0.3
+
+.. csv-table::
+   :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
+   :widths: 10, 5, 5, 15, 55
+
+   "AutoCashInterval","n/a","n/a","300000000000","(:math:`3*10^{11}`, 5 minutes) Maximum Time before any outstanding cheques are cashed"
+   "AutoCashThreshold","n/a","n/a","50000000000000","(:math:`5*10^{13}`) Maximum total amount of uncashed cheques in Wei"
+   "AutoDepositInterval","n/a","n/a","300000000000","(:math:`3*10^{11}`, 5 minutes) Maximum time before cheque book is replenished if necessary by sending funds from the baseaccount"
+   "AutoDepositThreshold","n/a","n/a","50000000000000","(:math:`5*10^{13}`) Minimum balance in Wei required before replenishing the cheque book"
+   "AutoDepositBuffer","n/a","n/a","100000000000000","(:math:`10^{14}`) Maximum amount of Wei expected as a safety credit buffer on the cheque book"
+
+SWAP pay profile parameters 
+---------------------------
+These parameters are likely to change in POC 0.3
+
+.. csv-table::
+   :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
+   :widths: 10, 5, 5, 15, 55
+
+   "PublicKey","n/a","n/a","","Public key of your swarm base account use"
+   "Contract","n/a","n/a","0x0000000000000000000000000000000000000000","Address of the cheque book contract deployed on the Ethereum blockchain. If blank, a new chequebook contract will be deployed."
+   "Beneficiary","n/a","n/a","0x0000000000000000000000000000000000000000","Ethereum account address serving as beneficiary of incoming cheques"
+
+
+Synchronisation parameters 
+--------------------------
+
+.. csv-table:: Synchronisation parameters 
+   :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
+   :widths: 10, 5, 5, 15, 55
+
+   "RequestDbPath","n/a","n/a","<$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/requests","Path to request DB"
+   "RequestDbBatchSize","n/a","n/a","512","Request DB Batch size"
+   "KeyBufferSize","n/a","n/a","1024","In-memory cache for unsynced keys"
+   "SyncBatchSize","n/a","n/a","128","In-memory cache for unsynced keys"
+   "SyncBufferSize","n/a","n/a","128","In-memory cache for outgoing deliveries"
+   "SyncCacheSize","n/a","n/a","1024","Maximum number of unsynced keys sent in one batch"
+   "Sync priorities","n/a","n/a","[2, 1, 1, 0, 0]","Array of 5 priorities corresponding to 5 delivery types:<delivery, propagation, deletion, history, backlog>.Specifying a monotonically decreasing list of priorities is highly recommended."
+   "SyncModes","n/a","n/a","[true, true, true, true, false]","A boolean array specifying confirmation mode ON corresponding to 5 delivery types:<delivery, propagation, deletion, history, backlog>. Specifying true for a type means all deliveries will be preceeded by a confirmation roundtrip: the hash key is sent first in an unsyncedKeysMsg and delivered only if confirmed in a deliveryRequestMsg."
+
 
 .. note:: The status of this project warrants that there will be potentially a lot
    of changes to these options.
 
-
-Main parameters
------------------------
-
-Path  (:file:`<datadir>/bzz-<$BZZKEY>/`)
-  swarm data directory
-
-Port (8500)
-  port to run the http proxy server
-
-PublicKey
-   Public key of your swarm base account
-
-
-BzzKey
-  Swarm node base address (:math:`hash(PublicKey)`). This is used to decide storage based on radius and routing by kademlia.
-
-EnsRoot (0xd344889e0be3e9ef6c26b0f60ef66a32e83c1b69)
-    Ethereum Name Service contract address
-
-Storage parameters
------------------------------
-
-ChunkDbPath (:file:`<datadir>/bzz-<$BZZKEY>/chunks`)
-  leveldb directory for persistent storage of chunks
-
-
-DbCapacity (5000000)
-  chunk storage capacity, number of chunks (5M is roughly 20-25GB)
-
-
-CacheCapacity (5000)
-  Number of recent chunks cached in memory
-
-
-Radius (0)
-  Storage Radius: minimum proximity order (number of identical prefix bits of address key) for chunks to warrant storage. Given a storage radius :math:`r` and total number of chunks in the network :math:`n`, the node stores :math:`n*2^{-r}` chunks minimum. If you allow :math:`b` bytes for guaranteed storage and the chunk storage size is :math:`c`, your radius should be set to :math:`int(log_2(nc/b))`
-
-
-Chunker/bzzhash parameters
--------------------------------
-
-
-..  index::
-   chunker
-   bzzhash
-
-Branches (128)
-   Number of branches in bzzhash merkle tree. :math:`Branches*ByteSize(Hash)` gives the datasize of chunks.
-   This option will be removed in a later release
-
-Hash (SHA3)
-   The hash function used by the chunker (base hash algo of bzzhash): SHA3 or SHA256
-   This option will be removed in a later release.
-
-Synchronisation parameters
--------------------------------
-..  index::
-   syncronisation
-   smart sync
-
-These parameters are likely to change in POC 0.3
-
-KeyBufferSize (1024)
-   In-memory cache for unsynced keys
-
-
-SyncBufferSize (128)
-   In-memory cache for unsynced keys
-
-
-SyncCacheSize (1024)
-   In-memory cache for outgoing deliveries
-
-
-SyncBatchSize (128)
-   Maximum number of unsynced keys sent in one batch
-
-
-SyncPriorities ([3, 3, 2, 1, 1])
-   Array of 5 priorities corresponding to 5 delivery types
-   <delivery, propagation, deletion, history, backlog>.
-   Specifying a monotonically decreasing list of priorities is highly recommended.
-
-..  index::
-   delivery types
-
-SyncModes ([true, true, true, true, false])
-   A boolean array specifying confirmation mode ON corresponding to 5 delivery types:
-   <delivery, propagation, deletion, history, backlog>.
-   Specifying true for a type means all deliveries will be preceeded by a confirmation roundtrip: the hash key is sent first in an unsyncedKeysMsg and delivered only if confirmed in a deliveryRequestMsg.
-
-..  index::
-   delivery types
-   delivery request message
-   unsynced keys message
-
-
-Hive/Kademlia parameters
----------------------------------
-..  index::
-   Kademlia
-
-These parameters are likely to change in POC 0.3
-
-
-CallInterval (1s)
-   Time elapsed before attempting to connect to the most needed peer
-
-
-BucketSize (3)
-   Maximum number of active peers in a kademlia proximity bin. If new peer is added, the worst peer in the bin is dropped.
-
-
-MaxProx (10)
-   Highest Proximity order (i.e., Maximum number of identical prefix bits of address key) considered distinct. Given the total number of nodes in the network :math:`N`, MaxProx should be larger than :math:`log_2(N/ProxBinSize)`), safely :math:`log_2(N)`.
-
-
-ProxBinSize (8)
-   Number of most proximate nodes lumped together in the most proximate kademlia bin
-
-
-KadDbPath (:file:`<datadir>/bzz/bzz-<BZZKEY>/bzz-peers.json`)
-   json file path storing the known bzz peers used to bootstrap kademlia table.
-
-
-SWAP parameters
---------------------
-
-BuyAt (:math:`2*10^{10}` wei)
-   highest accepted price per chunk in wei
-
-
-SellAt (:math:`2*10^{10}` wei)
-   offered price per chunk in wei
-
-
-PayAt (100 chunks)
-   Maximum number of chunks served without receiving a cheque. Debt tolerance.
-
-
-DropAt (10000)
-   Maximum number of chunks served without receiving a cheque. Debt tolerance.
-
-
-AutoCashInterval (:math:`3*10^{11}`, 5 minutes)
-   Maximum Time before any outstanding cheques are cashed
-
-
-AutoCashThreshold (:math:`5*10^{13}`)
-   Maximum total amount of uncashed cheques in Wei
-
-
-AutoDepositInterval (:math:`3*10^{11}`, 5 minutes)
-   Maximum time before cheque book is replenished if necessary by sending funds from the baseaccount
-
-
-AutoDepositThreshold (:math:`5*10^{13}`)
-   Minimum balance in Wei required before replenishing the cheque book
-
-
-AutoDepositBuffer (:math:`10^{14}`)
-   Maximum amount of Wei expected as a safety credit buffer on the cheque book
-
-
-PublicKey (PublicKey(bzzaccount))
-   Public key of your swarm base account use
-
-
-Contract
-   Address of the cheque book contract deployed on the Ethereum blockchain. If blank, a new chequebook contract will be deployed.
-
-
-Beneficiary (Address(PublicKey))
-   Ethereum account address serving as beneficiary of incoming cheques
-
-
-By default, the config file is sought under :file:`<datadir>/bzz/bzz-<$BZZKEY>/config.json`. If this file does not exist at startup, the default config file is created which you can then edit (the directories on the path will be created if necessary). In this case or if ``config.Contract`` is blank (zero address), a new chequebook contract is deployed. Until the contract is confirmed on the blockchain, no outgoing retrieve requests will be allowed.
+If ``config.Contract`` is blank (zero address), a new chequebook contract is deployed. Until the contract is confirmed on the blockchain, no outgoing retrieve requests will be allowed.
 
 Setting up SWAP
 -------------------------
@@ -650,7 +606,7 @@ Setting up SWAP
    autodeploy (chequebook contract)
 
 
-SWAP (Swarm accounting protocol) is the  system that allows fair utilisation of bandwidth (see :ref:`Incentivisation`, esp. :ref:`SWAP -- Swarm Accounting Protocol`).
+SWAP (Swarm accounting protocol) is the  system that allows fair utilisation of bandwidth (see :ref:`incentivisation`, esp. :ref:`swap`).
 In order for SWAP to be used, a chequebook contract has to have been deployed. If the chequebook contract does not exist when the client is launched or if the contract specified in the config file is invalid, then the client attempts to autodeploy a chequebook:
 
     [BZZ] SWAP Deploying new chequebook (owner: 0xe10536..  .5e491)
@@ -758,7 +714,7 @@ The cheque is verified. If uncashed cheques have an outstanding balance of more 
 
    [CHEQUEBOOK] cashing cheque (total: 104000000000000) on chequebook (0x95850c6..  .eee6c) sending to 0xa5df94be..  .e5aaz
 
-For further fine tuning of SWAP, see :ref:`SWAP parameters`.
+For further fine tuning of SWAP, see :ref:`swap_params`.
 
 ..  index::
    AutoDepositBuffer, credit buffer

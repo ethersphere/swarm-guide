@@ -62,13 +62,13 @@ Download the latest distribution
 
 .. code-block:: none
 
-  curl -O https://storage.googleapis.com/golang/go1.7.3.linux-amd64.tar.gz
+  curl -O https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz 
 
 Unpack it to the /usr/local (might require sudo)
 
 .. code-block:: none
 
-  tar -C /usr/local -xzf go1.7.3.linux-amd64.tar.gz
+  tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
 
 Set GOPATH and PATH
 
@@ -128,7 +128,7 @@ Should give you some relevant information back
   Swarm
   Version: 0.2
   Network Id: 0
-  Go Version: go1.7.4
+  Go Version: go1.9.2
   OS: linux
   GOPATH=/home/user/go
   GOROOT=/usr/local/go
