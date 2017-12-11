@@ -1,3 +1,5 @@
+.. _usage:
+
 *****************
 Usage
 *****************
@@ -5,7 +7,7 @@ Usage
 Using swarm from the command line
 ==================================
 
-Uploading a file or directory  to the swarm
+Uploading a file or directory to swarm
 ---------------------------------------------------------------
 
 Make sure you have compiled the swarm command
@@ -22,12 +24,12 @@ The `swarm up` subcommand makes it easy to upload files and directories. Usage:
   swarm up /path/to/file/or/directory
 
 By default this assumes that you are running your own swarm node with a local http proxy on the default port (8500).
-See :ref:`Running the swarm client` to learn how to run a local node.
+See :ref:`run_swarm_client` to learn how to run a local node.
 It is possible to specify alternative proxy endpoints with the ``--bzzapi`` option.
 
 You can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
 
-.. note:: This treat is likely to disappear or be seriously restricted in the future.
+.. note:: This treat is likely to disappear or be seriously restricted in the future. It currently also accepts limited file sizes.
 
 
 .. code-block:: none
@@ -41,22 +43,13 @@ Issue the following command to upload the go-ethereum README file to your swarm
 
 .. code-block:: none
 
-  swarm up  $GOPATH/src/github.com/ethereum/go-ethereum/README.md
+  swarm up $GOPATH/src/github.com/ethereum/go-ethereum/README.md
 
 It produces the following output
 
 .. code-block:: none
 
-  I1214 15:04:43.011654 upload.go:171] uploading file README.md (166 bytes)
-  I1214 15:04:48.167952 upload.go:180] uploading manifest
-  d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
-
-The first two lines are just debug logs, you can make them vanish by redirecting standard error to a file.
-
-.. code-block:: shell
-
-  swarm up README.md 2> up.log
-  d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
+  > d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
 
 The hash returned is the swarm hash of a manifest that contains the README.md file as its only entry. So by default both the primary content and the manifest is uploaded.
 You can access this file from swarm by pointing your browser to
@@ -67,23 +60,15 @@ You can access this file from swarm by pointing your browser to
 
 The manifest makes sure you could retrieve the file with the correct mime type.
 
-You may wish to only upload the content and maybe include it in a custom index, or it is handled as a datablob known and used only by some application that knows its mimetype. For this you can set `--manifest=false`:
+You may wish to prevent a manifest to be created for your content and only upload the raw content. Maybe you want to include it in a custom index, or it is handled as a datablob known and used only by some application that knows its mimetype. For this you can set `--manifest=false`:
 
 .. code-block:: none
 
-  swarm --manifest=false --bzzapi http://swarm-gateways.net/ up sw\^3.pdf 2> up.log
-  {
-    "entries": [
-      {
-        "hash": "6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5",
-        "contentType": "application/pdf"
-      }
-    ]
-  }
+  swarm --manifest=false --bzzapi http://swarm-gateways.net/ up yellowpaper.pdf 2> up.log
+  > 7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb
 
-
-This option supresses automatic manifest upload, instead upon uploading the file, it displays the manifest.
-As you see the single entry is the file itself, while the manifest contains the content type that will be given to the browser. The manifest here acts as an extension of the primary content with metadata. In future, other HTTP headers will also be supported.
+This option supresses automatic manifest upload. It uploads the content as-is.
+However, if you wish to retrieve this file, the browser can not be told unambiguously what that file represents. Thus, swarm will return a 404 Not Found. In order to access this file, you can use the ``bzzr`` (raw) scheme, see :ref:`bzzr`.
 
 Example: Uploading a directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -106,40 +91,27 @@ We can upload this directory with
 
   swarm --recursive up upload-test/
 
-The output should look something like
+The output again is the root hash of your uploaded directory, which can be used to retrieve the complete directory 
 
 .. code-block:: none
 
-  uploading file upload-test/one.txt (4 bytes)
-  uploading file upload-test/three/four (5 bytes)
-  uploading file upload-test/two (4 bytes)
-  uploading manifest
-  {
-    "hash": "6c64ae708609be4cc34027b38b1104f0ea8dafd5164343117ce421f7714b5e98",
-    "entries": [
-      {
-        "hash": "e57619a0be1101b948afc89dcfb9ce430f38fba9be19fd0a3ed7424d500340a4",
-        "contentType": "text/plain; charset=utf-8",
-        "path": "one.txt"
-      },
-      {
-        "hash": "8cc6a12255e553fc8d8b25b309186981b1fd458d2be41bcc099f148c167839ec",
-        "path": "three/four"
-      },
-      {
-        "hash": "2940c27ab5409f9ffa0074c4c81c01ab6f165ac0ae973cd03212068013b3b6f3",
-        "path": "two"
-      }
-    ]
-  }
+  ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30
 
 You could then retrieve the files relative to the root manifest like so:
 
 .. code-block:: none
 
-  http://localhost:8500/bzz:/6c64ae708609be4cc34027b38b1104f0ea8dafd5164343117ce421f7714b5e98/three/four
+  curl http://localhost:8500/bzz:/ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30/three/four
 
-if you'd like to be able to access your content via a human readable name like 'mysite.eth' intead of the long hex string above, see the section on :ref:`Ethereum Name Service` below.
+The result should be
+
+.. code-block:: none
+
+  four 
+
+
+If you'd like to be able to access your content via a human readable name like 'mysite.eth' instead of the long hex string above, see the section on `Ethereum Name Service`_ below.
+
 
 Content retrieval: hashes and manifests
 ==============================================
@@ -147,7 +119,7 @@ Content retrieval: hashes and manifests
 Retrieving content using the http proxy
 ---------------------------------------------------------
 
-As indicated above, your local swarm instance has an http interface running on port 8500 (by default). Retrieving content is simple matter of pointing your browser to
+As indicated above, your local swarm instance has an HTTP API running on port 8500 (by default). Retrieving content is simple matter of pointing your browser to
 
 .. code-block:: none
 
@@ -156,7 +128,7 @@ As indicated above, your local swarm instance has an http interface running on p
 where HASH is the id of a swarm manifest.
 This is the most common usecase whereby swarm can serve the web.
 
-Disregarding the clunky proxy part, it looks like http transfering content from servers, but in fact it is using swarm's serverless architecture.
+It looks like HTTP content transfer from servers, but in fact it is using swarm's serverless architecture.
 
 The general pattern is:
 
@@ -164,7 +136,7 @@ The general pattern is:
 
   <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
 
-The http proxy part can be eliminated if you register the appropriate scheme handler with your browser or you use Mist.
+The HTTP proxy part can be eliminated if you register the appropriate scheme handler with your browser or you use Mist.
 
 Swarm offers 3 distinct url schemes:
 
@@ -181,10 +153,21 @@ Example:
 
     GET http://localhost:8500/bzz:/theswarm.test
 
-The bzz scheme assumes  that the domain part of the url points to a manifest. When retrieving the asset adderessed by the url, the manifest entries are matched against the url path. The entry with the longest matching path is retrieved and served with the content type specified in the corresponding manifest entry.
+The bzz scheme assumes that the domain part of the url points to a manifest. When retrieving the asset addressed by the url, the manifest entries are matched against the url path. The entry with the longest matching path is retrieved and served with the content type specified in the corresponding manifest entry.
+
+Example:
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/read
+
+returns a readme.md file if the manifest at the given hash address contains such an entry.
+
+If the manifest contains multiple entries to which the URL could be resolved, like, in the example above, the manifest has entries for `readme.md` and `reading-list.txt`, the API returns a HTTP response "300 Multiple Choices", indicating that the request could not be unambiguously resolved. A list of available entries is returned via HTTP or JSON.
+
 
 This generic scheme supports name resolution for domains registered on the Ethereum Name Service
-(ENS, see :ref:`Ethereum Name Service`). This is a read-only scheme meaning that it only supports GET requests and serves to retrieve content from swarm.
+(ENS, see `Ethereum Name Service`). This is a read-only scheme meaning that it only supports GET requests and serves to retrieve content from swarm.
 
 
 bzzi (immutable)
@@ -194,7 +177,9 @@ bzzi (immutable)
 
     GET http://localhost:8500/bzzi:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
-The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzzi url will always nececssarily address the exact same fixed immutable content.
+The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzzi url will always necessarily address the exact same fixed immutable content.
+
+.. _bzzr:
 
 bzzr (raw)
 ^^^^^^^^^^^^^^
@@ -204,9 +189,9 @@ bzzr (raw)
     GET http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
 
-When responding to GET requests to the bzzr scheme, swarm does not assume a manifest just  serves the asset addressed by the url directly.
+When responding to GET requests with the bzzr scheme, swarm does not assume a manifest, just serves the asset addressed by the url directly.
 
-The ``content_type`` query parameter can be supplied to specify the mime you want otherwise content is served as a default octet stream. For instance if you have a pdf document (not the manifest wrapping it) at hash ``6a182226...`` then the following url will properly serve it.
+The ``content_type`` query parameter can be supplied to specify the mime type you are requesting, otherwise content is served as an octet stream per default. For instance if you have a pdf document (not the manifest wrapping it) at hash ``6a182226...`` then the following url will properly serve it.
 
 .. code-block:: none
 
@@ -223,11 +208,11 @@ In fact the command line tool ``swarm up`` uses the http proxy with the bzz raw 
 Manifests
 ----------------------
 
-In general manifests declare a list of strings associated with swarm hashes. Before we get into generalities however, let us begin with an introductory example.
+In general manifests declare a list of strings associated with swarm hashes. A manifest matches to exactly one hash, and it consists of a list of entries declaring the content which can be retrieved through that hash. Let us begin with an introductory example.
 
 
 This is demonstrated by the following example.
-Let's create directory containing the two orange papers and an html index file listing the two pdf documents.
+Let's create a directory containing the two orange papers and an html index file listing the two pdf documents.
 
 .. code-block:: none
 
@@ -259,14 +244,17 @@ We now use the ``swarm up`` command to upload the directory to swarm to create a
 .. code-block:: none
 
   swarm --recursive --defaultpath orange-papers/index.html --bzzapi http://swarm-gateways.net/ up orange-papers/ 2> up.log
-  2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+  > 2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
-The returned hash is the hash of this manifest:
+The returned hash is the hash of the manifest for the uploaded content (the orange-papers directory):
+
+We now can get the manifest itself directly (instead of the files they refer to) by using the bzz-raw protocol ``bzzr``:
 
 .. code-block:: none
 
-  # swarm --manifest=false --recursive --defaultpath orange-papers/index.html --bzzapi http://swarm-gateways.net/ up orange-papers/ 2> up.log
-  {
+  wget -O - "http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d"
+
+  > {
     "entries": [
       {
         "hash": "4b3a73e43ae5481960a5296a08aaae9cf466c9d5427e1eaa3b15f600373a048d",
@@ -290,33 +278,27 @@ The returned hash is the hash of this manifest:
     ]
   }
 
-We can see the retrieve the manifest directly (instead of the files they refer to) by using the bzz-raw protocol ``bzzr``:
 
-.. code-block:: none
-
-    wget -O - "http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d"
-
-Manifests contain content_type information for the hashes they reference. In other contexts, where content_type is not supplied or, when you suspect the information is wrong, it is possible to specify the content_type manually in the search query.
+Manifests contain content_type information for the hashes they reference. In other contexts, where content_type is not supplied or, when you suspect the information is wrong, it is possible to specify the content_type manually in the search query. For example, the manifest itself should be `text/plain`:
 
 .. code-block:: none
 
    http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain"
 
-Now you can also check that the manifest hashes to the content (in fact swarm does it for you):
+Now you can also check that the manifest hash matches the content (in fact swarm does it for you):
 
 .. code-block:: none
 
    $ wget -O- http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain" > manifest.json
 
    $ swarm hash manifest.json
-   2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+   > 2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
 Path Matching on Manifests
 ---------------------------------
 
-A useful feature of manifests is that urls can be matched on the paths.
-Directory trees, routing tables and database indexes all share this problem.
-In some sense this makes the manifest a routing table and so the manifest swarm entry acts as if it were a host.
+A useful feature of manifests is that we can match paths with URLs.
+In some sense this makes the manifest a routing table and so the manifest swarm entry acts as if it was a host.
 
 More concretely, continuing in our example, when we request:
 
@@ -324,9 +306,9 @@ More concretely, continuing in our example, when we request:
 
   GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/sw^3.pdf
 
-swarm first retrieves the document at the domain, which is the manifest above. The url path ``sw^3`` is matched against the entries. In this case a perfect match is found and the document at 6a182226... is served as a pdf.
+swarm first retrieves the document matching the manifest above. The url path ``sw^3`` is then matched against the entries. In this case a perfect match is found and the document at 6a182226... is served as a pdf.
 
-As you see the manifest contains 4 entries, although our directory contained only 3. The extra entry is there because of the ``--defaultpath orange-papers/index.html`` option to ``swarm up``, which associates the empty path with the file you give as its argument. This makes it possible to have a default page served when the url path is empty.
+As you can see the manifest contains 4 entries, although our directory contained only 3. The extra entry is there because of the ``--defaultpath orange-papers/index.html`` option to ``swarm up``, which associates the empty path with the file you give as its argument. This makes it possible to have a default page served when the url path is empty.
 This feature essentially implements the most common webserver rewrite rules used to set the landing page of a site served when the url only contains the domain. So when you request
 
 .. code-block:: none
@@ -346,7 +328,7 @@ If we take our earlier example and set the hash 2477cc85... as the content hash 
 
   GET http://localhost:8500/bzz:/orange-papers.eth/sw^3.pdf
 
-and get served the same as with:
+and get served the same content as with:
 
 .. code-block:: none
 
@@ -390,10 +372,10 @@ Registering a .test domain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The easiest option is to register a `.test domain <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-FIFS-registrar>`_. These domains can be registered by anyone at any time, but they automatically expire after 28 days.
 
-We will be sending transactions on Ropsten, so if you have not already done so, get yourself some ropsten testnet ether. You can `get some for free here <http://faucet.ropsten.be:3001/>`_.
+We will be sending a transactions on Ropsten, so if you have not already done so, get yourself some ropsten testnet ether. You can `get some for free here <http://faucet.ropsten.be:3001/>`_.
 
 
-Before being able to send transaction, you will need to unlock your account using ``personal.unlockAccount(account)`` i.e.
+Before being able to send the transaction, you will need to unlock your account using ``personal.unlockAccount(account)`` i.e.
 
 .. code-block:: none
 
@@ -416,7 +398,7 @@ The output will be a transaction hash. Once this transaction is mined on the tes
 Registering a .eth domain
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Registering a .eth domain is more involved. If you're just wanting to test things out quickly, start with a .test domain.
+Registering a .eth domain has more work involved. If you're just wanting to test things out quickly, start with a .test domain.
 The .eth domains take a while to register, as they use an auction system, (while .test domains can be registered instantly, but only persist for 28 days). Further, .eth domains are also restricted to being at least 7 characters long.
 For complete documentation `see here <https://github.com/ethereum/ens/wiki/Registering-a-name-with-the-auction-registrar>`_.
 
@@ -518,13 +500,13 @@ The HTTP API
 =========================
 
 GET http://localhost:8500/bzz:/domain/some/path
-  retrieve document at domain/some/path allowing domain to resolve via :ref:`The Ethereum Name Service`
+  retrieve document at domain/some/path allowing domain to resolve via the `Ethereum Name Service`_
 
 GET http://localhost:8500/bzzi:/HASH/some/path
   retrieve document at HASH/some/path where HASH is a valid swarm hash
 
 GET http://localhost:8500/bzzr:/domain/some/path
-  retrieve the raw content at domain/some/path allowing domain to resolve via :ref:`The Ethereum Name Service`
+  retrieve the raw content at domain/some/path allowing domain to resolve via the `Ethereum Name Service`_
 
 POST http://localhost:8500/bzzr:
   The post request is the simplest upload method. Direct upload of files - no manifest is created.
@@ -650,7 +632,7 @@ It is possible to upload files from the swarm console (without the need for swar
 
     bzz.upload("/path/to/file/or/directory", "filename")
 
-The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Proceeding as in the example above (:ref:`Example: Uploading a directory`). Prepare some files:
+The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Proceeding as in the example above (`Example: Uploading a directory`_). Prepare some files:
 
 .. code-block:: none
 

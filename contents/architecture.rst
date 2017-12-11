@@ -1,3 +1,5 @@
+.. _architecture:
+
 *******************
 Architecture
 *******************
@@ -9,7 +11,7 @@ This chapter is aimed at developers who want to understand the underlying concep
 There are 4 different layers of data units relevant to swarm:
 
 
-* :dfn:`message`: p2p RLPx network layer. Messages are relevant for the bzz wire protocol :ref:`The bzz protocol`.
+* :dfn:`message`: p2p RLPx network layer. Messages are relevant for the bzz wire protocol `The bzz protocol`_.
 * :dfn:`chunk`: fixed size data unit of storage, content-addressing, request/delivery and accounting: this is the level relevant to the entire storage layer (including localStore, DHT/netstore, bzz protocol, accounting protocol)
 *  :dfn:`document`: in want of a better word, we call the smallest unit that is associated with a mime-type and not guaranteed to have integrity unless it is complete. This is the smallest unit semantic to the user, basically a file on a filesystem. This layer is handled by the DPA and its Chunker.
 *  :dfn:`collection`: a mapping of paths to documents is represented by the :dfn:`swarm manifest`. This layer has mapping to file system directory tree. Given trivial routing conventions, url can be mapped to documents in a standardised way, allowing manifests to mimic webservers on swarm. This layer is relevant to high level apis: the go API, HTTP proxy API, console and web3 JS APIs.
@@ -37,16 +39,17 @@ The swarm manifest is a structure that defines a mapping between arbitrary paths
 The high level API to the manifests provides functionality to upload and download individual documents as files, collections (manifests) as directories. It also provides an interface to add documents to a collection on a path, delete a document from a collection. Note that deletion here only means that a new manifest is created in which the path in question is missing. There is no other notion of deletion in the swarm.
 
 API is the go implementation (and go API) for these high level functions. There is an http proxy interface as well as a RPC API for these functions. These all differ in their exact functionality due to inherent privilege differences or interface limitations.
-These are described in detail in :ref:`Usage`.
+These are described in detail in :ref:`usage`.
 
 .. index::
    API
    HTTP proxy
 
-The :ref:`SWAP -- Swarm Accounting Protocol` component keeps track of requests between peers and implements the accounting protocol. It is described in detail in :ref:`Incentivisation`.
+The :ref:`swap` component keeps track of requests between peers and implements the accounting protocol. It is described in detail in :ref:`Incentivisation`.
 
 In what follows we describe the components in more detail.
 
+.. _swarm_hash:
 
 Swarm hash
 ===================
@@ -366,12 +369,16 @@ dispaTching to netstore for handling the DHT logic, registering peers in the Kad
 
 
 
+.. _incentivisation:
+
 Incentivisation
 ===========================
 
 
 swap, swear & swindle
 -----------------------------
+
+.. _swap:
 
 SWAP -- Swarm Accounting Protocol
 -----------------------------------------------------------------------------------------------

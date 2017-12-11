@@ -14,7 +14,7 @@ Introduction
 
 Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum :dfn:`web 3` stack. The primary objective of Swarm is to provide a sufficiently decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as block chain data. From an economic point of view, it allows participants to efficiently pool their storage and bandwidth resources in order to provide the aforementioned services to all participants.
 
-From the end user's perspective, Swarm is not that different from WWW, except that uploads are not to a specific server. The objective is to offer a peer-to-peer storage and serving solution that is DDOS-resistant, zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer-to-peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution, service payments and content availability insurance (the latter is to be implemented in POC 0.4 by Q2 2017).
+From the end user's perspective, Swarm is not that different from WWW, except that uploads are not to a specific server. The objective is to offer a peer-to-peer storage and serving solution that is DDOS-resistant, zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer-to-peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution, service payments and content availability insurance (the latter is to be implemented in POC 0.4 by Q2 2018).
 
 This document provides you with information on :
 
@@ -54,7 +54,7 @@ These objectives entail the following design requirements:
 * sustainability due to a incentive system
 * efficient market driven pricing. tradeable trade off of memory, persistent storage, bandwidth
 * efficient use of the blockchain by the swarm accounting protocol
-* deposit-challenge based guaranteed storage [planned for POC 0.4 by Q2 2017]
+* deposit-challenge based guaranteed storage [planned for POC 0.4 by Q2 2018]
 
 Basics
 ========================
@@ -64,7 +64,7 @@ Basics
 Swarm client is part of the Ethereum stack, the reference implementation is written in golang and found under the go-ethereum repository. Currently at POC (proof of concept) version 0.2 is running on all nodes.
 
 Swarm defines the :dfn:`bzz subprotocol` running on the ethereum devp2p network. The bzz subprotocol is in flux, the
-specification of the wire protocol is considered stable only with POC 0.4 expected in Q2 2017.
+specification of the wire protocol is considered stable only with POC 0.4 expected in Q2 2018.
 
 The swarm of Swarm is the collection of nodes of the devp2p network each of which run the bzz protocol on the same network id.
 
@@ -77,7 +77,7 @@ then is allowed to go offline. As long as nodes do not drop out or become unavai
 be accessible due to the 'synchronization' procedure in which nodes continuously pass along available data between each other.
 
 .. note::
-  Uploaded content is not guaranteed to persist until storage insurance is implemented (expected in POC 0.4 by Q2). All participating nodes should consider  voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard swarm as safe storage until the incentive system is functional.
+  Uploaded content is not guaranteed to persist until storage insurance is implemented (expected in POC 0.4 by Q2 2018). All participating nodes should consider  voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard swarm as safe storage until the incentive system is functional.
 
 .. note::
   Swarm POC 0.2 uses no encryption. Upload of sensitive and private data is highly discouraged as there is no way to undo an upload. Users should refrain from uploading unencrypted sensitive data, in other words
@@ -104,7 +104,7 @@ Identifiers need to be
 * deterministic (same content will always receive the same identifier)
 * uniformly distributed
 
-The choice of identifier in swarm is the hierarchical swarm hash described in :ref:`swarm hash`.
+The choice of identifier in swarm is the hierarchical swarm hash described in :ref:`swarm_hash`.
 The properties above let us view the identifiers as addresses at which content is expected to be found.
 Since hashes can be assumed to be collision free, they are bound to one specific version of a content, i.e. Hash addressing therefore is immutable in the strong sense that you cannot even express mutable content: "changing the content changes the hash".
 
@@ -121,7 +121,7 @@ The viability of both hinges on the assumption that any node (uploader/requester
 .. note:: There is no such thing as delete/remove in swarm. Once data is uploaded there is no way you can initiate her to revoke it.
 
 Nodes cache content that they pass on at retrieval, resulting in an auto scaling elastic cloud: popular (oft-accessed) content is replicated throughout the network decreasing its retrieval latency. Caching also results in a :dfn:`maximum resource utilisation` in as much as nodes will fill their dedicated storage space with data passing through them. If capacity is reached, least accessed chunks are purged by a garbage collection process. As a consequence, unpopular content will end up
-getting deleted. Storage insurance (to be implemented in POC 0.4 expected by Q2 of 2017) will be used to protect important content from this fate.
+getting deleted. Storage insurance (to be implemented in POC 0.4 expected by Q2 of 2018) will be used to protect important content from this fate.
 
 Swarm content access is centred around the notion of a manifest. A manifest file describes a document collection, e.g.,
 
@@ -134,7 +134,7 @@ Manifests can therefore define a routing table for (static) assets (including dy
 This offers the functionality of :dfn:`virtual hosting`, storing entire directories or web(3)sites, similar to www but
 without servers.
 
-You can read more   about these components in :ref:`Architecture`.
+You can read more about these components in :ref:`architecture`.
 
 About
 ===================
