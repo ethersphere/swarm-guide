@@ -76,7 +76,7 @@ To download a file from swarm, you just need the file's address string. Once you
 
 .. code-block:: none
 
-  curl http://localhost:8500/bzz:/027e57bcbae76c4b6a1c5ce589be41232498f1af86e1b1a2fc2bdffd740e9b39
+  curl http://localhost:8500/bzz:/027e57bcbae76c4b6a1c5ce589be41232498f1af86e1b1a2fc2bdffd740e9b39/
 
 The result should be your file:
 
