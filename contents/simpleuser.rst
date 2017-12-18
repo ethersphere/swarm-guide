@@ -84,7 +84,7 @@ The result should be your file:
 
   some-data
 
-And that's it.
+And that's it. Note that if you omit the trailing slash from the url then the request will result in a redirect.
 
 Tar stream upload
 -----------------
