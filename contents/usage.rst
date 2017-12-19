@@ -215,7 +215,7 @@ Returns a list of all files contained in <manifest> under <path> grouped into co
 
 bzzr and bzzi
 ^^^^^^^^^^^^^^
-Schemes with short names bzzr and bzzi are deprecated in favour of bzz-raw and bzz-immutable, respectably. They are kept for backward compatibility, and will be removed on the next release.
+Schemes with short names bzzr and bzzi are deprecated in favour of bzz-raw and bzz-immutable, respectively. They are kept for backward compatibility, and will be removed on the next release.
 
 
 Manifests
