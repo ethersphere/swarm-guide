@@ -209,9 +209,9 @@ bzz-list
 
 .. code-block:: none
 
-    GET http://localhost:8500/bzz-list:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+    GET http://localhost:8500/bzz-list:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/path
 
-Returns a list of all files contained in <manifest> under <path> grouped into common prefixes using ``/`` as a delimiter. The response is a JSON-encoded object with ``common_prefixes`` string field and ``entries`` list field.
+Returns a list of all files contained in <manifest> under <path> grouped into common prefixes using ``/`` as a delimiter. If path is ``/``, all files in manifest are returned. The response is a JSON-encoded object with ``common_prefixes`` string field and ``entries`` list field.
 
 bzzr and bzzi
 ^^^^^^^^^^^^^^
