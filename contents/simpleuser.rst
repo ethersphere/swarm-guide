@@ -157,11 +157,11 @@ Files can also be uploaded using a simple HTML form:
 Listing files
 -------------
 
-Setting `list=true` in the query of a `GET` request returns a list of files contained under the path, grouped into common prefixes which represent directories:
+A `GET` request with bzz-list url scheme returns a list of files contained under the path, grouped into common prefixes which represent directories:
 
 .. code-block:: none
 
-   curl -s http://localhost:8500/bzz:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/?list=true | jq .
+   curl -s http://localhost:8500/bzz-list:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/ | jq .
    > {
       "common_prefixes": [
         "dir1/",
@@ -172,7 +172,7 @@ Setting `list=true` in the query of a `GET` request returns a list of files cont
 
 .. code-block:: none
 
-    curl -s http://localhost:8500/bzz:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/dir1/?list=true | jq .
+    curl -s http://localhost:8500/bzz-list:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/dir1/ | jq .
     > {
       "entries": [
         {
