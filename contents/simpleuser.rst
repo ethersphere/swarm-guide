@@ -157,7 +157,7 @@ Files can also be uploaded using a simple HTML form:
 Listing files
 -------------
 
-A `GET` request with bzz-list url scheme returns a list of files contained under the path, grouped into common prefixes which represent directories:
+A `GET` request with ``bzz-list`` url scheme returns a list of files contained under the path, grouped into common prefixes which represent directories:
 
 .. code-block:: none
 
