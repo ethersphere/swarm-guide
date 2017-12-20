@@ -68,7 +68,7 @@ You may wish to prevent a manifest to be created for your content and only uploa
   > 7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb
 
 This option supresses automatic manifest upload. It uploads the content as-is.
-However, if you wish to retrieve this file, the browser can not be told unambiguously what that file represents. Thus, swarm will return a 404 Not Found. In order to access this file, you can use the ``bzzr`` (raw) scheme, see :ref:`bzzr`.
+However, if you wish to retrieve this file, the browser can not be told unambiguously what that file represents. Thus, swarm will return a 404 Not Found. In order to access this file, you can use the ``bzz-raw`` scheme, see :ref:`bzz-raw`.
 
 Example: Uploading a directory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -170,32 +170,32 @@ This generic scheme supports name resolution for domains registered on the Ether
 (ENS, see `Ethereum Name Service`). This is a read-only scheme meaning that it only supports GET requests and serves to retrieve content from swarm.
 
 
-bzzi (immutable)
+bzz-immutable
 ^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    GET http://localhost:8500/bzzi:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+    GET http://localhost:8500/bzz-immutable:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
-The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzzi url will always necessarily address the exact same fixed immutable content.
+The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzz-immutable url will always necessarily address the exact same fixed immutable content.
 
-.. _bzzr:
+.. _bzz-raw:
 
-bzzr (raw)
+bzz-raw
 ^^^^^^^^^^^^^^
 
 .. code-block:: none
 
-    GET http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+    GET http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
 
-When responding to GET requests with the bzzr scheme, swarm does not assume a manifest, just serves the asset addressed by the url directly.
+When responding to GET requests with the bzz-raw scheme, swarm does not assume a manifest, just serves the asset addressed by the url directly.
 
 The ``content_type`` query parameter can be supplied to specify the mime type you are requesting, otherwise content is served as an octet stream per default. For instance if you have a pdf document (not the manifest wrapping it) at hash ``6a182226...`` then the following url will properly serve it.
 
 .. code-block:: none
 
-    GET http://localhost:8500/bzzr:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content_type=application/pdf
+    GET http://localhost:8500/bzz-raw:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content_type=application/pdf
 
 
 Importantly and somewhat unusually for generic schemes, the raw scheme supports POST and PUT requests. This is a crucially important way in which swarm is different from the internet as we know it.
@@ -203,6 +203,19 @@ Importantly and somewhat unusually for generic schemes, the raw scheme supports 
 The possibility to POST makes swarm an actual cloud service, bringing upload functionality to your browsing.
 
 In fact the command line tool ``swarm up`` uses the http proxy with the bzz raw scheme under the hood.
+
+bzz-list
+^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz-list:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/path
+
+Returns a list of all files contained in <manifest> under <path> grouped into common prefixes using ``/`` as a delimiter. If path is ``/``, all files in manifest are returned. The response is a JSON-encoded object with ``common_prefixes`` string field and ``entries`` list field.
+
+bzzr and bzzi
+^^^^^^^^^^^^^^
+Schemes with short names bzzr and bzzi are deprecated in favour of bzz-raw and bzz-immutable, respectively. They are kept for backward compatibility, and will be removed on the next release.
 
 
 Manifests
@@ -248,11 +261,11 @@ We now use the ``swarm up`` command to upload the directory to swarm to create a
 
 The returned hash is the hash of the manifest for the uploaded content (the orange-papers directory):
 
-We now can get the manifest itself directly (instead of the files they refer to) by using the bzz-raw protocol ``bzzr``:
+We now can get the manifest itself directly (instead of the files they refer to) by using the bzz-raw protocol ``bzz-raw``:
 
 .. code-block:: none
 
-  wget -O - "http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d"
+  wget -O - "http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d"
 
   > {
     "entries": [
@@ -283,13 +296,13 @@ Manifests contain content_type information for the hashes they reference. In oth
 
 .. code-block:: none
 
-   http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain"
+   http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain"
 
 Now you can also check that the manifest hash matches the content (in fact swarm does it for you):
 
 .. code-block:: none
 
-   $ wget -O- http://localhost:8500/bzzr:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain" > manifest.json
+   $ wget -O- http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain" > manifest.json
 
    $ swarm hash manifest.json
    > 2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
@@ -502,13 +515,13 @@ The HTTP API
 GET http://localhost:8500/bzz:/domain/some/path
   retrieve document at domain/some/path allowing domain to resolve via the `Ethereum Name Service`_
 
-GET http://localhost:8500/bzzi:/HASH/some/path
+GET http://localhost:8500/bzz-immutable:/HASH/some/path
   retrieve document at HASH/some/path where HASH is a valid swarm hash
 
-GET http://localhost:8500/bzzr:/domain/some/path
+GET http://localhost:8500/bzz-raw:/domain/some/path
   retrieve the raw content at domain/some/path allowing domain to resolve via the `Ethereum Name Service`_
 
-POST http://localhost:8500/bzzr:
+POST http://localhost:8500/bzz-raw:
   The post request is the simplest upload method. Direct upload of files - no manifest is created.
   It returns the hash of the uploaded file
 
