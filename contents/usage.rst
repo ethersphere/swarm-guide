@@ -213,6 +213,18 @@ bzz-list
 
 Returns a list of all files contained in <manifest> under <path> grouped into common prefixes using ``/`` as a delimiter. If path is ``/``, all files in manifest are returned. The response is a JSON-encoded object with ``common_prefixes`` string field and ``entries`` list field.
 
+bzz-hash
+^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz-hash:/theswarm.test
+
+
+Swarm accepts GET requests for bzz-hash url scheme and responds with the hash value of the raw content, the same content returned by requests with bzz-raw scheme. Hash of the manifest is also the hash stored in ENS so bzz-hash can be used for ENS domain resolution.
+
+Response content type is *text/plain*.
+
 bzzr and bzzi
 ^^^^^^^^^^^^^^
 Schemes with short names bzzr and bzzi are deprecated in favour of bzz-raw and bzz-immutable, respectively. They are kept for backward compatibility, and will be removed on the next release.
