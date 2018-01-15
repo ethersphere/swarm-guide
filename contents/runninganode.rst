@@ -17,7 +17,7 @@ First set aside an empty temporary directory to be the data store
 
 .. code-block:: none
 
-   DATADIR=/tmp/BZZ/`date +%s`
+   DATADIR=/.ethereum/swarm/`date +%s`
    mkdir $DATADIR
 
 then make a new account using this directory
@@ -86,9 +86,8 @@ In the following examples, swarm's output will be written to a log file. These i
 .. code-block:: none
 
   swarm --bzzaccount $BZZKEY \
-         --datadir $DATADIR \
-         --ens-api '' \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+        --datadir $DATADIR \
+        --ens-api ''
 
 The ``swarm`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
 
@@ -105,22 +104,19 @@ Run a geth node connected to the Ropsten testnet
 
 .. code-block:: none
 
-  nohup geth --datadir $DATADIR \
-         --unlock 0 \
-         --password <(echo -n "MYPASSWORD") \
-         --testnet \
-          2>> $DATADIR/geth.log &
+  geth --datadir $DATADIR \
+        --unlock 0 \
+        --password <(echo -n "MYPASSWORD") \
+        --testnet
 
 Then launch the swarm; connecting it to the geth node (--ens-api).
-
 
 .. code-block:: none
 
   swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --keystore $DATADIR/testnet/keystore \
-         --ens-api $DATADIR/testnet/geth.ipc \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+         --ens-api $DATADIR/testnet/geth.ipc
 
 Adding enodes manually
 ------------------------
@@ -156,26 +152,24 @@ To launch in singleton mode, start geth using ``--maxpeers 0``
 
 .. code-block:: none
 
-  nohup geth --datadir $DATADIR \
-         --unlock 0 \
-         --password <(echo -n "MYPASSWORD") \
-         --verbosity 4 \
-         --networkid 322 \
-         --nodiscover \
-         --maxpeers 0 \
-          2>> $DATADIR/geth.log &
+  geth --datadir $DATADIR \
+        --unlock 0 \
+        --password <(echo -n "MYPASSWORD") \
+        --verbosity 4 \
+        --networkid 3 \
+        --nodiscover \
+        --maxpeers 0
 
-and launch the swarm; connecting it to the geth node. For consistency, let's use the same network id 322 as geth.
+and launch the swarm; connecting it to the geth node. For consistency, let's use the same network id 3 as geth.
 
 .. code-block:: none
 
   swarm --bzzaccount $BZZKEY \
-         --datadir $DATADIR \
-         --ens-api $DATADIR/geth.ipc \
-         --verbosity 4 \
-         --maxpeers 0 \
-         --bzznetworkid 322 \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+        --datadir $DATADIR \
+        --ens-api $DATADIR/geth.ipc \
+        --verbosity 4 \
+        --maxpeers 0 \
+        --bzznetworkid 3
 
 .. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply change the ens-api flag to ``--ens-api ''`` (an empty string).
 
@@ -201,7 +195,7 @@ If you want to run all these instructions in a single script, you can wrap them 
   cd /tmp
 
   # Preparation
-  DATADIR=/tmp/BZZ/`date +%s`
+  DATADIR=/.ethereum/swarm/`date +%s`
   mkdir -p $DATADIR
   read -s -p "Enter Password. It will be stored in $DATADIR/my-password: " MYPASSWORD && echo $MYPASSWORD > $DATADIR/my-password
   echo
@@ -210,14 +204,13 @@ If you want to run all these instructions in a single script, you can wrap them 
   echo "Your account is ready: "$BZZKEY
 
   # Run geth in the background
-  nohup $GOPATH/bin/geth --datadir $DATADIR \
+  $GOPATH/bin/geth --datadir $DATADIR \
       --unlock 0 \
       --password <(cat $DATADIR/my-password) \
       --verbosity 6 \
-      --networkid 322 \
+      --networkid 3 \
       --nodiscover \
-      --maxpeers 0 \
-      2>> $DATADIR/geth.log &
+      --maxpeers 0
 
   echo "geth is running in the background, you can check its logs at "$DATADIR"/geth.log"
 
@@ -228,8 +221,7 @@ If you want to run all these instructions in a single script, you can wrap them 
       --ens-api $DATADIR/geth.ipc \
       --verbosity 6 \
       --maxpeers 0 \
-      --bzznetworkid 322 \
-      &> $DATADIR/swarm.log < <(cat $DATADIR/my-password) &
+      --bzznetworkid 3
 
 
   echo "swarm is running in the background, you can check its logs at "$DATADIR"/swarm.log"
@@ -342,29 +334,27 @@ We are now ready to restart geth and swarm using our custom genesis block
 
 .. code-block:: none
 
-  nohup geth --datadir $DATADIR \
-         --mine \
-         --unlock 0 \
-         --password <(echo -n "MYPASSWORD") \
-         --verbosity 6 \
-         --networkid 322 \
-         --nodiscover \
-         --maxpeers 0 \
-          2>> $DATADIR/geth.log &
+  geth --datadir $DATADIR \
+       --mine \
+       --unlock 0 \
+       --password <(echo -n "MYPASSWORD") \
+       --verbosity 6 \
+       --networkid 3 \
+       --nodiscover \
+       --maxpeers 0
 
-and launch the swarm (with SWAP); connecting it to the geth node. For consistency let's use the same network id  322 for the swarm private network.
+and launch the swarm (with SWAP); connecting it to the geth node. For consistency let's use the same network id  3 for the swarm private network.
 
 .. code-block:: none
 
   swarm --bzzaccount $BZZKEY \
-         --swap \
-         --swap-api $DATADIR/geth.ipc \
-         --datadir $DATADIR \
-         --verbosity 6 \
-         --ens-api $DATADIR/geth.ipc \
-         --maxpeers 0 \
-         --bzznetworkid 322 \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+        --swap \
+        --swap-api $DATADIR/geth.ipc \
+        --datadir $DATADIR \
+        --verbosity 6 \
+        --ens-api $DATADIR/geth.ipc \
+        --maxpeers 0 \
+        --bzznetworkid 3
 
 If all is successful you will see the message "Deploying new chequebook" on the swarm.log. Once the transaction is mined, SWAP is ready.
 
@@ -396,13 +386,12 @@ Once the balance is greater than 0 we can restart ``swarm`` with swap enabled.
 
     killall swarm
     swarm --bzzaccount $BZZKEY \
-         --swap \
-         --swap-api $DATADIR/geth.ipc \
-         --datadir $DATADIR \
-         --verbosity 6 \
-         --ens-api $DATADIR/geth.ipc \
-         --maxpeers 0 \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+          --swap \
+          --swap-api $DATADIR/geth.ipc \
+          --datadir $DATADIR \
+          --verbosity 6 \
+          --ens-api $DATADIR/geth.ipc \
+          --maxpeers 0
 
 Note: without a custom genesis block the mining difficulty may be too high to be practical (depending on your system). You can see the current difficulty with ``admin.nodeInfo``
 
@@ -458,10 +447,10 @@ Configuration options
 A TOML configuration file is organized in sections. The below list of available configuration options is organized according to these sections. The sections correspond to `Go` modules, so need to be respected in order for file configuration to work properly. See `<https://github.com/naoina/toml>`_ for the TOML parser and encoder library for Golang, and `<https://github.com/toml-lang/toml>`_ for further information on TOML.
 
 
-General configuration parameters 
+General configuration parameters
 --------------------------------
 
-.. csv-table:: 
+.. csv-table::
    :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
    :widths: 10, 5, 5, 15, 55
 
@@ -483,10 +472,10 @@ General configuration parameters
    "BootNodes","--boot-nodes","SWARM_BOOTNODES","","Boot nodes"
 
 
-Storage parameters 
+Storage parameters
 ------------------
 
-.. csv-table:: 
+.. csv-table::
    :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
    :widths: 10, 5, 5, 15, 55
 
@@ -496,18 +485,18 @@ Storage parameters
    "Radius","n/a","n/a","0","Storage Radius: minimum proximity order (number of identical prefix bits of address key) for chunks to warrant storage. Given a storage radius :math:`r` and total number of chunks in the network :math:`n`, the node stores :math:`n*2^{-r}` chunks minimum. If you allow :math:`b` bytes for guaranteed storage and the chunk storage size is :math:`c`, your radius should be set to :math:`int(log_2(nc/b))`"
 
 
-Chunker parameters 
+Chunker parameters
 ------------------
 
-.. csv-table:: 
+.. csv-table::
    :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
    :widths: 10, 5, 5, 15, 55
 
    "Branches","n/a","n/a","128","Number of branches in bzzhash merkle tree. :math:`Branches*ByteSize(Hash)` gives the datasize of chunks"
    "Hash","n/a","n/a","SHA3","Hash: The hash function used by the chunker (base hash algo of bzzhash): SHA3 or SHA256.This option will be removed in a later release."
-   
-   
-Hive parameters 
+
+
+Hive parameters
 ---------------
 
 .. csv-table::
@@ -518,10 +507,10 @@ Hive parameters
    "KadDbPath","n/a","n/a","<$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/","Kademblia DB path, json file path storing the known bzz peers used to bootstrap kademlia table."
 
 
-Kademlia parameters 
+Kademlia parameters
 -------------------
 
-.. csv-table:: 
+.. csv-table::
    :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
    :widths: 10, 5, 5, 15, 55
 
@@ -535,7 +524,7 @@ Kademlia parameters
 
 .. _swap_params:
 
-SWAP profile parameters 
+SWAP profile parameters
 -----------------------
 These parameters are likely to change in POC 0.3
 
@@ -548,7 +537,7 @@ These parameters are likely to change in POC 0.3
    "PayAt","n/a","n/a","100","Maximum number of chunks served without receiving a cheque. Debt tolerance."
    "DropAtMaximum","n/a","n/a","10000","Number of chunks served without receiving a cheque. Debt tolerance."
 
-SWAP strategy parameters 
+SWAP strategy parameters
 ------------------------
 These parameters are likely to change in POC 0.3
 
@@ -562,7 +551,7 @@ These parameters are likely to change in POC 0.3
    "AutoDepositThreshold","n/a","n/a","50000000000000","(:math:`5*10^{13}`) Minimum balance in Wei required before replenishing the cheque book"
    "AutoDepositBuffer","n/a","n/a","100000000000000","(:math:`10^{14}`) Maximum amount of Wei expected as a safety credit buffer on the cheque book"
 
-SWAP pay profile parameters 
+SWAP pay profile parameters
 ---------------------------
 These parameters are likely to change in POC 0.3
 
@@ -575,10 +564,10 @@ These parameters are likely to change in POC 0.3
    "Beneficiary","n/a","n/a","0x0000000000000000000000000000000000000000","Ethereum account address serving as beneficiary of incoming cheques"
 
 
-Synchronisation parameters 
+Synchronisation parameters
 --------------------------
 
-.. csv-table:: Synchronisation parameters 
+.. csv-table:: Synchronisation parameters
    :header: "Config file", "Command-line flag", "Environment variable", "Default value", "Description"
    :widths: 10, 5, 5, 15, 55
 
