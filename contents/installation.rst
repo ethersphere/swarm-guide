@@ -126,7 +126,7 @@ Should give you some relevant information back
 .. code-block:: none
 
   Swarm
-  Version: 0.2
+  Version: 1.8.0-unstable
   Network Id: 0
   Go Version: go1.9.2
   OS: linux
