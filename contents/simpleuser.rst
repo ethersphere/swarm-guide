@@ -7,7 +7,7 @@ These instructions layout the simplest way to use swarm.
 How do I connect?
 ===========================
 
-To start a basic swarm node you must have both geth and swarm installed on your manchine. You can find the relevant instructions in the Installation section of the Swarm manual.
+To start a basic swarm node you must have both geth and swarm installed on your machine. You can find the relevant instructions in the Installation section of the Swarm manual.
 
 ..  note:: You can find the relevant instructions in the Installation and Updates section of the Swarm manual.
 
