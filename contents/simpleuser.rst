@@ -35,7 +35,7 @@ Since we need to use it later, save it into your ENV variables under the name ``
 
 .. code-block:: none
 
-  BZZKEY=2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
+ export BZZKEY=2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 
 Next, start your geth node and establish connection with Ethereum main network with the following command
 
