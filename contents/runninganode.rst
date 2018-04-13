@@ -17,8 +17,9 @@ First set aside an empty temporary directory to be the data store
 
 .. code-block:: none
 
-   DATADIR=/tmp/BZZ/`date +%s`
-   mkdir $DATADIR
+    mkdir -p ~/.ethereum/swarm
+    export DATADIR=~/.ethereum/swarm
+    echo "export DATADIR=~/.ethereum/swarm" >> ~/.bashrc
 
 then make a new account using this directory
 
@@ -81,14 +82,15 @@ Set up your environment as seen above, ie., make sure you have a data directory.
 
 ..  note::  Even though you do not need the ethereum blockchain, you will need geth to generate a swarm account ($BZZKEY), since this account determines the base address that your swarm node is going to use.
 
-In the following examples, swarm's output will be written to a log file. These instructions are for getting familiar with swarm and employ a syntax to speed up this documentation a bit (e.g. automatic password entry). Note though that the password will remain in plain text in your shell's history.
+In the following examples, swarm's output will be written to a log file.
+Please save your password into a file and replace ``password.file`` with the correct name.
 
 .. code-block:: none
 
   swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --ens-api '' \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+         --password ~/password.file
 
 The ``swarm`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
 
@@ -107,9 +109,8 @@ Run a geth node connected to the Ropsten testnet
 
   nohup geth --datadir $DATADIR \
          --unlock 0 \
-         --password <(echo -n "MYPASSWORD") \
+         --password ~/password.file
          --testnet \
-          2>> $DATADIR/geth.log &
 
 Then launch the swarm; connecting it to the geth node (--ens-api).
 
@@ -120,7 +121,7 @@ Then launch the swarm; connecting it to the geth node (--ens-api).
          --datadir $DATADIR \
          --keystore $DATADIR/testnet/keystore \
          --ens-api $DATADIR/testnet/geth.ipc \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+         --password ~/password.file
 
 Adding enodes manually
 ------------------------
@@ -158,12 +159,11 @@ To launch in singleton mode, start geth using ``--maxpeers 0``
 
   nohup geth --datadir $DATADIR \
          --unlock 0 \
-         --password <(echo -n "MYPASSWORD") \
+         --password ~/password.file
          --verbosity 4 \
-         --networkid 322 \
+         --networkid 3 \
          --nodiscover \
-         --maxpeers 0 \
-          2>> $DATADIR/geth.log &
+         --maxpeers 0 
 
 and launch the swarm; connecting it to the geth node. For consistency, let's use the same network id 322 as geth.
 
@@ -174,8 +174,9 @@ and launch the swarm; connecting it to the geth node. For consistency, let's use
          --ens-api $DATADIR/geth.ipc \
          --verbosity 4 \
          --maxpeers 0 \
-         --bzznetworkid 322 \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+         --bzznetworkid 3 \
+         --password ~/password.file
+
 
 .. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply change the ens-api flag to ``--ens-api ''`` (an empty string).
 
@@ -201,7 +202,7 @@ If you want to run all these instructions in a single script, you can wrap them 
   cd /tmp
 
   # Preparation
-  DATADIR=/tmp/BZZ/`date +%s`
+  DATADIR=~/.ethereum/swarm
   mkdir -p $DATADIR
   read -s -p "Enter Password. It will be stored in $DATADIR/my-password: " MYPASSWORD && echo $MYPASSWORD > $DATADIR/my-password
   echo
@@ -212,12 +213,10 @@ If you want to run all these instructions in a single script, you can wrap them 
   # Run geth in the background
   nohup $GOPATH/bin/geth --datadir $DATADIR \
       --unlock 0 \
-      --password <(cat $DATADIR/my-password) \
-      --verbosity 6 \
-      --networkid 322 \
+      --password ~/password.file
+      --networkid 3 \
       --nodiscover \
-      --maxpeers 0 \
-      2>> $DATADIR/geth.log &
+      --maxpeers 0 
 
   echo "geth is running in the background, you can check its logs at "$DATADIR"/geth.log"
 
@@ -226,10 +225,9 @@ If you want to run all these instructions in a single script, you can wrap them 
       --bzzaccount $BZZKEY \
       --datadir $DATADIR \
       --ens-api $DATADIR/geth.ipc \
-      --verbosity 6 \
       --maxpeers 0 \
-      --bzznetworkid 322 \
-      &> $DATADIR/swarm.log < <(cat $DATADIR/my-password) &
+      --bzznetworkid 3 \
+      --password ~/password.file
 
 
   echo "swarm is running in the background, you can check its logs at "$DATADIR"/swarm.log"
@@ -240,7 +238,7 @@ If you want to run all these instructions in a single script, you can wrap them 
   ##
   # kill -9 $(ps aux | grep swarm | grep bzzaccount | awk '{print $2}')
   # kill -9 $(ps aux | grep geth | grep datadir | awk '{print $2}')
-  # rm -rf /tmp/BZZ
+  # rm -rf ~/.ethereum/swarm
 
 Running a private swarm
 =============================
@@ -288,127 +286,126 @@ To change IP to localhost:
 
 
 
-Testing SWAP
-===============
+.. uncommentthis Testing SWAP
+.. uncommentthis ===============
 
-.. note:: Important! Please only test SWAP on a private network.
+.. uncommentthis note:: Important! Please only test SWAP on a private network.
 
-Testing SWAP on your private blockchain.
------------------------------------------
+.. uncommentthisTesting SWAP on your private blockchain.
+.. uncommentthis-----------------------------------------
 
-The SWarm Accounting Protocol (SWAP) is disabled by default. Set the ``--swap`` flag to enable it. If it is set to true, then SWAP will be enabled.
-However, activating SWAP requires more than just adding the --swap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
+.. uncommentthisThe SWarm Accounting Protocol (SWAP) is disabled by default. Set the ``--swap`` flag to enable it. If it is set to true, then SWAP will be enabled.
+.. uncommentthisHowever, activating SWAP requires more than just adding the --swap flag. This is because it requires a chequebook contract to be deployed and for that we need to have ether in the main account. We can get some ether either through mining or by simply issuing ourselves some ether in a custom genesis block.
 
-Custom genesis block
-^^^^^^^^^^^^^^^^^^^^^^
+.. uncommentthisCustom genesis block
+.. uncommentthis^^^^^^^^^^^^^^^^^^^^^^
 
-Open a text editor and write the following (be sure to include the correct BZZKEY)
+.. uncommentthisOpen a text editor and write the following (be sure to include the correct BZZKEY)
 
-.. code-block:: none
+.. uncommentthis.. code-block:: none
 
-  {
-  "nonce": "0x0000000000000042",
-    "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-    "difficulty": "0x4000",
-    "alloc": {
-      "THE BZZKEY address starting with 0x eg. 0x2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1": {
-      "balance": "10000000000000000000"
-      }
-    },
-    "coinbase": "0x0000000000000000000000000000000000000000",
-    "timestamp": "0x00",
-    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-    "extraData": "Custom Ethereum Genesis Block to test Swarm with SWAP",
-    "gasLimit": "0xffffffff"
-  }
+.. uncommentthis  {
+.. uncommentthis  "nonce": "0x0000000000000042",
+.. uncommentthis    "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+.. uncommentthis    "difficulty": "0x4000",
+.. uncommentthis    "alloc": {
+.. uncommentthis      "THE BZZKEY address starting with 0x eg. 0x2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1": {
+.. uncommentthis      "balance": "10000000000000000000"
+.. uncommentthis      }
+.. uncommentthis    },
+.. uncommentthis    "coinbase": "0x0000000000000000000000000000000000000000",
+.. uncommentthis    "timestamp": "0x00",
+.. uncommentthis    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+.. uncommentthis    "extraData": "Custom Ethereum Genesis Block to test Swarm with SWAP",
+.. uncommentthis    "gasLimit": "0xffffffff"
+.. uncommentthis  }
 
-Save the file as ``$DATADIR/genesis.json``.
+.. uncommentthisSave the file as ``$DATADIR/genesis.json``.
 
-If you already have swarm and geth running, kill the processes
+.. uncommentthisIf you already have swarm and geth running, kill the processes
 
-.. code-block:: none
+.. uncommentthis.. code-block:: none
 
-  killall -s SIGKILL geth
-  killall -s SIGKILL swarm
+.. uncommentthis  killall -s SIGKILL geth
+.. uncommentthis  killall -s SIGKILL swarm
 
-and remove the old data from the $DATADIR and then reinitialise with the custom genesis block
+.. uncommentthisand remove the old data from the $DATADIR and then reinitialise with the custom genesis block
 
-.. code-block:: none
+.. uncommentthis.. code-block:: none
 
-  rm -rf $DATADIR/geth $DATADIR/swarm
-  geth --datadir $DATADIR init $DATADIR/genesis.json
+.. uncommentthis  rm -rf $DATADIR/geth $DATADIR/swarm
+.. uncommentthis  geth --datadir $DATADIR init $DATADIR/genesis.json
 
-We are now ready to restart geth and swarm using our custom genesis block
+.. uncommentthisWe are now ready to restart geth and swarm using our custom genesis block
 
-.. code-block:: none
+.. uncommentthis.. code-block:: none
 
-  nohup geth --datadir $DATADIR \
-         --mine \
-         --unlock 0 \
-         --password <(echo -n "MYPASSWORD") \
-         --verbosity 6 \
-         --networkid 322 \
-         --nodiscover \
-         --maxpeers 0 \
-          2>> $DATADIR/geth.log &
+.. uncommentthis  nohup geth --datadir $DATADIR \
+.. uncommentthis         --mine \
+.. uncommentthis         --unlock 0 \
+.. uncommentthis         --password <(echo -n "MYPASSWORD") \
+.. uncommentthis         --networkid 3 \
+.. uncommentthis         --nodiscover \
+.. uncommentthis         --maxpeers 0 \
+.. uncommentthis          
 
-and launch the swarm (with SWAP); connecting it to the geth node. For consistency let's use the same network id  322 for the swarm private network.
+.. uncommentthisand launch the swarm (with SWAP); connecting it to the geth node. For consistency let's use the same network id  322 for the swarm private network.
 
-.. code-block:: none
+.. uncommentthis.. code-block:: none
 
-  swarm --bzzaccount $BZZKEY \
-         --swap \
-         --swap-api $DATADIR/geth.ipc \
-         --datadir $DATADIR \
-         --verbosity 6 \
-         --ens-api $DATADIR/geth.ipc \
-         --maxpeers 0 \
-         --bzznetworkid 322 \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
-
-If all is successful you will see the message "Deploying new chequebook" on the swarm.log. Once the transaction is mined, SWAP is ready.
-
-.. note:: Astute readers will notice that enabling SWAP while setting maxpeers to 0 seems futile. These instructions will be updated soon to allow you to run a private swap testnet with several peers.
-
-Mining on your private chain
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The alternative to creating a custom genesis block is to earn all your ether by mining on your private chain.
-You can start your geth node in mining mode using the ``--mine`` flag, or (in our case) we can start mining on an already running geth node by issuing the ``miner.start()`` command:
-
-.. code-block:: none
-
-   geth --exec 'miner.start()' attach ipc:$DATADIR/geth.ipc
-
-There will be an initial delay while the necessary DAG is generated. You can see the progress in the geth.log file.
-After mining has started, you can see your balance increasing via ``eth.getBalance()``:
-
-.. code-block:: none
-
-  geth --exec 'eth.getBalance(eth.coinbase)' attach ipc:$DATADIR/geth.ipc
-  # or
-  geth --exec 'eth.getBalance(eth.accounts[0])' attach ipc:$DATADIR/geth.ipc
+.. uncommentthis  swarm --bzzaccount $BZZKEY \
+.. uncommentthis         --swap \
+.. uncommentthis         --swap-api $DATADIR/geth.ipc \
+.. uncommentthis         --datadir $DATADIR \
+.. uncommentthis         --ens-api $DATADIR/geth.ipc \
+.. uncommentthis         --maxpeers 0 \
+.. uncommentthis         --bzznetworkid 3 \
+.. uncommentthis         --password ~/password.file
 
 
-Once the balance is greater than 0 we can restart ``swarm`` with swap enabled.
+.. uncommentthis If all is successful you will see the message "Deploying new chequebook" on the swarm.log. Once the transaction is mined, SWAP is ready.
 
-.. code-block:: none
+.. uncommentthis .. note:: Astute readers will notice that enabling SWAP while setting maxpeers to 0 seems futile. These instructions will be updated soon to allow you to run a private swap testnet with several peers.
 
-    killall swarm
-    swarm --bzzaccount $BZZKEY \
-         --swap \
-         --swap-api $DATADIR/geth.ipc \
-         --datadir $DATADIR \
-         --verbosity 6 \
-         --ens-api $DATADIR/geth.ipc \
-         --maxpeers 0 \
-         2>> $DATADIR/swarm.log < <(echo -n "MYPASSWORD") &
+.. uncommentthis Mining on your private chain
+.. uncommentthis ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Note: without a custom genesis block the mining difficulty may be too high to be practical (depending on your system). You can see the current difficulty with ``admin.nodeInfo``
+.. uncommentthis The alternative to creating a custom genesis block is to earn all your ether by mining on your private chain.
+.. uncommentthis You can start your geth node in mining mode using the ``--mine`` flag, or (in our case) we can start mining on an already running geth node by issuing the ``miner.start()`` command:
 
-.. code-block:: none
+.. uncommentthis .. code-block:: none
 
-  geth --exec 'admin.nodeInfo' attach ipc:$DATADIR/geth.ipc | grep difficulty
+.. uncommentthis   geth --exec 'miner.start()' attach ipc:$DATADIR/geth.ipc
+
+.. uncommentthisThere will be an initial delay while the necessary DAG is generated. You can see the progress in the geth.log file.
+.. uncommentthisAfter mining has started, you can see your balance increasing via ``eth.getBalance()``:
+
+.. uncommentthis.. code-block:: none
+
+.. uncommentthis  geth --exec 'eth.getBalance(eth.coinbase)' attach ipc:$DATADIR/geth.ipc
+.. uncommentthis   # or
+.. uncommentthis   geth --exec 'eth.getBalance(eth.accounts[0])' attach ipc:$DATADIR/geth.ipc
+
+
+.. uncommentthis Once the balance is greater than 0 we can restart ``swarm`` with swap enabled.
+
+.. uncommentthis .. code-block:: none
+
+.. uncommentthis     killall swarm
+.. uncommentthis     swarm --bzzaccount $BZZKEY \
+.. uncommentthis          --swap \
+.. uncommentthis          --swap-api $DATADIR/geth.ipc \
+.. uncommentthis          --datadir $DATADIR \
+.. uncommentthis          --ens-api $DATADIR/geth.ipc \
+.. uncommentthis          --maxpeers 0 \
+.. uncommentthis          --password ~/password.file
+
+
+.. uncommentthis Note: without a custom genesis block the mining difficulty may be too high to be practical (depending on your system). You can see the current difficulty with ``admin.nodeInfo``
+
+.. uncommentthis .. code-block:: none
+
+.. uncommentthis  geth --exec 'admin.nodeInfo' attach ipc:$DATADIR/geth.ipc | grep difficulty
 
 
 Configuration
