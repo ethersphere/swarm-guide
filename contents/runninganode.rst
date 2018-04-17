@@ -245,7 +245,7 @@ If you want to run all these instructions in a single script, you can wrap them 
 Running a private swarm
 =============================
 
-You can extend your singleton node into a private swarm. First you fire up a number of ``swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific into will reside under ``$DATADIR/bzz-$BZZKEY/``
+You can extend your singleton node into a private swarm. First you fire up a number of ``swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific info will reside under ``$DATADIR/bzz-$BZZKEY/``
 Make sure that you create an account for each instance of swarm you want to run.
 For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
 
