@@ -560,7 +560,7 @@ Each time you update your site's content afterwards, you only need to repeat the
 PSS
 ======================
 
-``PSS`` (Postal Service over Swarm) enables message relay over swarm. This means nodes can send messages to each other without being directly connected with each other, while taking advantage of the efficient routing algorithms that swarm uses for transporting and storing data.
+``PSS`` (Postal Service over Swarm) is a messaging protocol over Swarm. This means nodes can send messages to each other without being directly connected with each other, while taking advantage of the efficient routing algorithms that swarm uses for transporting and storing data.
 
 .. note::
   ``PSS`` is under active development, and the first implementation is yet to be merged to the Ethereum main branch. Expect things to change.
@@ -568,45 +568,35 @@ PSS
 
 There are a few prerequisits for sending a message over ``PSS``:
 
-1. Encryption key
+1. ``Encryption key`` - can be a public key or a 32 byte symmetric key. It must be coupled with a peer address (or an address space) in the node prior to sending
 
-2. Topic
+2. ``Topic`` - is an arbitrary 4 byte word (with the exception of ``0x0000`` to be reserved for ``raw`` messages).
 
-3. Message payload
+3. ``Message payload`` - is an arbitrary byte slice of data.
 
-`Encryption key` - can be a public key or a 32 byte symmetric key. It must be coupled with a peer address in the node prior to sending.
 
-`Topic` - is an arbitrary 4 byte word (with the exception of ``0x0000`` to be reserved for ``raw`` messages).
-
-`Message payload` - is an arbitrary byte slice of data.
+.. note:: In case you would like to send just ``raw`` messages - defining an encryption key is not mandatory
 
 Upon sending the message it is encrypted and passed on from peer to peer. Any node along the route that can successfully decrypt the message is regarded as a recipient. Recipients continue to pass on the message to their peers, to make traffic analysis attacks more difficult.
 
-The Address that is coupled with the encryption key is used for routing the message. This does *not* need to be a full addresses; the network will route the message to the best of its ability with the information that is available. If *no* address is given (zero-length byte slice), routing is effectively deactivated, and the message is passed to all peers by all peers.
+The Address that is coupled with the encryption key is used for routing the message. 
+This does *not* need to be a full address; the network will route the message to the best 
+of its ability with the information that is available. 
+If *no* address is given (zero-length byte slice), routing is effectively deactivated, 
+and the message is passed to all peers by all peers.
 
-1. asymmetric encryption
-
-2. symmetric encryption
-
-3. raw
-
-asymmetric encription => need to add the public keys of the other participants through an API call.
-symmetric => works the same
-
-register a key, with a topic (4 bytes) (not 0x0000 - reserved value), a part of the address (or no address) (or a full address). address part is not encrypted.
-
-after the association, every time you send a message, the send will take into account the address and encryption key and topic when sending.
+After you associate an encryption key with an address space they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address space of the message. 
 
 .. important::
   When using the internal encryption methods, you MUST associate keys (whether symmetric or asymmetric) with an address space AND a topic before you will be able to send anything.
 
 You can subscribe to incoming messages using a topic. 
-You can subscribe to messages on topic 0x0000 and handle the encryption on your side thus you will be able to use the swarm node
+You can subscribe to messages on topic 0x0000 and handle the encryption on your side, thus enabling you to use the swarm node
 as an Identity Multiplexer (so to say).
 
-
-no delivery guarranty
-no sequence guarrenty
+.. important::
+  ``PSS`` does not guarantee message ordering (`Best-Effort Delivery <https://en.wikipedia.org/wiki/Best-effort_delivery>`_)
+  nor message delivery (e.g. messages to offline nodes will not be cached and replayed) at the moment
 
 
 FUSE
