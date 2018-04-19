@@ -188,8 +188,8 @@ Now you can also check that the manifest hash matches the content (in fact swarm
    $ swarm hash manifest.json
    > 2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
-Path Matching on Manifests
----------------------------------
+Path Matching
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A useful feature of manifests is that we can match paths with URLs.
 In some sense this makes the manifest a routing table and so the manifest swarm entry acts as if it was a host.
@@ -631,7 +631,6 @@ PSS
 Configuration
 ---------------
 
-
 ``PSS`` has builtin encryption functionality. To use this functionality to send a message, recipients first have to be registered with the node. This registration includes the following data:
 
 1. ``Encryption key`` - can be a ECDSA public key or a 32 byte symmetric key. It must be coupled with a peer address (or an address space) in the node prior to sending
@@ -677,7 +676,6 @@ You can subscribe to messages on topic 0x0000 and handle the encryption on your 
 
 Sending a raw message
 ----------------------
-
 
 It is also possible to send a message without using the builtin encryption. In this case no recipient registration is made, but the message is sent directly, with the following input data:
 
