@@ -155,6 +155,12 @@ html_theme_path = ["../docs/_themes/" ]
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_context = {
+    'css_files': [
+        '_static/theme_overrides.css',  # overrides for wide tables in RTD theme
+        ],
+    }
+
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
 # directly to the root of the documentation.
@@ -379,3 +385,7 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 
 
 http_index_localname = "SWARM HTTP API"
+
+
+def setup(app):
+   app.add_stylesheet("_static/theme_overrides.css")
