@@ -13,8 +13,9 @@ Contents:
 
    introduction
    installation
-   simpleuser
-   runninganode
+   gettingstarted
+   up-and-download
+   configuration
    userguide
    apireference
    architecture
