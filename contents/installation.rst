@@ -2,44 +2,54 @@
 Installation and Updates
 *************************
 
-Installation
-=======================
-Swarm is part of the Ethereum stack, the reference implementation is currently at POC (proof of concept) version 0.2.
-
-The source code is found on github: https://github.com/ethereum/go-ethereum/tree/master/
-
 Supported Platforms
 =========================
 
-Geth runs on all major platforms (linux, MacOSX, Windows, also raspberry pi, android OS, iOS).
+Swarm must be run in combination with Geth which runs on Linux, macOSX, Windows, Raspberry Pi, Android and iOS.
 
 ..  note::
-  This package has not been tested on platforms other than linux and OSX.
+  This package has not been tested on platforms other than Linux and OSX.
+
+
+Installing from PPA
+=======================
+Swarm is part of the Ethereum stack, the reference implementation is currently only available as a proof of concept stage in the `ethereum-unstable` package
+
+.. code-block:: none
+
+  sudo add-apt-repository -y ppa:ethereum/ethereum
+  sudo apt-get update
+  sudo apt-get install ethereum-unstable
+
+You should now be able to run ``swarm`` and connect to the network.
+
+Building from source
+=======================
+
+The source code for Swarm can be found on GitHub: https://github.com/ethereum/go-ethereum/
+Updates and fixes are merged into the ``master`` branch.
 
 Prerequisites
 ================
 
-building the swarm daemon :command:`swarm` requires the following packages:
+Building Swarm requires the following prerequisites
 
-* go: https://golang.org
-* git: http://git.org
+* Go - https://golang.org
+* Git - https://git-scm.com/
 
-
-Grab the relevant prerequisites and build from source.
-
-On linux (ubuntu/debian variants) use ``apt`` to install go and git
+On Linux (Ubuntu/Debian variants)
 
 .. code-block:: none
 
   sudo apt install golang git
 
-while on Mac OSX you'd use :command:`brew`
+On macOS
 
 .. code-block:: none
 
     brew install go git
 
-Then you must prepare your go environment as follows
+Then prepare your Go environment
 
 .. code-block:: none
 
@@ -106,16 +116,15 @@ Once all prerequisites are met, download the go-ethereum source code
   git checkout master
   go get github.com/ethereum/go-ethereum
 
-and finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``geth``.
+and compile the ``geth`` client and ``swarm`` daemon.
 
 .. code-block:: none
 
   go install -v ./cmd/geth
   go install -v ./cmd/swarm
 
-
-You can now run :command:`swarm` to start your swarm node.
-Let's check `swarm`'s installation
+You can now run ``swarm`` to start your swarm node.
+Let's check Swarm's installation
 
 .. code-block:: none
 
