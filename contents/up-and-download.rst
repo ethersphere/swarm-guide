@@ -1,0 +1,272 @@
+.. _updownload:
+
+***************************
+Uploading and Downloading
+***************************
+
+Introduction
+==================================
+.. note:: This guide assumes you've installed the swarm client and have a running node that listens by default on port 8500. See "Getting Started" for details.
+
+Arguably, uploading and downloading content is the raison d'être of Swarm. Uploading content consists of "uploading" content to your local swarm node, followed by your local swarm node 'syncing' the resulting chunks of data with its peers in the network. Meanwhile downloading content consists of your local swarm node querying its peers in the network for the relevant chunks of data and then reassembling the content locally.
+
+Uploading and Downloading data can be done through the `go-swam` command line interface (CLI) on the terminal or via the HTTP interface on `http://localhost:8500`.
+
+
+Uploading using go-swarm CLI
+=============================
+
+Uploading a file to your local swarm node
+------------------------------------------
+
+The basic command for uploading to your local node is `swarm up FILE`. For example, issue the following command to upload the go-ethereum README file to your swarm
+
+.. code-block:: none
+
+  go-swarm up $GOPATH/src/github.com/ethereum/go-ethereum/README.md
+  > d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
+
+The hash returned is the hash of a swarm manifest. This manifest is a JSON file that contains the README.md file as its only entry. Both the primary content and the manifest are uploaded by default.
+
+After uploading, you can access this README.md file from swarm by pointing your browser to:
+
+.. code-block:: none
+
+  http://localhost:8500/bzz:/d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
+
+The manifest makes sure you could retrieve the file with the correct mime type.
+
+Suppressing automatic manifest creation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You may wish to prevent a manifest to be created for your content and only upload the raw content. Maybe you want to include it in a custom index, or it is handled as a datablob known and used only by some application that knows its mimetype. For this you can set `--manifest=false`:
+
+.. code-block:: none
+
+  swarm --manifest=false up FILE
+  > 7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb
+
+This option suppresses automatic manifest upload. It uploads the content as-is.
+However, if you wish to retrieve this file, the browser can not be told unambiguously what that file represents.
+In the context, the hash `7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb` does not refer to a manifest and any attempt to retrieve it over bzz will result in a 404 Not Found Error. In order to access this file, you would have to use the :ref:`bzz-raw` scheme.
+
+
+Uploading to a remote swarm node
+-----------------------------------
+You can upload to a remote swarm node using the `--bzzapi` flag.
+For example, you can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
+
+.. note:: This treat is likely to disappear or be seriously restricted in the future. It currently also accepts limited file sizes.
+
+
+.. code-block:: none
+
+    go-swarm --bzzapi http://swarm-gateways.net up /path/to/file/or/directory
+
+
+
+Uploading a directory
+-----------------------
+
+Uploading directories is achieved with the `--recursive` flag.
+
+.. code-block:: none
+
+  go-swarm --recursive up /path/to/directory
+  > ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30
+
+The returned hash refers to a root manifest referencing all the files in the directory. If there was a file called `index.html` in that directory, you could now access it under
+
+.. code-block:: none
+
+  http://localhost:8500/bzz:/ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30/index.html
+
+Directory with default entry
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It is possible to declare a default entry in a manifest. In the example above, if `index.html` is declared as the default, then it is no longer required to append `/index.html` after the HASH.
+
+.. code-block:: none
+
+  go-swarm --defaultpath /path/to/directory/index.html --recursive up /path/to/directory
+  > ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b
+
+You can now access index.html at
+
+.. code-block:: none
+
+  http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/index.html
+
+and also at
+
+.. code-block:: none
+
+  http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/
+This is especially useful when the hash (in this case ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b) is given a registered name like 'mysite.eth' in the `Ethereum Name Service`_.
+
+
+Adding entries to a manifest
+-------------------------------
+The command for modifying manifests is `go-swarm manifest`.
+
+To add an entry to a manifest, use the command:
+
+.. code-block:: none
+
+  go-swarm manifest add
+
+To remove an entry from a manifest, use the command:
+
+.. code-block:: none
+
+  go-swarm manifest remove
+
+To modify the hash of an entry in a manifest, use the command:
+
+.. code-block:: none
+
+  go-swarm manifest update
+
+
+Downloading from your local swarm node
+-----------------------------------------
+There is no `go-swarm down` command dual to `go-swarm up`. To download from swarm you should use the HTTP interface. You can still download using a CLI with commands such as `curl` or `wget`.
+
+
+
+Up and Downloading using HTTP
+==============================
+
+Swarm runs an HTTP API. Thus, a simple way to upload and download files to/from Swarm is through this API.
+We can use the ``curl`` tool to exemplify how to interact with this API.
+
+.. note:: Files can be uploaded in a single HTTP request, where the body is either a single file to store, a tar stream (application/x-tar) or a multipart form (multipart/form-data).
+
+To upload a single file, run this:
+
+.. code-block:: none
+
+  curl -H "Content-Type: text/plain" --data-binary "some-data" http://localhost:8500/bzz:/
+
+Once the file is uploaded, you will receive a hex string which will look similar to.
+
+.. code-block:: none
+
+  027e57bcbae76c4b6a1c5ce589be41232498f1af86e1b1a2fc2bdffd740e9b39
+
+This is the address string of your content inside Swarm.
+
+To download a file from swarm, you just need the file's address string. Once you have it the process is simple. Run:
+
+.. code-block:: none
+
+  curl http://localhost:8500/bzz:/027e57bcbae76c4b6a1c5ce589be41232498f1af86e1b1a2fc2bdffd740e9b39/
+
+The result should be your file:
+
+.. code-block:: none
+
+  some-data
+
+And that's it. Note that if you omit the trailing slash from the url then the request will result in a redirect.
+
+Tar stream upload
+-----------------
+
+.. code-block:: none
+
+  ( mkdir dir1 dir2; echo "some-data" | tee dir1/file.txt | tee dir2/file.txt; )
+
+  tar c dir1/file.txt dir2/file.txt | curl -H "Content-Type: application/x-tar" --data-binary @- http://localhost:8500/bzz:/
+  > 1e0e21894d731271e50ea2cecf60801fdc8d0b23ae33b9e808e5789346e3355e
+
+  curl http://localhost:8500/bzz:/1e0e21894d731271e50ea2cecf60801fdc8d0b23ae33b9e808e5789346e3355e/dir1/file.txt
+  > some-data
+
+  curl http://localhost:8500/bzz:/1e0e21894d731271e50ea2cecf60801fdc8d0b23ae33b9e808e5789346e3355e/dir2/file.txt
+  > some-data
+
+GET requests work the same as before with the added ability to download multiple files by setting `Accept: application/x-tar`:
+
+.. code-block:: none
+
+  curl -s -H "Accept: application/x-tar" http://localhost:8500/bzz:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/ | tar t
+  > dir1/file.txt
+    dir2/file.txt
+    dir3/file.txt
+
+
+Multipart form upload
+---------------------
+
+.. code-block:: none
+
+  curl -F 'dir1/file.txt=some-data;type=text/plain' -F 'dir2/file.txt=some-data;type=text/plain' http://localhost:8500/bzz:/
+  > 9557bc9bb38d60368f5f07aae289337fcc23b4a03b12bb40a0e3e0689f76c177
+
+  curl http://localhost:8500/bzz:/9557bc9bb38d60368f5f07aae289337fcc23b4a03b12bb40a0e3e0689f76c177/dir1/file.txt
+  > some-data
+
+  curl http://localhost:8500/bzz:/9557bc9bb38d60368f5f07aae289337fcc23b4a03b12bb40a0e3e0689f76c177/dir2/file.txt
+  > some-data
+
+
+Files can also be added to an existing manifest:
+------------------------------------------------
+
+.. code-block:: none
+
+  curl -F 'dir3/file.txt=some-other-data;type=text/plain' http://localhost:8500/bzz:/9557bc9bb38d60368f5f07aae289337fcc23b4a03b12bb40a0e3e0689f76c177
+  > ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8
+
+  curl http://localhost:8500/bzz:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/dir1/file.txt
+  > some-data
+
+  curl http://localhost:8500/bzz:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/dir3/file.txt
+  > some-other-data
+
+
+Files can also be uploaded using a simple HTML form:
+----------------------------------------------------
+
+.. code-block:: html
+
+  <form method="POST" action="/bzz:/" enctype="multipart/form-data">
+    <input type="file" name="dir1/file.txt">
+    <input type="file" name="dir2/file.txt">
+    <input type="submit" value="upload">
+  </form>
+
+
+  Listing files
+  -------------
+
+  A `GET` request with ``bzz-list`` url scheme returns a list of files contained under the path, grouped into common prefixes which represent directories:
+
+  .. code-block:: none
+
+     curl -s http://localhost:8500/bzz-list:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/ | jq .
+     > {
+        "common_prefixes": [
+          "dir1/",
+          "dir2/",
+          "dir3/"
+        ]
+      }
+
+  .. code-block:: none
+
+      curl -s http://localhost:8500/bzz-list:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/dir1/ | jq .
+      > {
+        "entries": [
+          {
+            "path": "dir1/file.txt",
+            "contentType": "text/plain",
+            "size": 9,
+            "mod_time": "2017-03-12T15:19:55.112597383Z",
+            "hash": "94f78a45c7897957809544aa6d68aa7ad35df695713895953b885aca274bd955"
+          }
+        ]
+      }
+
+  Setting Accept: text/html returns the list as a browsable HTML document
