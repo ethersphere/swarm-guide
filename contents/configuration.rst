@@ -16,7 +16,7 @@ Connecting swarm only (no blockchain)
 To suppress any ENS name resolution, use the `--ens-api ''` option.
 .. code-block:: none
 
-  swarm --bzzaccount $BZZKEY \
+  go-swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
          --ens-api '' \
          --password ~/password.file
@@ -48,7 +48,7 @@ Then launch the swarm; connecting it to the geth node (--ens-api).
 
 .. code-block:: none
 
-  swarm --bzzaccount $BZZKEY \
+  go-swarm --bzzaccount $BZZKEY \
          --keystore $HOME/.ethereum/geth/testnet/keystore \
          --ens-api $HOME/.ethereum/geth/testnet/geth.ipc \
          --password ~/password.file
@@ -72,7 +72,7 @@ and launch the swarm; connecting it to the geth node.
 
 .. code-block:: none
 
- swarm --bzzaccount $BZZKEY \
+ go-swarm --bzzaccount $BZZKEY \
         --datadir $DATADIR \
         --ens-api $DATADIR/geth.ipc \
         --maxpeers 0 \
