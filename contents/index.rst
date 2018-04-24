@@ -15,7 +15,8 @@ Contents:
    installation
    simpleuser
    runninganode
-   usage
+   userguide
+   apireference
    architecture
 
 

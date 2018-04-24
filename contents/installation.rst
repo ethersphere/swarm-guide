@@ -45,7 +45,7 @@ Then you must prepare your go environment as follows
 
   mkdir ~/go
   export GOPATH="$HOME/go"
-  echo 'export GOPATH="$HOME/go"' >> ~/.profile
+  echo 'export GOPATH="$HOME/go"' >> ~/.bashrc
 
 
 
@@ -62,13 +62,13 @@ Download the latest distribution
 
 .. code-block:: none
 
-  curl -O https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz 
+  curl -O https://storage.googleapis.com/golang/go1.10.1.linux-amd64.tar.gz 
 
 Unpack it to the /usr/local (might require sudo)
 
 .. code-block:: none
 
-  tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
+  tar -C /usr/local -xzf go1.10.1.linux-amd64.tar.gz
 
 Set GOPATH and PATH
 
@@ -128,7 +128,7 @@ Should give you some relevant information back
   Swarm
   Version: 0.2
   Network Id: 0
-  Go Version: go1.9.2
+  Go Version: go1.10.1
   OS: linux
   GOPATH=/home/user/go
   GOROOT=/usr/local/go

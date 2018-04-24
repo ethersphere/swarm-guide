@@ -1,31 +1,20 @@
-.. _usage:
+.. _userguide:
 
 *****************
-Usage
+User Guide
 *****************
 
-Using swarm from the command line
+Introduction
+==================================
+.. note:: This guide assumes you've installed the swarm client and have a running node that listens by default on port 8500
+
+tbd
+
+CLI usage
 ==================================
 
 Uploading a file or directory to swarm
 ---------------------------------------------------------------
-
-Make sure you have compiled the swarm command
-
-.. code-block:: none
-
-  cd $GOPATH/src/github.com/ethereum/go-ethereum
-  go install ./cmd/swarm
-
-The `swarm up` subcommand makes it easy to upload files and directories. Usage:
-
-.. code-block:: none
-
-  swarm up /path/to/file/or/directory
-
-By default this assumes that you are running your own swarm node with a local http proxy on the default port (8500).
-See :ref:`run_swarm_client` to learn how to run a local node.
-It is possible to specify alternative proxy endpoints with the ``--bzzapi`` option.
 
 You can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
 
@@ -36,7 +25,7 @@ You can use one of the public gateways as a proxy, in which case you can upload 
 
     swarm --bzzapi http://swarm-gateways.net up /path/to/file/or/directory
 
-Example: uploading a file
+Uploading a file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Issue the following command to upload the go-ethereum README file to your swarm
@@ -44,15 +33,10 @@ Issue the following command to upload the go-ethereum README file to your swarm
 .. code-block:: none
 
   swarm up $GOPATH/src/github.com/ethereum/go-ethereum/README.md
-
-It produces the following output
-
-.. code-block:: none
-
   > d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
 
-The hash returned is the swarm hash of a manifest that contains the README.md file as its only entry. So by default both the primary content and the manifest is uploaded.
-You can access this file from swarm by pointing your browser to
+The hash returned is the hash of a swarm manifest that contains the README.md file as its only entry. Both the primary content and the manifest are uploaded by default.
+You can access this file from swarm by pointing your browser to:
 
 .. code-block:: none
 
@@ -90,144 +74,29 @@ We can upload this directory with
 .. code-block:: none
 
   swarm --recursive up upload-test/
+  > ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30
 
 The output again is the root hash of your uploaded directory, which can be used to retrieve the complete directory 
-
-.. code-block:: none
-
-  ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30
+  
 
 You could then retrieve the files relative to the root manifest like so:
 
 .. code-block:: none
 
   curl http://localhost:8500/bzz:/ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30/three/four
-
-The result should be
-
-.. code-block:: none
-
-  four 
+  > four   
 
 
 If you'd like to be able to access your content via a human readable name like 'mysite.eth' instead of the long hex string above, see the section on `Ethereum Name Service`_ below.
 
 
-Content retrieval: hashes and manifests
+Working with content
 ==============================================
 
-Retrieving content using the http proxy
----------------------------------------------------------
-
-As indicated above, your local swarm instance has an HTTP API running on port 8500 (by default). Retrieving content is simple matter of pointing your browser to
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz:/HASH
-
-where HASH is the id of a swarm manifest.
-This is the most common usecase whereby swarm can serve the web.
-
-It looks like HTTP content transfer from servers, but in fact it is using swarm's serverless architecture.
-
-The general pattern is:
-
-.. code-block:: none
-
-  <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
-
-The HTTP proxy part can be eliminated if you register the appropriate scheme handler with your browser or you use Mist.
-
-Swarm offers 3 distinct url schemes:
-
-bzz url schemes
---------------------
-
-bzz
-^^^^
-
-Example:
+Hashes
+----------------------
 
 
-.. code-block:: none
-
-    GET http://localhost:8500/bzz:/theswarm.test
-
-The bzz scheme assumes that the domain part of the url points to a manifest. When retrieving the asset addressed by the url, the manifest entries are matched against the url path. The entry with the longest matching path is retrieved and served with the content type specified in the corresponding manifest entry.
-
-Example:
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/read
-
-returns a readme.md file if the manifest at the given hash address contains such an entry.
-
-If the manifest contains multiple entries to which the URL could be resolved, like, in the example above, the manifest has entries for `readme.md` and `reading-list.txt`, the API returns a HTTP response "300 Multiple Choices", indicating that the request could not be unambiguously resolved. A list of available entries is returned via HTTP or JSON.
-
-
-This generic scheme supports name resolution for domains registered on the Ethereum Name Service
-(ENS, see `Ethereum Name Service`). This is a read-only scheme meaning that it only supports GET requests and serves to retrieve content from swarm.
-
-
-bzz-immutable
-^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-immutable:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
-
-The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzz-immutable url will always necessarily address the exact same fixed immutable content.
-
-.. _bzz-raw:
-
-bzz-raw
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
-
-
-When responding to GET requests with the bzz-raw scheme, swarm does not assume a manifest, just serves the asset addressed by the url directly.
-
-The ``content_type`` query parameter can be supplied to specify the mime type you are requesting, otherwise content is served as an octet stream per default. For instance if you have a pdf document (not the manifest wrapping it) at hash ``6a182226...`` then the following url will properly serve it.
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-raw:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content_type=application/pdf
-
-
-Importantly and somewhat unusually for generic schemes, the raw scheme supports POST and PUT requests. This is a crucially important way in which swarm is different from the internet as we know it.
-
-The possibility to POST makes swarm an actual cloud service, bringing upload functionality to your browsing.
-
-In fact the command line tool ``swarm up`` uses the http proxy with the bzz raw scheme under the hood.
-
-bzz-list
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-list:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/path
-
-Returns a list of all files contained in <manifest> under <path> grouped into common prefixes using ``/`` as a delimiter. If path is ``/``, all files in manifest are returned. The response is a JSON-encoded object with ``common_prefixes`` string field and ``entries`` list field.
-
-bzz-hash
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-hash:/theswarm.test
-
-
-Swarm accepts GET requests for bzz-hash url scheme and responds with the hash value of the raw content, the same content returned by requests with bzz-raw scheme. Hash of the manifest is also the hash stored in ENS so bzz-hash can be used for ENS domain resolution.
-
-Response content type is *text/plain*.
-
-bzzr and bzzi
-^^^^^^^^^^^^^^
-Schemes with short names bzzr and bzzi are deprecated in favour of bzz-raw and bzz-immutable, respectively. They are kept for backward compatibility, and will be removed on the next release.
 
 
 Manifests
@@ -319,8 +188,8 @@ Now you can also check that the manifest hash matches the content (in fact swarm
    $ swarm hash manifest.json
    > 2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
-Path Matching on Manifests
----------------------------------
+Path Matching
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A useful feature of manifests is that we can match paths with URLs.
 In some sense this makes the manifest a routing table and so the manifest swarm entry acts as if it was a host.
@@ -341,6 +210,237 @@ This feature essentially implements the most common webserver rewrite rules used
   GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
 you get served the index page (with content type ``text/html``) at ``4b3a73e43ae5481960a5296a08aaae9cf466c9d5427e1eaa3b15f600373a048d``.
+
+
+Encryption
+----------------------
+
+Introduced in POC 0.3, symmetric encryption using ``SHA3 Keccak256`` is now readily available to be used with swarm upload commands.
+The encryption mechanism is meant to protect your information and make the chunked data unreadable to any handling swarm node, putting the
+concepts of plausible deniability and censorship resistence to work.
+
+More info about how we handle encryption at Swarm can be found `here <https://github.com/ethersphere/swarm/wiki/Symmetric-Encryption-for-Swarm-Content>`_.
+
+.. note:: 
+  Swarm currently supports both encrypted and unencrypted ``up`` commands through usage of the ``--encrypt`` flag.
+  This might change in the future as we will refine and make Swarm a safer network.
+
+.. note:: 
+  When you upload content to Swarm using the `--encrypt` flag, the hash received in response will be 
+  longer than the standard Swarm hash you're used to - that's because the resulting hash is a concatenated 
+  string of the content hash and the encryption key used to encrypt the content.
+
+
+.. important::
+  The encryption feature is non-deterministic (due to a random seed generated on every upload request) and as a result not idempotent by design, thus uploading the same resource twice to Swarm with encryption enabled will not result in the same output hash.
+
+
+Example usage:
+
+.. code-block:: none
+
+  swarm up --encrypt foo.txt
+  > c2ebba57da7d97bc4725a542ff3f0bd37163fd564e0298dd87f320368ae4faddd1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
+  # note the longer response hash
+
+
+Content Retrieval Using a Proxy
+-------------------------------
+
+Retrieving content is simple matter of pointing your browser to
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz:/<HASH>
+
+where HASH is the id of a swarm manifest.
+This is the most common usecase whereby swarm can serve the web.
+
+It looks like HTTP content transfer from servers, but in fact it is using swarm's serverless architecture.
+
+The general pattern is:
+
+.. code-block:: none
+
+  <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
+
+The HTTP proxy part can be eliminated if you register the appropriate scheme handler with your browser or you use Mist.
+
+
+Resource Updates
+------------------------
+
+As of POC 0.3 Swarm offers mutable resources updates. This does not infer that the underlying chunks are actually
+modified, but rather provides a deterministic blockchain-time-based (e.g. relies on the blockchain's generation time) 
+hashing system that enables the Swarm node to look for the most recent version of a resource (or, in turn, a specific requested version).
+
+``bzz-resource`` resources are meant to serve as a mechanism to push updates to an ``ENS`` identifier.
+Thus, a typical way to access them would be to simply point at the ``bzz-resource`` URL:
+
+.. code-block:: none
+  bzz-resource:/theswarm.eth
+
+This will make sure that you always get the most current version of ``theswarm.eth``.
+You can also point to a specific version by specifying an Ethereum block height and a version specifier. If the 
+requested version cannot be found, the Swarm node will try to fetch the latest version in relative to that requested version (but not a newer one).
+
+.. note::
+  To simplify things, think of immutable resources as a layer between your Dapp and ENS, facilitating faster and cheaper
+  resource updates. Architecture wise, this means your ENS record will point to a versionless ``bzz-resource``. This will allow
+  a browser pointing to the ENS record to retrive the newest version of your resource. A resource update does not infer that the ENS
+  record gets updated.
+
+.. important::
+  Creating or updating a mutable resource involves, under the hood, a proper configration that ensures that the actor that is trying to make a mutable
+  resource update is indeed the owner of the ENS record. This means your node has to be configured accordingly. If your Swarm node isn't configured with the
+  ``--ens-api`` switch, ``bzz-resource`` updates will be disabled entirely.
+
+
+Creating a mutable resource
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Given the correct configuration, creating a new mutable resource is as simple as:
+
+.. code-block:: none
+
+  curl -X POST --header "Content-Type:application/octet-stream" --data-binary <BINARY_DATA> http://localhost:8500/bzz-resource:/yourdomainname.eth/<period>
+
+
+  curl -X POST --header "Content-Type:application/octet-stream" --data-binary <BINARY_DATA> http://localhost:8500/bzz-resource:/yourdomainname.eth/
+
+The Swarm node will ensure that you are indeed the owner of the ENS record, and if so, will commit the resource change.
+
+
+Retrieving a mutable resource
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Retrieval of a mutable resource is as easy as:
+
+.. code-block:: none
+
+  curl http://localhost:8500/bzz-resource:/yourdomainname.eth
+
+This will retrieve the newest version of the resource you've requested, regardless of ownership
+
+
+Retrieving a specific version
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can also retrieve a specific version of the resource, specifying a block height and a (incremental) version identifier:
+ 
+.. code-block:: none
+
+  curl http://localhost:8500/bzz-resource:/yourdomainname.eth/3/1
+
+
+
+
+BZZ URL schemes
+--------------------
+Swarm offers 8 distinct url schemes:
+
+
+bzz
+^^^^
+
+Example:
+
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz:/theswarm.test
+
+The bzz scheme assumes that the domain part of the url points to a manifest. When retrieving the asset addressed by the url, the manifest entries are matched against the url path. The entry with the longest matching path is retrieved and served with the content type specified in the corresponding manifest entry.
+
+Example:
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/read
+
+returns a readme.md file if the manifest at the given hash address contains such an entry.
+
+If the manifest contains multiple entries to which the URL could be resolved, like, in the example above, the manifest has entries for `readme.md` and `reading-list.txt`, the API returns a HTTP response "300 Multiple Choices", indicating that the request could not be unambiguously resolved. A list of available entries is returned via HTTP or JSON.
+
+
+This generic scheme supports name resolution for domains registered on the Ethereum Name Service
+(ENS, see `Ethereum Name Service`). This is a read-only scheme meaning that it only supports GET requests and serves to retrieve content from swarm.
+
+
+bzz-immutable
+^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz-immutable:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+
+The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzz-immutable url will always necessarily address the exact same fixed immutable content.
+
+.. _bzz-raw:
+
+bzz-resource
+^^^^^^^^^^^^^^^^^^^^
+
+``bzz-resource`` allows you to receive hash pointers to content that the ENS entry resolved to at different versions
+
+bzz-resource://<id> - get latest update
+bzz-resource://<id>/<n> - get latest update on period n
+bzz-resource://<id>/<n>/<m> - get update version m of period n
+<id> = ens name
+
+
+
+
+
+bzz-raw
+^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+
+
+When responding to GET requests with the bzz-raw scheme, swarm does not assume a manifest, just serves the asset addressed by the url directly.
+
+The ``content_type`` query parameter can be supplied to specify the mime type you are requesting, otherwise content is served as an octet stream per default. For instance if you have a pdf document (not the manifest wrapping it) at hash ``6a182226...`` then the following url will properly serve it.
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz-raw:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content_type=application/pdf
+
+
+Importantly and somewhat unusually for generic schemes, the raw scheme supports POST and PUT requests. This is a crucially important way in which swarm is different from the internet as we know it.
+
+The possibility to POST makes swarm an actual cloud service, bringing upload functionality to your browsing.
+
+In fact the command line tool ``swarm up`` uses the http proxy with the bzz raw scheme under the hood.
+
+bzz-list
+^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz-list:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/path
+
+Returns a list of all files contained in <manifest> under <path> grouped into common prefixes using ``/`` as a delimiter. If path is ``/``, all files in manifest are returned. The response is a JSON-encoded object with ``common_prefixes`` string field and ``entries`` list field.
+
+bzz-hash
+^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz-hash:/theswarm.test
+
+
+Swarm accepts GET requests for bzz-hash url scheme and responds with the hash value of the raw content, the same content returned by requests with bzz-raw scheme. Hash of the manifest is also the hash stored in ENS so bzz-hash can be used for ENS domain resolution.
+
+Response content type is *text/plain*.
+
+bzzr and bzzi
+^^^^^^^^^^^^^^
+Schemes with short names bzzr and bzzi are deprecated in favour of bzz-raw and bzz-immutable, respectively. They are kept for backward compatibility, and will be removed on the next release.
+
+
 
 Ethereum Name Service
 ======================
@@ -366,7 +466,7 @@ If you just want to set up ENS so that you can host your Swarm content on a doma
 Content Retrieval using ENS
 ----------------------------
 
-The default configuration of swarm is to use names registered on the Ropsten testnet. In order for you to be able to resolve names to swarm hashes, all that needs to happen is that your swarm client is connected to a geth node synced on the Ropsten testnet. See section "Running the swarm client" `here <./runninganode.html#using-swarm-together-with-the-ropsten-testnet-blockchain>`_.
+The default configuration of swarm is to use names registered on the Ropsten testnet. In order for you to be able to resolve names to swarm hashes, all that needs to happen is that your swarm client is connected to a geth node synced on the Ropsten testnet. See section `"Running the swarm client" <./runninganode.html#using-swarm-together-with-the-ropsten-testnet-blockchain>`_.
 
 Registering names for your swarm content
 ----------------------------------------
@@ -519,73 +619,82 @@ Each time you update your site's content afterwards, you only need to repeat the
     publicResolver.setContent(namehash('MYNAME.test'), 'NEWHASH', {from: eth.accounts[0], gas: 100000})
 
 
+PSS
+======================
+
+``PSS`` (Postal Service over Swarm) is a messaging protocol over Swarm. This means nodes can send messages to each other without being directly connected with each other, while taking advantage of the efficient routing algorithms that swarm uses for transporting and storing data.
+
+.. note::
+  ``PSS`` is under active development and is available as of POC3 of Swarm. Expect things to change.
 
 
-The HTTP API
-=========================
+Configuration
+---------------
 
-GET http://localhost:8500/bzz:/domain/some/path
-  retrieve document at domain/some/path allowing domain to resolve via the `Ethereum Name Service`_
+``PSS`` has builtin encryption functionality. To use this functionality to send a message, recipients first have to be registered with the node. This registration includes the following data:
 
-GET http://localhost:8500/bzz-immutable:/HASH/some/path
-  retrieve document at HASH/some/path where HASH is a valid swarm hash
+1. ``Encryption key`` - can be a ECDSA public key or a 32 byte symmetric key. It must be coupled with a peer address (or an address space) in the node prior to sending
 
-GET http://localhost:8500/bzz-raw:/domain/some/path
-  retrieve the raw content at domain/some/path allowing domain to resolve via the `Ethereum Name Service`_
+2. ``Topic`` - an arbitrary 4 byte word (``0x0000`` is reserved for ``raw`` messages).
 
-POST http://localhost:8500/bzz-raw:
-  The post request is the simplest upload method. Direct upload of files - no manifest is created.
-  It returns the hash of the uploaded file
+3. ``Address``- the swarm overlay address to use for the routing.
+   
+   The registration returns a key id which is used to refer to the stored key in ensuing operations.
 
-PUT http://localhost:8500/bzz:/HASH|domain/some/path
-  The PUT request publishes the uploaded asset to the manifest. 
-  It looks for the manifest by domain or hash, makes a copy of it and updates its collection with the new asset.
-  It returns the hash of the newly created manifest.
+After you associate an encryption key with an address they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address space of the message. 
 
-Swarm IPC API
-========================
+Sending a message
+-------------------
 
-Swarm exposes an RPC API under the ``bzz`` namespace.
+There are a few prerequisits for sending a message over ``PSS``:
 
-.. note:: Note that this is not the recommended way for users or dapps to interact with swarm and is only meant for debugging ad testing purposes. Given that this module offers local filesystem access, allowing dapps to use this module or exposing it via remote connections creates a major security risk. For this reason ``swarm`` only exposes this api via local ipc (unlike geth not allowing websockets or http).
+1. ``Encryption key id`` - id of the stored recipient's encryption key. 
 
-The API offers the following methods:
+2. ``Topic`` - an arbitrary 4 byte word (with the exception of ``0x0000`` to be reserved for ``raw`` messages).
 
-``bzz.upload(localfspath, defaultfile)``
-  uploads the file or directory at ``localfspath``. The second optional argument specifies the path to the file which will be served when the empty path is matched. It is common to match the empty path to :file:`index.html`
+3. ``Message payload`` - the message data as an arbitrary byte sequence.
 
-  it returns content hash of the manifest which can then be used to download it.
 
-``bzz.download(bzzpath, localdirpath)``
-  it recursively downloads all the paths starting from the manifest at ``bzzpath`` and downloads them in a corresponding directory structure under ``localdirpath`` using the slashes in the paths to indicate subdirectories.
+.. note:: In case you would like to send just ``raw`` messages - defining an encryption key is not mandatory
 
-  assuming ``dirpath.orig`` is the root of any aribitrary directory tree containing no soft links or special files,
-  uploading and downloading will result in identical data on your filesystem:
+Upon sending the message it is encrypted and passed on from peer to peer. Any node along the route that can successfully decrypt the message is regarded as a recipient. Recipients continue to pass on the message to their peers, to make traffic analysis attacks more difficult.
 
-  bzz.download(bzz.upload(dirpath.orig), dirpath.replica)
-  diff -r dirpath.orig dirpath.replica || echo "identical"
+.. note::
+The Address that is coupled with the encryption key is used for routing the message. 
+This does *not* need to be a full address; the network will route the message to the best 
+of its ability with the information that is available. 
+If *no* address is given (zero-length byte slice), routing is effectively deactivated, 
+and the message is passed to all peers by all peers.
 
-``bzz.put(content, contentType)``
-  can be used to push a raw data blob to swarm. Creates a manifest with an entry. This entry has the empty path and specifies the content type given as second argument.
-  It returns content hash of this manifest.
+After you associate an encryption key with an address space they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address space of the message. 
 
-``bzz.get(bzzpath)``
-  It downloads the manifest at ``bzzpath`` and returns a response json object with content, mime type, status code and content size. This should only be used for small pieces of data, since the content gets instantiated in memory.
+.. important::
+  When using the internal encryption methods, you MUST associate keys (whether symmetric or asymmetric) with an address space AND a topic before you will be able to send anything.
 
-``bzz.resolve(domain)``
-  resolves the domain name to a content hash using ENS and returns that. If swarm is not connected to a blockchain it returns an error. Note that your eth backend needs to be syncronised in order to get uptodate domain resolution.
+You can subscribe to incoming messages using a topic. 
+You can subscribe to messages on topic 0x0000 and handle the encryption on your side,  This even enables you to use the swarm node as a multiplexer for different keypair identities.
 
-``bzz.info()``
-  returns information about the swarm node
+Sending a raw message
+----------------------
 
-``bzz.hive()``
-  outputs the kademlia table in a human-friendly table format
+It is also possible to send a message without using the builtin encryption. In this case no recipient registration is made, but the message is sent directly, with the following input data:
 
-Mounting Swarm
---------------
-Another way of intracting with Swarm is by mounting it as a local filesystem using Fuse (a.k.a swarmfs). There are three IPC api's which help in doing this.
+1. ``Message payload`` - the message data as an arbitrary byte sequence.
 
-.. note:: Fuse needs to be installed on your Operating System for these commands to work. Windows is not supported by Fuse, so these command will work only in Linux, Mac OS and FreeBSD. For installation instruction for your OS, see "Installing FUSE" section below.
+2. ``Address``- the swarm overlay address to use for the routing. 
+
+
+.. important::
+  ``PSS`` does not guarantee message ordering (`Best-effort delivery <https://en.wikipedia.org/wiki/Best-effort_delivery>`_)
+  nor message delivery (e.g. messages to offline nodes will not be cached and replayed) at the moment
+
+
+FUSE
+======================
+
+Another way of intracting with Swarm is by mounting it as a local filesystem using FUSE (a.k.a swarmfs). There are three IPC API's which help in doing this.
+
+.. note:: FUSE needs to be installed on your Operating System for these commands to work. Windows is not supported by FUSE, so these command will work only in Linux, Mac OS and FreeBSD. For installation instruction for your OS, see "Installing FUSE" section below.
   
 
 ``swarmfs.mount(HASH|domain, mountpoint))``
@@ -599,7 +708,7 @@ Another way of intracting with Swarm is by mounting it as a local filesystem usi
   For every active mount, this command display three things. The mountpoint, start HASH supplied and the latest HASH. Since the HASH is mounted in rw mode, when ever there is a change to the file system (adding file, removing file etc), a new HASH is computed. This hash is called the latest HASH.
 
 Installing FUSE
-^^^^^^^^^^^^^^^
+----------------
 
 1. Linux (Ubuntu)
 
@@ -620,87 +729,3 @@ Installing FUSE
 	brew install caskroom/cask/brew-cask
 	brew cask install osxfuse
 
-
-
-Chequebook RPC API
-------------------------------
-
-Swarm also exposes an RPC API for the chequebook offering the followng methods:
-
-``chequebook.balance()``
-  Returns the balance of your swap chequebook contract in wei.
-  It errors if no chequebook is set.
-
-``chequebook.issue(beneficiary, value)``
-  Issues a cheque to beneficiary (an ethereum address) in the amount of value (given in wei). The json structure returned can be copied and sent to beneficiary who in turn can cash it using ``chequebook.cash(cheque)``.
-  It errors if no chequebook is set.
-
-``chequebook.cash(cheque)``
-  Cashes the cheque issued. Note that anyone can cash a cheque. Its success only depends on the cheque's validity and the solvency of the issuers chequbook contract up to the amount specified in the cheque. The tranasction is paid from your bzz base account.
-  Returns the transaction hash.
-  It errors if no chequebook is set or if your account has insufficient funds to send the transaction.
-
-``chequebook.deposit(amount)``
-  Transfers funds of amount  wei from your bzz base account to your swap chequebook contract.
-  It errors if no chequebook is set  or if your account has insufficient funds.
-
-
-Example: use of the console
-------------------------------
-
-Uploading content
-^^^^^^^^^^^^^^^^^^
-
-It is possible to upload files from the swarm console (without the need for swarm command or an http proxy). The console command is
-
-.. code-block:: none
-
-    bzz.upload("/path/to/file/or/directory", "filename")
-
-The command returns the root hash of a manifest. The second argument is optional; it specifies what the empty path should resolve to (often this would be :file:`index.html`). Proceeding as in the example above (`Example: Uploading a directory`_). Prepare some files:
-
-.. code-block:: none
-
-  mkdir upload-test
-  echo "one" > upload-test/one.txt
-  echo "two" > upload-test/two
-  mkdir upload-test/three
-  echo "four" > upload-test/three/four
-
-Then execute the ``bzz.upload`` command on the swarm console: (note ``bzzd.ipc`` instead of ``geth.ipc``)
-
-.. code-block:: none
-
-    ./geth --exec 'bzz.upload("upload-test/", "one.txt")' attach ipc:$DATADIR/bzzd.ipc
-
-We get the output:
-
-.. code-block:: none
-
-        dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440
-
-If we open this HASH in a browser
-
-.. code-block:: none
-
-  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/
-
-We see "one" because the empty path resolves to "one.txt". Other valid URLs are
-
-.. code-block:: none
-
-  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/one.txt
-  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/two
-  http://localhost:8500/bzz:/dec805295032e7b712ce4d90ff3b31092a861ded5244e3debce7894c537bd440/three/four
-
-We only recommend using this API for testing purposes or command line scripts. Since they save on http file upload, their performance is somewhat better than using the http API.
-
-Downloading content
-^^^^^^^^^^^^^^^^^^^^
-
-As an alternative to http to retrieve content, you can use ``bzz.get(HASH)`` or ``bzz.download(HASH, /path/to/download/to)`` on the swarm console (note ``bzzd.ipc`` instead of ``geth.ipc``)
-
-.. code-block:: none
-
-    ./geth --exec 'bzz.get(HASH)' attach ipc:$DATADIR/bzzd.ipc
-    ./geth --exec 'bzz.download(HASH, "/path/to/download/to")' attach ipc:$DATADIR/bzzd.ipc
