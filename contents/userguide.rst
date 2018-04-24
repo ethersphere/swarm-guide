@@ -6,6 +6,7 @@ User Guide
 
 Introduction
 ==================================
+
 .. note:: This guide assumes you've installed the swarm client and have a running node that listens by default on port 8500
 
 tbd
@@ -189,7 +190,7 @@ Now you can also check that the manifest hash matches the content (in fact swarm
    > 2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
 Path Matching
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
 
 A useful feature of manifests is that we can match paths with URLs.
 In some sense this makes the manifest a routing table and so the manifest swarm entry acts as if it was a host.
@@ -340,11 +341,6 @@ BZZ URL schemes
 Swarm offers 8 distinct url schemes:
 
 
-bzz
-^^^^
-
-Example:
-
 
 .. code-block:: none
 
@@ -459,7 +455,7 @@ and get served the same content as with:
 
   GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/sw^3.pdf
 
-Full documentation on ENS is `available here <https://github.com/ethereum/ens/wiki>`_.
+Full documentation on ENS is `available here <http://ens.readthedocs.io/en/latest/introduction.html>`_.
 
 If you just want to set up ENS so that you can host your Swarm content on a domain, here's a quick set of steps to get you started.
 
@@ -695,17 +691,6 @@ FUSE
 Another way of intracting with Swarm is by mounting it as a local filesystem using FUSE (a.k.a swarmfs). There are three IPC API's which help in doing this.
 
 .. note:: FUSE needs to be installed on your Operating System for these commands to work. Windows is not supported by FUSE, so these command will work only in Linux, Mac OS and FreeBSD. For installation instruction for your OS, see "Installing FUSE" section below.
-  
-
-``swarmfs.mount(HASH|domain, mountpoint))``
-  mounts swarm contents represented by a swarm hash or a ens domain name to the specified local directory. The local directory has to be writable and should be empty.
-  Once this command is succesfull, you should see the contents in the local directory. The HASH is mounted in a rw mode, which means any change insie the directory will be automatically reflected in swarm. Ex: if you copy a file from somewhere else in to mountpoint, it is equvivalent of using a "swarm up <file>" command.    
-
-``swarmfs.unmount(mountpoint)``
-  This command unmounts the HASH|domain mounted in the specified mountpoint. If the device is busy, unmounting fails. In that case make sure you exit the process that is using the directory and try unmounting again.
-
-``swarmfs.listmounts()``
-  For every active mount, this command display three things. The mountpoint, start HASH supplied and the latest HASH. Since the HASH is mounted in rw mode, when ever there is a change to the file system (adding file, removing file etc), a new HASH is computed. This hash is called the latest HASH.
 
 Installing FUSE
 ----------------
