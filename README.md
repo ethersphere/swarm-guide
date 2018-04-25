@@ -10,7 +10,7 @@ cd swarm-guide
 mkdir -p docs/_themes
 cd docs/_themes
 ln -s /usr/local/lib/python2.7/site-packages/sphinx_rtd_theme sphinx_rtd_theme
-sed -i -e 's/^#html_theme_path*/html_theme_path/g' contents/conf.py # don't push this delta!
+sed -i -e 's/^#html_theme_path*/html_theme_path/g' contents/conf.py # don't push
 ```
 
 To compile the html,
