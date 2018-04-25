@@ -189,6 +189,7 @@ hashing system that enables the Swarm node to look for the most recent version o
 Thus, a typical way to access them would be to simply point at the ``bzz-resource`` URL:
 
 .. code-block:: none
+
   bzz-resource:/theswarm.eth
 
 This will make sure that you always get the most current version of ``theswarm.eth``.
