@@ -51,9 +51,11 @@ Then you must prepare your go environment as follows
 
 .. code-block:: none
 
-  mkdir ~/go
-  export GOPATH="$HOME/go"
-  echo 'export GOPATH="$HOME/go"' >> ~/.bashrc
+  mkdir $HOME/go
+  export GOPATH=$HOME/go
+  echo 'export GOPATH=$HOME/go' >> ~/.bashrc
+  export PATH=$PATH:$GOPATH/bin
+  echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
 
 
 .. _below:
@@ -77,9 +79,18 @@ and then add ``/usr/lib/go-1.10/bin`` to your ``PATH`` environment variable.
 .. code-block:: none
 
   export PATH="$PATH:/usr/lib/go-1.10/bin"
-  echo 'export PATH="$PATH:/usr/lib/go-1.10/bin"' >> ~/.bashrc
+  echo 'export PATH=$PATH:/usr/lib/go-1.10/bin' >> ~/.bashrc
 
 You must also set up a go folder and ``GOPATH``.
+
+.. code-block:: none
+
+  mkdir $HOME/go
+  export GOPATH=$HOME/go
+  echo 'export GOPATH=$HOME/go' >> ~/.bashrc
+  export PATH=$PATH:$GOPATH/bin
+  echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
+
 
 Generic linux
 ---------------
