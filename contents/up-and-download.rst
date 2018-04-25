@@ -10,7 +10,7 @@ Introduction
 
 Arguably, uploading and downloading content is the raison d'être of Swarm. Uploading content consists of "uploading" content to your local swarm node, followed by your local swarm node "syncing" the resulting chunks of data with its peers in the network. Meanwhile, downloading content consists of your local Swarm node querying its peers in the network for the relevant chunks of data and then reassembling the content locally.
 
-Uploading and downloading data can be done through the `go-swarm` command line interface (CLI) on the terminal or via the HTTP interface on `http://localhost:8500`.
+Uploading and downloading data can be done through the ``go-swarm`` command line interface (CLI) on the terminal or via the HTTP interface on ``http://localhost:8500``.
 
 
 Uploading using CLI
@@ -20,7 +20,7 @@ Uploading a file to your local swarm node
 ------------------------------------------
 .. note:: Once a file is uploaded to your local Swarm node, your node will `sync` the chunks of data with other nodes on the network. Thus, the file will eventually be available on the network even when your original node goes offline.
 
-The basic command for uploading to your local node is `swarm up FILE`. For example, issue the following command to upload the file example.md file to your local Swarm node
+The basic command for uploading to your local node is ``swarm up FILE``. For example, issue the following command to upload the file example.md file to your local Swarm node
 
 .. code-block:: none
 
@@ -39,7 +39,7 @@ The manifest makes sure you could retrieve the file with the correct MIME type.
 
 Suppressing automatic manifest creation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-You may wish to prevent a manifest from being created alongside with your content and only upload the raw content. You might want to include it in a custom index, or handle it as a data-blob known and used only by a certain application that knows its MIME type. For this you can set `--manifest=false`:
+You may wish to prevent a manifest from being created alongside with your content and only upload the raw content. You might want to include it in a custom index, or handle it as a data-blob known and used only by a certain application that knows its MIME type. For this you can set ``--manifest=false``:
 
 .. code-block:: none
 
@@ -48,12 +48,12 @@ You may wish to prevent a manifest from being created alongside with your conten
 
 This option suppresses automatic manifest upload. It uploads the content as-is.
 However, if you wish to retrieve this file, the browser can not be told unambiguously what that file represents.
-In the context, the hash `7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb` does not refer to a manifest and any attempt to retrieve it over bzz will result in a 404 Not Found Error. In order to access this file, you would have to use the :ref:`bzz-raw` scheme.
+In the context, the hash ``7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb`` does not refer to a manifest and any attempt to retrieve it over bzz will result in a 404 Not Found Error. In order to access this file, you would have to use the :ref:`bzz-raw` scheme.
 
 
 Uploading to a remote swarm node
 -----------------------------------
-You can upload to a remote swarm node using the `--bzzapi` flag.
+You can upload to a remote swarm node using the ``--bzzapi`` flag.
 For example, you can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
 
 .. note:: This treat is likely to disappear or be seriously restricted in the future. It currently also accepts limited file sizes.
@@ -68,14 +68,14 @@ For example, you can use one of the public gateways as a proxy, in which case yo
 Uploading a directory
 -----------------------
 
-Uploading directories is achieved with the `--recursive` flag.
+Uploading directories is achieved with the ``--recursive`` flag.
 
 .. code-block:: none
 
   go-swarm --recursive up /path/to/directory
   > ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30
 
-The returned hash refers to a root manifest referencing all the files in the directory. If there was a file called `index.html` in that directory, you could now access it under
+The returned hash refers to a root manifest referencing all the files in the directory. If there was a file called ``index.html`` in that directory, you could now access it under
 
 .. code-block:: none
 
@@ -84,7 +84,7 @@ The returned hash refers to a root manifest referencing all the files in the dir
 Directory with default entry
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is possible to declare a default entry in a manifest. In the example above, if `index.html` is declared as the default, then it is no longer required to append `/index.html` after the HASH.
+It is possible to declare a default entry in a manifest. In the example above, if ``index.html`` is declared as the default, then it is no longer required to append ``/index.html`` after the HASH.
 
 .. code-block:: none
 
@@ -108,7 +108,7 @@ This is especially useful when the hash (in this case ef6fc0747d1fbaf86d769b3eed
 
 Adding entries to a manifest
 -------------------------------
-The command for modifying manifests is `go-swarm manifest`.
+The command for modifying manifests is ``go-swarm manifest``.
 
 To add an entry to a manifest, use the command:
 
@@ -132,7 +132,7 @@ To modify the hash of an entry in a manifest, use the command:
 Downloading Swarm content from your local node
 -----------------------------------------------
 
-There is no `go-swarm down` command dual to `go-swarm up`. To download from swarm you should use the HTTP interface. You can still download using a CLI with commands such as `curl` or `wget`.
+There is no ``go-swarm down`` command dual to ``go-swarm up``. To download from swarm you should use the HTTP interface. You can still download using a CLI with commands such as ``curl`` or ``wget``.
 
 
 
