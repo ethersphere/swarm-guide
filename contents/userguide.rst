@@ -97,7 +97,7 @@ Now you can also check that the manifest hash matches the content (in fact swarm
    > 2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
 Path Matching
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^
 
 A useful feature of manifests is that we can match paths with URLs.
 In some sense this makes the manifest a routing table and so the manifest swarm entry acts as if it was a host.
@@ -121,35 +121,10 @@ you get served the index page (with content type ``text/html``) at ``4b3a73e43ae
 
 
 
-Content Retrieval Using a Proxy
--------------------------------
-
-Retrieving content is simple matter of pointing your browser to
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz:/<HASH>
-
-where HASH is the id of a swarm manifest.
-This is the most common usecase whereby swarm can serve the web.
-
-It looks like HTTP content transfer from servers, but in fact it is using swarm's serverless architecture.
-
-The general pattern is:
-
-.. code-block:: none
-
-  <HTTP proxy>/<URL SCHEME>:/<DOMAIN OR HASH>/<PATH>?<QUERY_STRING>
-
-The HTTP proxy part can be eliminated if you register the appropriate scheme handler with your browser or you use Mist.
-
-
 Resource Updates
 ------------------------
 
-As of POC 0.3 Swarm offers mutable resources updates. This does not infer that the underlying chunks are actually
-modified, but rather provides a deterministic blockchain-time-based (e.g. relies on the blockchain's generation time)
-hashing system that enables the Swarm node to look for the most recent version of a resource (or, in turn, a specific requested version).
+As of POC 0.3 Swarm offers mutable resources updates. This does not imply that the underlying chunks are actually modified, but rather provides a deterministic blockchain-time-based (e.g. relies on the blockchain's generation time) hashing system that enables the Swarm node to look for the most recent version of a resource (or, in turn, a specific requested version).
 
 ``bzz-resource`` resources are meant to serve as a mechanism to push updates to an ``ENS`` identifier.
 Thus, a typical way to access them would be to simply point at the ``bzz-resource`` URL:
@@ -165,11 +140,11 @@ requested version cannot be found, the Swarm node will try to fetch the latest v
 .. note::
   To simplify things, think of immutable resources as a layer between your Dapp and ENS, facilitating faster and cheaper
   resource updates. Architecture wise, this means your ENS record will point to a versionless ``bzz-resource``. This will allow
-  a browser pointing to the ENS record to retrive the newest version of your resource. A resource update does not infer that the ENS
+  a browser pointing to the ENS record to retrieve the newest version of your resource. A resource update does not infer that the ENS
   record gets updated.
 
 .. important::
-  Creating or updating a mutable resource involves, under the hood, a proper configration that ensures that the actor that is trying to make a mutable
+  Creating or updating a mutable resource involves, under the hood, a proper configuration that ensures that the actor that is trying to make a mutable
   resource update is indeed the owner of the ENS record. This means your node has to be configured accordingly. If your Swarm node isn't configured with the
   ``--ens-api`` switch, ``bzz-resource`` updates will be disabled entirely.
 
@@ -213,114 +188,13 @@ You can also retrieve a specific version of the resource, specifying a block hei
 
 
 
-BZZ URL schemes
---------------------
-Swarm offers 8 distinct url schemes:
-
-
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz:/theswarm.test
-
-The bzz scheme assumes that the domain part of the url points to a manifest. When retrieving the asset addressed by the url, the manifest entries are matched against the url path. The entry with the longest matching path is retrieved and served with the content type specified in the corresponding manifest entry.
-
-Example:
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/read
-
-returns a readme.md file if the manifest at the given hash address contains such an entry.
-
-If the manifest contains multiple entries to which the URL could be resolved, like, in the example above, the manifest has entries for `readme.md` and `reading-list.txt`, the API returns a HTTP response "300 Multiple Choices", indicating that the request could not be unambiguously resolved. A list of available entries is returned via HTTP or JSON.
-
-
-This generic scheme supports name resolution for domains registered on the Ethereum Name Service
-(ENS, see `Ethereum Name Service`). This is a read-only scheme meaning that it only supports GET requests and serves to retrieve content from swarm.
-
-
-bzz-immutable
-^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-immutable:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
-
-The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzz-immutable url will always necessarily address the exact same fixed immutable content.
-
-
-
-bzz-resource
-^^^^^^^^^^^^^^^^^^^^
-
-``bzz-resource`` allows you to receive hash pointers to content that the ENS entry resolved to at different versions
-
-bzz-resource://<id> - get latest update
-bzz-resource://<id>/<n> - get latest update on period n
-bzz-resource://<id>/<n>/<m> - get update version m of period n
-<id> = ens name
-
-
-
-
-.. _bzz-raw:
-bzz-raw
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
-
-
-When responding to GET requests with the bzz-raw scheme, swarm does not assume a manifest, just serves the asset addressed by the url directly.
-
-The ``content_type`` query parameter can be supplied to specify the mime type you are requesting, otherwise content is served as an octet stream per default. For instance if you have a pdf document (not the manifest wrapping it) at hash ``6a182226...`` then the following url will properly serve it.
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-raw:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content_type=application/pdf
-
-
-Importantly and somewhat unusually for generic schemes, the raw scheme supports POST and PUT requests. This is a crucially important way in which swarm is different from the internet as we know it.
-
-The possibility to POST makes swarm an actual cloud service, bringing upload functionality to your browsing.
-
-In fact the command line tool ``swarm up`` uses the http proxy with the bzz raw scheme under the hood.
-
-bzz-list
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-list:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/path
-
-Returns a list of all files contained in <manifest> under <path> grouped into common prefixes using ``/`` as a delimiter. If path is ``/``, all files in manifest are returned. The response is a JSON-encoded object with ``common_prefixes`` string field and ``entries`` list field.
-
-bzz-hash
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-hash:/theswarm.test
-
-
-Swarm accepts GET requests for bzz-hash url scheme and responds with the hash value of the raw content, the same content returned by requests with bzz-raw scheme. Hash of the manifest is also the hash stored in ENS so bzz-hash can be used for ENS domain resolution.
-
-Response content type is *text/plain*.
-
-bzzr and bzzi
-^^^^^^^^^^^^^^
-Schemes with short names bzzr and bzzi are deprecated in favour of bzz-raw and bzz-immutable, respectively. They are kept for backward compatibility, and will be removed on the next release.
-
-
 
 
 
 FUSE
 ======================
 
-Another way of intracting with Swarm is by mounting it as a local filesystem using FUSE (a.k.a swarmfs). There are three IPC API's which help in doing this.
+Another way of interacting with Swarm is by mounting it as a local filesystem using FUSE. There are three IPC API's which help in doing this.
 
 .. note:: FUSE needs to be installed on your Operating System for these commands to work. Windows is not supported by FUSE, so these command will work only in Linux, Mac OS and FreeBSD. For installation instruction for your OS, see "Installing FUSE" section below.
 
