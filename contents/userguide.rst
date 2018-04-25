@@ -1,94 +1,4 @@
-.. _userguide:
 
-*****************
-User Guide
-*****************
-
-Introduction
-==================================
-
-.. note:: This guide assumes you've installed the swarm client and have a running node that listens by default on port 8500
-
-tbd
-
-CLI usage
-==================================
-
-Uploading a file or directory to swarm
----------------------------------------------------------------
-
-You can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
-
-.. note:: This treat is likely to disappear or be seriously restricted in the future. It currently also accepts limited file sizes.
-
-
-.. code-block:: none
-
-    swarm --bzzapi http://swarm-gateways.net up /path/to/file/or/directory
-
-Uploading a file
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Issue the following command to upload the go-ethereum README file to your swarm
-
-.. code-block:: none
-
-  swarm up $GOPATH/src/github.com/ethereum/go-ethereum/README.md
-  > d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
-
-The hash returned is the hash of a swarm manifest that contains the README.md file as its only entry. Both the primary content and the manifest are uploaded by default.
-You can access this file from swarm by pointing your browser to:
-
-.. code-block:: none
-
-  http://localhost:8500/bzz:/d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
-
-The manifest makes sure you could retrieve the file with the correct mime type.
-
-You may wish to prevent a manifest to be created for your content and only upload the raw content. Maybe you want to include it in a custom index, or it is handled as a datablob known and used only by some application that knows its mimetype. For this you can set `--manifest=false`:
-
-.. code-block:: none
-
-  swarm --manifest=false --bzzapi http://swarm-gateways.net/ up yellowpaper.pdf 2> up.log
-  > 7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb
-
-This option supresses automatic manifest upload. It uploads the content as-is.
-However, if you wish to retrieve this file, the browser can not be told unambiguously what that file represents. Thus, swarm will return a 404 Not Found. In order to access this file, you can use the ``bzz-raw`` scheme, see :ref:`bzz-raw`.
-
-Example: Uploading a directory
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Uploading directories is achieved with ``swarm --recursive up``.
-
-Let us create some test files
-
-.. code-block:: none
-
-  mkdir upload-test
-  echo "one" > upload-test/one.txt
-  echo "two" > upload-test/two
-  mkdir upload-test/three
-  echo "four" > upload-test/three/four
-
-We can upload this directory with
-
-.. code-block:: none
-
-  swarm --recursive up upload-test/
-  > ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30
-
-The output again is the root hash of your uploaded directory, which can be used to retrieve the complete directory 
-  
-
-You could then retrieve the files relative to the root manifest like so:
-
-.. code-block:: none
-
-  curl http://localhost:8500/bzz:/ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30/three/four
-  > four   
-
-
-If you'd like to be able to access your content via a human readable name like 'mysite.eth' instead of the long hex string above, see the section on `Ethereum Name Service`_ below.
 
 
 Working with content
@@ -222,13 +132,13 @@ concepts of plausible deniability and censorship resistence to work.
 
 More info about how we handle encryption at Swarm can be found `here <https://github.com/ethersphere/swarm/wiki/Symmetric-Encryption-for-Swarm-Content>`_.
 
-.. note:: 
+.. note::
   Swarm currently supports both encrypted and unencrypted ``up`` commands through usage of the ``--encrypt`` flag.
   This might change in the future as we will refine and make Swarm a safer network.
 
-.. note:: 
-  When you upload content to Swarm using the `--encrypt` flag, the hash received in response will be 
-  longer than the standard Swarm hash you're used to - that's because the resulting hash is a concatenated 
+.. note::
+  When you upload content to Swarm using the `--encrypt` flag, the hash received in response will be
+  longer than the standard Swarm hash you're used to - that's because the resulting hash is a concatenated
   string of the content hash and the encryption key used to encrypt the content.
 
 
@@ -272,7 +182,7 @@ Resource Updates
 ------------------------
 
 As of POC 0.3 Swarm offers mutable resources updates. This does not infer that the underlying chunks are actually
-modified, but rather provides a deterministic blockchain-time-based (e.g. relies on the blockchain's generation time) 
+modified, but rather provides a deterministic blockchain-time-based (e.g. relies on the blockchain's generation time)
 hashing system that enables the Swarm node to look for the most recent version of a resource (or, in turn, a specific requested version).
 
 ``bzz-resource`` resources are meant to serve as a mechanism to push updates to an ``ENS`` identifier.
@@ -282,7 +192,7 @@ Thus, a typical way to access them would be to simply point at the ``bzz-resourc
   bzz-resource:/theswarm.eth
 
 This will make sure that you always get the most current version of ``theswarm.eth``.
-You can also point to a specific version by specifying an Ethereum block height and a version specifier. If the 
+You can also point to a specific version by specifying an Ethereum block height and a version specifier. If the
 requested version cannot be found, the Swarm node will try to fetch the latest version in relative to that requested version (but not a newer one).
 
 .. note::
@@ -328,7 +238,7 @@ Retrieving a specific version
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can also retrieve a specific version of the resource, specifying a block height and a (incremental) version identifier:
- 
+
 .. code-block:: none
 
   curl http://localhost:8500/bzz-resource:/yourdomainname.eth/3/1
@@ -372,7 +282,7 @@ bzz-immutable
 
 The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzz-immutable url will always necessarily address the exact same fixed immutable content.
 
-.. _bzz-raw:
+
 
 bzz-resource
 ^^^^^^^^^^^^^^^^^^^^
@@ -387,7 +297,7 @@ bzz-resource://<id>/<n>/<m> - get update version m of period n
 
 
 
-
+.. _bzz-raw:
 bzz-raw
 ^^^^^^^^^^^^^^
 
@@ -634,17 +544,17 @@ Configuration
 2. ``Topic`` - an arbitrary 4 byte word (``0x0000`` is reserved for ``raw`` messages).
 
 3. ``Address``- the swarm overlay address to use for the routing.
-   
+
    The registration returns a key id which is used to refer to the stored key in ensuing operations.
 
-After you associate an encryption key with an address they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address space of the message. 
+After you associate an encryption key with an address they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address space of the message.
 
 Sending a message
 -------------------
 
 There are a few prerequisits for sending a message over ``PSS``:
 
-1. ``Encryption key id`` - id of the stored recipient's encryption key. 
+1. ``Encryption key id`` - id of the stored recipient's encryption key.
 
 2. ``Topic`` - an arbitrary 4 byte word (with the exception of ``0x0000`` to be reserved for ``raw`` messages).
 
@@ -656,18 +566,18 @@ There are a few prerequisits for sending a message over ``PSS``:
 Upon sending the message it is encrypted and passed on from peer to peer. Any node along the route that can successfully decrypt the message is regarded as a recipient. Recipients continue to pass on the message to their peers, to make traffic analysis attacks more difficult.
 
 .. note::
-The Address that is coupled with the encryption key is used for routing the message. 
-This does *not* need to be a full address; the network will route the message to the best 
-of its ability with the information that is available. 
-If *no* address is given (zero-length byte slice), routing is effectively deactivated, 
+The Address that is coupled with the encryption key is used for routing the message.
+This does *not* need to be a full address; the network will route the message to the best
+of its ability with the information that is available.
+If *no* address is given (zero-length byte slice), routing is effectively deactivated,
 and the message is passed to all peers by all peers.
 
-After you associate an encryption key with an address space they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address space of the message. 
+After you associate an encryption key with an address space they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address space of the message.
 
 .. important::
   When using the internal encryption methods, you MUST associate keys (whether symmetric or asymmetric) with an address space AND a topic before you will be able to send anything.
 
-You can subscribe to incoming messages using a topic. 
+You can subscribe to incoming messages using a topic.
 You can subscribe to messages on topic 0x0000 and handle the encryption on your side,  This even enables you to use the swarm node as a multiplexer for different keypair identities.
 
 Sending a raw message
@@ -677,7 +587,7 @@ It is also possible to send a message without using the builtin encryption. In t
 
 1. ``Message payload`` - the message data as an arbitrary byte sequence.
 
-2. ``Address``- the swarm overlay address to use for the routing. 
+2. ``Address``- the swarm overlay address to use for the routing.
 
 
 .. important::
@@ -701,7 +611,7 @@ Installing FUSE
 
 	sudo apt-get install fuse
 	sudo modprobe fuse
-	sudo chown <username>:<groupname> /etc/fuse.conf  
+	sudo chown <username>:<groupname> /etc/fuse.conf
 	sudo chown <username>:<groupname> /dev/fuse
 
 2. Mac OS
@@ -713,4 +623,3 @@ Installing FUSE
 	brew update
 	brew install caskroom/cask/brew-cask
 	brew cask install osxfuse
-
