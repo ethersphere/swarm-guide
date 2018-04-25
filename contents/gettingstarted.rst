@@ -43,6 +43,8 @@ Verifying that your local Swarm node is up
 
 When running, ``go-swarm`` is accessible through an HTTP API on port 8500. Confirm that it is up and running by pointing your browser to http://localhost:8500
 
+.. _connect-ens
+
 How do I enable ENS name resolution?
 =====================================
 

@@ -15,9 +15,11 @@ Contents:
    installation
    gettingstarted
    up-and-download
+   ens
    encryption
    configuration
    userguide
+   pss
    apireference
    architecture
 
