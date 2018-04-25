@@ -41,12 +41,12 @@ Using this account, connect to Swarm with
 Verifying that your local Swarm node is up
 -------------------------------------------
 
-When running, `go-swarm` is accessible through an HTTP API on port 8500. Confirm that it is up and running by pointing your browser to `http://localhost:8500`.
+When running, ``go-swarm`` is accessible through an HTTP API on port 8500. Confirm that it is up and running by pointing your browser to http://localhost:8500
 
 How do I enable ENS name resolution?
 =====================================
 
-The `Ethereum Name Service <http://ens.readthedocs.io/en/latest/introduction.html>`_ is based on a suite of smart contracts running on the Ethereum main network. Thus, in order to use the ENS to resolve names to swarm content hashes, `go-swarm` has to connect to a `geth` instance that is connected to the Ethereum main net. This is done using the `--ens-api '/path/to/geth/datadir/geth.ipc'` flag.
+The `Ethereum Name Service <http://ens.readthedocs.io/en/latest/introduction.html>`_ is based on a suite of smart contracts running on the Ethereum main network. Thus, in order to use the ENS to resolve names to swarm content hashes, ``go-swarm`` has to connect to a ``geth`` instance that is connected to the Ethereum main net. This is done using the ``--ens-api '/path/to/geth/datadir/geth.ipc'``` flag.
 
 First you must start your geth node and establish connection with Ethereum main network with the following command:
 
@@ -68,4 +68,4 @@ After the connection is established, open another terminal window and connect to
 
   go-swarm --ens-api '$HOME/.ethereum/geth.ipc'
 
-Verify that this was successful by pointing your browser to `http://localhost:8500/bzz:/theswarm.eth/`.
+Verify that this was successful by pointing your browser to http://localhost:8500/bzz:/theswarm.eth/

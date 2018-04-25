@@ -101,6 +101,7 @@ Generic linux
 ^^^^^^^^^^^^^^
 
 The latest version of golang can be found at https://golang.org/dl/
+
 To install it, download the tar.gz file
 
 .. code-block:: none
