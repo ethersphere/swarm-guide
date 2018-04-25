@@ -137,8 +137,8 @@ Swarm is code by Ethersphere `https://github.com/ethersphere`
 
 the team behind swarm:
 
-* Viktor Trón @zelig
-* Dániel A. Nagy @nagydani
+* Viktor TrÃ³n @zelig
+* DÃ¡niel A. Nagy @nagydani
 * Aron Fischer @homotopycolimit
 * Janos Gulyas @janos
 * Louis Holbrook @nolash
@@ -157,7 +157,7 @@ Special thanks to
 * Jeffrey Wilcke and the go team for continued support, testing and direction;
 * Gavin Wood and Vitalik Buterin for the vision;
 * Nick Johnson @Arachnid for ENS and ENS swarm integration
-* Zsolt Felföldi @zsfelfoldi for his contribution early in the project
+* Zsolt FelfÃ¶ldi @zsfelfoldi for his contribution early in the project
 * Alex Van der Sande, Fabian Vogelsteller, Bas van Kervel, Victor Maia, Everton Fraga and the Mist team
 * Elad Verbin, Nick Savers, Alex Beregszaszi, Daniel Varga, Juan Benet for inspiring discussions and ideas
 * Participants of the orange lounge research group and the swarm orange summits
