@@ -2,22 +2,27 @@
 Installation and Updates
 *************************
 
-Installation
-=======================
 Swarm is part of the Ethereum stack, the reference implementation is currently at POC3 (proof of concept 3), or version 0.3.
+
+
+Swarm runs on all major platforms (linux, MacOSX, Windows, also raspberry pi, android OS, iOS).
+
+..  note::
+  The go-swarm package has not been tested on platforms other than linux and OSX.
+
+Installing Swarm binaries
+=========================
+
+THIS SECTION IS MISSING
+
+
+Installing Swarm from source
+=============================
 
 The source code is found on github: https://github.com/ethereum/go-ethereum/tree/master/
 
-Supported Platforms
-=========================
-
-Geth runs on all major platforms (linux, MacOSX, Windows, also raspberry pi, android OS, iOS).
-
-..  note::
-  This package has not been tested on platforms other than linux and OSX.
-
 Prerequisites
-================
+-------------
 
 building the Swarm daemon :command:`go-swarm` requires the following packages:
 
@@ -61,7 +66,7 @@ Then you must prepare your go environment as follows
 .. _below:
 
 Ubuntu
----------
+^^^^^^^^
 
 At the time of writing, the Ubuntu repositories carry an older version of Go. Up to date instruction on how to install the newest version of Go in Ubuntu can always be found `here <https://github.com/golang/go/wiki/Ubuntu>`_.
 
@@ -93,7 +98,7 @@ You must also set up a go folder and ``GOPATH``.
 
 
 Generic linux
----------------
+^^^^^^^^^^^^^^
 
 The latest version of golang can be found at https://golang.org/dl/
 To install it, download the tar.gz file
@@ -130,8 +135,8 @@ Read the environment variables into current session:
 
   source ~/.bashrc
 
-Installing Swarm from source
-=============================
+Compiling and installing
+-------------------------
 
 Once all prerequisites are met, download the go-ethereum source code
 
@@ -178,7 +183,7 @@ This should return some relevant information. For example:
   GOROOT=/usr/local/go
 
 Updating your client
-=====================
+---------------------
 
 To update your client simply download the newest source code and recompile.
 
