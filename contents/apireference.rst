@@ -139,7 +139,7 @@ PUT http://localhost:8500/bzz:/HASH|domain/some/path
   It looks for the manifest by domain or hash, makes a copy of it and updates its collection with the new asset.
   It returns the hash of the newly created manifest.
 
-Javascript
+JavaScript
 ========================
 Swarm currently supports a Javascript API through the `swarm-js <https://github.com/MaiaVictor/swarm-js>`_ package which is available through `NPM <https://www.npmjs.com/package/swarm-js>`_ by issuing
 the following command:

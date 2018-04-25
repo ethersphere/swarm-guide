@@ -387,5 +387,5 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 http_index_localname = "SWARM HTTP API"
 
 
-def setup(app):
-   app.add_stylesheet("_static/theme_overrides.css")
+# def setup(app):
+#    app.add_stylesheet("_static/theme_overrides.css")
