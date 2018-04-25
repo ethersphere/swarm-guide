@@ -51,7 +51,7 @@ Then launch the swarm; connecting it to the geth node (``--ens-api``).
 
 
 Swarm in singleton mode (no peers)
-====================================
+------------------------------------
 
 To launch in singleton mode, use the ``--maxpeers 0`` flag. This works on both ``geth`` and ``go-swarm``.
 
@@ -103,7 +103,7 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
     geth --exec "console.log(admin.nodeInfo.enode)" attach /path/to/bzzd.ipc
 
 Running a private swarm
-=============================
+-------------------------
 
 You can extend your singleton node into a private swarm. First you fire up a number of ``go-swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific into will reside under ``$DATADIR/bzz-$BZZKEY/``
 Make sure that you create an account for each instance of go-swarm you want to run.
