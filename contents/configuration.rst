@@ -14,6 +14,7 @@ Connecting swarm only (no blockchain)
 ..  note::  Even though you do not need the ethereum blockchain, you will need geth to generate a swarm account ($BZZKEY), since this account determines the base address that your swarm node is going to use.
 
 To suppress any ENS name resolution, use the `--ens-api ''` option.
+
 .. code-block:: none
 
   go-swarm --bzzaccount $BZZKEY \
@@ -97,6 +98,7 @@ Without discovery, it is possible to manually start off the connection process b
   geth --exec='admin.addPeer("ENODE")' attach ipc:/path/to/bzzd.ipc
 
 Where ENODE is the enode record of a swarm node. Such a record looks like the following:
+
 .. code-block:: none
 
   enode://01f7728a1ba53fc263bcfbc2acacc07f08358657070e17536b2845d98d1741ec2af00718c79827dfdbecf5cfcd77965824421508cc9095f378eb2b2156eb79fa@1.2.3.4:30399
