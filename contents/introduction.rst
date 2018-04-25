@@ -22,19 +22,19 @@ Basics
 ========================
 
 Swarm is set out to provide base layer infrastructure for a new decentralised internet.
-Swarm is a peer to peer network of nodes providing distributed digital services by contributing resources (storage, message forwarding, payment processing) to each other. These contributions are accurately accounted for on a peer to peer basis, allowing nodes to trade resource for resource, but offering monetary compensation for nodes consuming more than they serve.
+Swarm is a peer to peer network of nodes providing distributed digital services by contributing resources (storage, message forwarding, payment processing) to each other. These contributions are accurately accounted for on a peer to peer basis, allowing nodes to trade resource for resource, but offering monetary compensation to nodes consuming less than they serve.
 
 The Ethereum Foundation swarm team is operating a swarm testnet where swarm can be tried out.
 Everyone can join the network by running the swarm client node on their server, desktop, laptop or mobile device.
 The Swarm client is part of the Ethereum stack, the reference implementation is written in golang and found under the go-ethereum repository. Currently at POC (proof of concept) version 0.3 is running on all nodes.
 
-Swarm offers a local http proxy API that dapps or command line tools can use to interact with swarm. Some modules like messaging is only available through RPC-JSON API. The foundation servers on the testnet are offering public gateways, which serve to easily demonstrate functionality and allow free access so that people can try swarm without even running their own node.
+Swarm offers a local http proxy API that dapps or command line tools can use to interact with swarm. Some modules like messaging are   only available through RPC-JSON API. The foundation servers on the testnet are offering public gateways, which serve to easily demonstrate functionality and allow free access so that people can try swarm without even running their own node.
 
 .. note::
   The swarm public gateways are temporary and users should not rely on their existence for production services.
 
 Swarm defines the :dfn:`bzz suite of devp2p subprotocols` running on the ethereum devp2p network. The bzz subprotocol is in flux, the
-specification of the wire protocol is considered stable only with POC4 expected in Q1 20192.
+specification of the wire protocol is considered stable only with POC4 expected in Q1 2019.
 
 The swarm of Swarm is the collection of nodes of the devp2p network each of which run the bzz protocol suite on the same network id.
 
@@ -57,10 +57,17 @@ Swarm defines 3 crucial notions
   Chunks are pieces of data of limited size (max 4K), the basic unit of storage and retrieval in the swarm. The network layer only knows about chunks and has no notion of document or collection.
 
 :dfn:`reference`
-  A reference is a unique identifier of a digital asset that allows clients to retrieve and access the content. For unencrypted content the document reference is cryptographic hash of the data and serves as its content address. This hash reference is a 32 byte hash, which is serialised with 64 hex bytes. In case of an encrypted document the reference has two equal-length component: the first 32 bytes are the content address of the encrypted asset, while the second 32 bytes are the decryption key, altogether 64 bytes, serialised as 128 hex bytes.
+  A reference is a unique identifier of a digital asset that allows clients to retrieve and access the content. For unencrypted content the document reference is cryptographic hash of the data and serves as its content address. This hash reference is a 32 byte hash, which is serialised with 64 hex bytes. In case of an encrypted document the reference has two equal-length components: the first 32 bytes are the content address of the encrypted asset, while the second 32 bytes are the decryption key, altogether 64 bytes, serialised as 128 hex bytes.
 
 :dfn:`manifest`
-  A manifests is a data structure describing document collections. A manifest is basically a mapping from strings to documemts. The bzz url scheme assumes that the content referenced in the domain is a manifest and renders the content entry whose path match the one in the request path. Given this url based access to content, manifests can be regarded as routing tables for virtual hosts.
+  A manifests is a data structure describing document collections. A manifest is basically a mapping from strings to documemts. The bzz url scheme assumes that the content referenced in the domain is a manifest and renders the content entry whose path matches the one in the request path. Given this url based access to content, manifests can be regarded as routing tables for a website, which makes swarm able to offer virtual hosting, ie serve websites without servers.
+  Manifests can also be mapped to a filesystem directory tree, which allows for uploading and downloading directories.
+  Finally, manifests can also be considered indexes, so it can be used to implement a simple key value store.
+
+  Manifests specify paths and corresponding content hashes allowing for url based content retrieval.
+  Manifests can therefore define a routing table for (static) assets (including dynamic content using for instance static javascript).
+  This offers the functionality of :dfn:`virtual hosting`, storing entire directories or web(3)sites, similar to www but
+  without servers.d
 
 In this guide, content is understood very broadly in a technical sense denoting any blob of data.
 Swarm defines a specific identifier for a piece of content. This identifier part of the reference serves as the retrieval address for the content.
@@ -80,7 +87,7 @@ Using ENS for domain name resolution, the url scheme provides
 content retrieval based on mnemonic (or branded) names, much like the DNS of the world wide web, but without servers.
 MRU is an off-chain solution for communicating updates to a resource, it offers cheaper and faster updates than ENS, yet the updates can be consolidated on ENS by any third party willing to pay for the transaction.
 
-Swarm nodes participating in the network also have their own :dfn:`base address (also called bzzkey)` which is derived as the (keccak 256bit sha3) hash of an ethereum address, the so called :dfn:`swarm base account` of the node. These node addresses define a location in the same address space as the data.
+Just as content in swarm is identified via a swarm hash, so too is every swarm node in the network. All swarm nodes have their own :dfn:`base address` which is derived as the (keccak 256bit sha3) hash of an ethereum address, the so called :dfn:`swarm base account` of the node. These node addresses define a location in the same address space as the data.
 
 When content is uploaded to swarm it is chopped up into pieces called chunks. Each chunk is accessed at the address defined by its swarm hash. The hashes of data chunks themselves are packaged into a chunk which in turn has its own hash. In this way the content gets mapped to a chunk tree. This hierarchical swarm hash construct allows for merkle proofs for chunks within a piece of content, thus providing swarm with integrity protected random access into (large) files (allowing for instance skipping safely in a streaming video or looking up a key in a database file).
 
@@ -92,16 +99,6 @@ The viability of both hinges on the assumption that any node (uploader/requester
 Nodes cache content that they pass on at retrieval, resulting in an auto scaling elastic cloud: popular (oft-accessed) content is replicated throughout the network decreasing its retrieval latency. Caching also results in a :dfn:`maximum resource utilisation` in as much as nodes will fill their dedicated storage space with data passing through them. If capacity is reached, least accessed chunks are purged by a garbage collection process. As a consequence, unpopular content will end up
 getting deleted. Storage insurance (to be implemented in POC4 by Q1 of 2019) will offer users a secure guarantee to protect important content from being purged.
 
-Swarm content access is centred around the notion of a manifest. A manifest file describes a document collection, e.g.,
-
-* a filesystem directory
-* an index of a database
-* a routing table of a virtual host
-
-Manifests specify paths and corresponding content hashes allowing for url based content retrieval.
-Manifests can therefore define a routing table for (static) assets (including dynamic content using for instance static javascript).
-This offers the functionality of :dfn:`virtual hosting`, storing entire directories or web(3)sites, similar to www but
-without servers.
 
 You can read more about these components in :ref:`architecture`.
 
@@ -208,14 +205,10 @@ The swarm page also contains a list of swarm-related talks (video recording and 
 
 You can also find the ethersphere orange papers there.
 
-Public gateways are:
+Public gateways:  http://swarm-gateways.net/
 
-* http://swarm-gateways.net/
-
-Swarm testnet monitor: http://stats.ens.domains/
+Example dapps: bzz://swarmapps.eth, source code: https://github.com/ethereum/swarm-dapps
 
 Source code is at https://github.com/ethereum/go-ethereum/ and our team working copy  https://github.com/ethersphere/go-ethereum/
-
-Example dapps are at https://github.com/ethereum/swarm-dapps
 
 This document source https://github.com/ethersphere/swarm-guide
