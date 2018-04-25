@@ -8,38 +8,38 @@ Introduction
 ==================================
 .. note:: This guide assumes you've installed the swarm client and have a running node that listens by default on port 8500. See "Getting Started" for details.
 
-Arguably, uploading and downloading content is the raison d'être of Swarm. Uploading content consists of "uploading" content to your local swarm node, followed by your local swarm node 'syncing' the resulting chunks of data with its peers in the network. Meanwhile downloading content consists of your local swarm node querying its peers in the network for the relevant chunks of data and then reassembling the content locally.
+Arguably, uploading and downloading content is the raison d'être of Swarm. Uploading content consists of "uploading" content to your local swarm node, followed by your local swarm node "syncing" the resulting chunks of data with its peers in the network. Meanwhile, downloading content consists of your local Swarm node querying its peers in the network for the relevant chunks of data and then reassembling the content locally.
 
-Uploading and Downloading data can be done through the `go-swam` command line interface (CLI) on the terminal or via the HTTP interface on `http://localhost:8500`.
+Uploading and downloading data can be done through the `go-swarm` command line interface (CLI) on the terminal or via the HTTP interface on `http://localhost:8500`.
 
 
-Uploading using go-swarm CLI
-=============================
+Uploading using CLI
+=====================
 
 Uploading a file to your local swarm node
 ------------------------------------------
+.. note:: Once a file is uploaded to your local Swarm node, your node will `sync` the chunks of data with other nodes on the network. Thus, the file will eventually be available on the network even when your original node goes offline.
 
-The basic command for uploading to your local node is `swarm up FILE`. For example, issue the following command to upload the go-ethereum README file to your swarm
+The basic command for uploading to your local node is `swarm up FILE`. For example, issue the following command to upload the file example.md file to your local Swarm node
 
 .. code-block:: none
 
-  go-swarm up $GOPATH/src/github.com/ethereum/go-ethereum/README.md
+  go-swarm up /path/to/example.md
   > d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
 
-The hash returned is the hash of a swarm manifest. This manifest is a JSON file that contains the README.md file as its only entry. Both the primary content and the manifest are uploaded by default.
+The hash returned is the hash of a Swarm manifest. This manifest is a JSON file that contains the example.md file as its only entry. Both the primary content and the manifest are uploaded by default.
 
-After uploading, you can access this README.md file from swarm by pointing your browser to:
+After uploading, you can access this example.md file from swarm by pointing your browser to:
 
 .. code-block:: none
 
   http://localhost:8500/bzz:/d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
 
-The manifest makes sure you could retrieve the file with the correct mime type.
+The manifest makes sure you could retrieve the file with the correct MIME type.
 
 Suppressing automatic manifest creation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-You may wish to prevent a manifest to be created for your content and only upload the raw content. Maybe you want to include it in a custom index, or it is handled as a datablob known and used only by some application that knows its mimetype. For this you can set `--manifest=false`:
+You may wish to prevent a manifest from being created alongside with your content and only upload the raw content. You might want to include it in a custom index, or handle it as a data-blob known and used only by a certain application that knows its MIME type. For this you can set `--manifest=false`:
 
 .. code-block:: none
 
@@ -102,6 +102,7 @@ and also at
 .. code-block:: none
 
   http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/
+
 This is especially useful when the hash (in this case ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b) is given a registered name like 'mysite.eth' in the `Ethereum Name Service`_.
 
 
@@ -128,14 +129,15 @@ To modify the hash of an entry in a manifest, use the command:
   go-swarm manifest update
 
 
-Downloading from your local swarm node
------------------------------------------
+Downloading Swarm content from your local node
+-----------------------------------------------
+
 There is no `go-swarm down` command dual to `go-swarm up`. To download from swarm you should use the HTTP interface. You can still download using a CLI with commands such as `curl` or `wget`.
 
 
 
-Up and Downloading using HTTP
-==============================
+Up and Downloading using the HTTP API
+=====================================
 
 Swarm runs an HTTP API. Thus, a simple way to upload and download files to/from Swarm is through this API.
 We can use the ``curl`` tool to exemplify how to interact with this API.
@@ -156,7 +158,7 @@ Once the file is uploaded, you will receive a hex string which will look similar
 
 This is the address string of your content inside Swarm.
 
-To download a file from swarm, you just need the file's address string. Once you have it the process is simple. Run:
+To download a file from Swarm, you just need the file's address string. Once you have it the process is simple. Run:
 
 .. code-block:: none
 
@@ -175,10 +177,21 @@ Tar stream upload
 
 .. code-block:: none
 
-  ( mkdir dir1 dir2; echo "some-data" | tee dir1/file.txt | tee dir2/file.txt; )
+  # create two directories with a file in each
+  mkdir dir1 dir2
+  echo "some-data" > dir1/file.txt
+  echo "some-data" > dir2/file.txt
 
-  tar c dir1/file.txt dir2/file.txt | curl -H "Content-Type: application/x-tar" --data-binary @- http://localhost:8500/bzz:/
+  # create a tar archive containing the two directories
+  tar cf files.tar .
+
+  # upload the tar archive to Swarm to create a manifest
+  curl -H "Content-Type: application/x-tar" --data-binary @files.tar http://localhost:8500/bzz:/
   > 1e0e21894d731271e50ea2cecf60801fdc8d0b23ae33b9e808e5789346e3355e
+
+You can then download the files using:
+
+.. code-block:: none
 
   curl http://localhost:8500/bzz:/1e0e21894d731271e50ea2cecf60801fdc8d0b23ae33b9e808e5789346e3355e/dir1/file.txt
   > some-data
@@ -193,7 +206,6 @@ GET requests work the same as before with the added ability to download multiple
   curl -s -H "Accept: application/x-tar" http://localhost:8500/bzz:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/ | tar t
   > dir1/file.txt
     dir2/file.txt
-    dir3/file.txt
 
 
 Multipart form upload
@@ -241,7 +253,7 @@ Files can also be uploaded using a simple HTML form:
   Listing files
   -------------
 
-  A `GET` request with ``bzz-list`` url scheme returns a list of files contained under the path, grouped into common prefixes which represent directories:
+  A `GET` request with ``bzz-list`` URL scheme returns a list of files contained under the path, grouped into common prefixes which represent directories:
 
   .. code-block:: none
 
