@@ -109,14 +109,13 @@ This document
 ---------------------
 
 This document's source code is found at https://github.com/ethersphere/swarm-guide
-The most up-to-date swarm book in various formats is available on the old web
-http://ethersphere.org/swarm/docs as well as on swarm bzz://swarm/guide
+The HTML rendered version is available at https://swarm-guide.readthedocs.io/en/latest/
 
 
 Status
 ---------------
 
-The status of swarm is proof of concept 3 release series (POC3).
+The status of Swarm is proof of concept 3 release series (POC3).
 
 .. note:: Swarm is experimental code and untested in the wild. Use with extreme care. We encourage developers to connect to the testnet with their permanent nodes and give us feedback.
 
@@ -134,7 +133,7 @@ in our repository in the COPYING `https://github.com/ethereum/go-ethereum/blob/m
 Credits
 ---------------------
 
-Swarm is code by Ethersphere (ΞTHΞRSPHΞЯΞ) `https://github.com/ethersphere`
+Swarm is code by Ethersphere `https://github.com/ethersphere`
 
 the team behind swarm:
 
@@ -174,7 +173,7 @@ Daily development and discussions are ongoing in various gitter channels:
 
 * https://gitter.im/ethereum/swarm: general public chatroom about swarm dev
 * https://gitter.im/ethersphere/orange-lounge: our reading/writing/working group and R&D sessions
-* https://gitter.im/ethereum/pss: about postal services on swarm - messaging with deterministic routing
+* https://gitter.im/ethersphere/pss: about postal services on swarm - messaging with deterministic routing
 * https://gitter.im/ethereum/swatch: variable bitrate media streaming and multicast/broadcast solution
 
 Swarm discussions also on the Ethereum subreddit: http://www.reddit.com/r/ethereum
@@ -199,9 +198,9 @@ Swarm roadmap and tentative plan for features and POC series are found on the wi
 * https://github.com/ethereum/go-ethereum/wiki/swarm-roadmap
 * https://github.com/ethereum/go-ethereum/wiki/swarm---POC-series
 
-the *swarm homepage* is accessible via swarm at bzz://theswarm.eth or the gateway http://swarm-gateways.net/bzz:/theswarm.eth/
+the *Swarm homepage* is accessible via swarm at bzz://theswarm.eth or the gateway http://swarm-gateways.net/bzz:/theswarm.eth/
 
-The swarm page also contains a list of swarm-related talks (video recording and slides).
+The swarm page also contains a list of Swarm-related talks (video recording and slides).
 
 You can also find the ethersphere orange papers there.
 
