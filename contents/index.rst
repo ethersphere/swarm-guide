@@ -17,6 +17,7 @@ Contents:
    up-and-download
    ens
    encryption
+   urlschemes
    configuration
    userguide
    pss
