@@ -310,8 +310,8 @@ These parameters are likely to change in POC 0.3
    :widths: 10, 5, 5, 15, 55
 
    "PublicKey","n/a","n/a","","Public key of your swarm base account use"
-   "Contract","n/a","n/a","0x0000000000000000000000000000000000000000","Address of the cheque book contract deployed on the Ethereum blockchain. If blank, a new chequebook contract will be deployed."
-   "Beneficiary","n/a","n/a","0x0000000000000000000000000000000000000000","Ethereum account address serving as beneficiary of incoming cheques"
+   "Contract","n/a","n/a","0x0","Address of the cheque book contract deployed on the Ethereum blockchain. If blank, a new chequebook contract will be deployed."
+   "Beneficiary","n/a","n/a","0x0","Ethereum account address serving as beneficiary of incoming cheques"
 
 
 Synchronisation parameters
