@@ -13,21 +13,18 @@ Connecting swarm only (no blockchain)
 
 ..  note::  Even though you do not need the ethereum blockchain, you will need geth to generate a swarm account ($BZZKEY), since this account determines the base address that your swarm node is going to use.
 
-To suppress any ENS name resolution, use the `--ens-api ''` option.
+To suppress any ENS name resolution, use the ``--ens-api ''`` option.
 
 .. code-block:: none
 
   go-swarm --bzzaccount $BZZKEY \
          --datadir $DATADIR \
-         --ens-api '' \
-         --password ~/password.file
-
-Assuming `password.file` contains the password to your bzzaccount.
+         --ens-api ''
 
 
 The ``go-swarm`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
 
-Using swarm together with the Ropsten testnet blockchain ENS
+Using Swarm together with the Ropsten testnet blockchain ENS
 -------------------------------------------------------------
 
 In case you don't yet have a testnet account, run
@@ -40,19 +37,16 @@ Run a geth node connected to the Ropsten testnet
 
 .. code-block:: none
 
-  geth --unlock 0 \
-      --password ~/password.file
-      --testnet
+  geth --testnet
 
-Then launch the swarm; connecting it to the geth node (--ens-api).
+Then launch the swarm; connecting it to the geth node (``--ens-api``).
 
 
 .. code-block:: none
 
   go-swarm --bzzaccount $BZZKEY \
          --keystore $HOME/.ethereum/geth/testnet/keystore \
-         --ens-api $HOME/.ethereum/geth/testnet/geth.ipc \
-         --password ~/password.file
+         --ens-api $HOME/.ethereum/geth/testnet/geth.ipc
 
 
 
@@ -69,7 +63,7 @@ For example:
         --nodiscover \
         --maxpeers 0
 
-and launch the swarm; connecting it to the geth node.
+and launch the Swarm; connecting it to the geth node.
 
 .. code-block:: none
 
@@ -77,13 +71,12 @@ and launch the swarm; connecting it to the geth node.
         --datadir $DATADIR \
         --ens-api $DATADIR/geth.ipc \
         --maxpeers 0 \
-        --nodiscover \
-        --password ~/password.file
+        --nodiscover
 
 
 .. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply change the ens-api flag to ``--ens-api ''`` (an empty string).
 
-.. note:: In this example, `--nodiscover` is superfluous, because `--maxpeers 0` is already enough to suppress all discovery and connection attempts.
+.. note:: In this example, ``--nodiscover`` is superfluous, because ``--maxpeers 0`` is already enough to suppress all discovery and connection attempts.
 
 
 Adding enodes manually
@@ -128,7 +121,7 @@ Then you can for instance connect each node with one particular node (call it bo
 
     geth --exec "admin.addPeer($BOOTNODE)" attach /path/to/bzzd.ipc
 
-Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start swarm.
+Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start Swarm.
 
 These relatively tedious steps of managing connections need to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
 
@@ -150,7 +143,7 @@ To change IP to localhost:
     cat enodes.lst | perl -pe 's/@[\d\.]+/@[::]/' > local-enodes.lst
 
 .. note::
-    The steps in this section are not necessary if you simply want to connect to the public swarm testnet.
+    The steps in this section are not necessary if you simply want to connect to the public Swarm testnet.
     Since a bootnode to the testnet is set by default, your node will have a way to bootstrap its connections.
 
 
@@ -162,7 +155,7 @@ Configuration of go-swarm
 Command line options for go-swarm
 -----------------------------------
 
-The Swarm executable supports the following configuration options:
+The ``go-swarm`` executable supports the following configuration options:
 
 * Configuration file
 * Environment variables
@@ -198,7 +191,8 @@ The following table illustrates the list of all configuration options and how th
 Configuration options
 ------------------------
 
-.. note:: `go-swarm` can be executed with the *dumpconfig* command, which prints a default configuration to STDOUT, and thus can be redirected to a file as a template for the config file.
+.. note:: ``go-swarm`` can be executed with the ``dumpconfig`` command, which prints a default configuration to STDOUT, and thus can be redirected to a file as a template for the config file.
+
 
 A TOML configuration file is organized in sections. The below list of available configuration options is organized according to these sections. The sections correspond to `Go` modules, so need to be respected in order for file configuration to work properly. See `<https://github.com/naoina/toml>`_ for the TOML parser and encoder library for Golang, and `<https://github.com/toml-lang/toml>`_ for further information on TOML.
 
@@ -211,7 +205,7 @@ General configuration parameters
    :widths: 10, 5, 5, 15, 55
 
    "n/a","--config","n/a","n/a","Path to config file in TOML format"
-   "Contract","--chequebook","SWARM_CHEQUEBOOK_ADDR","0x0000000000000000000000000000000000000000","Swap chequebook contract address"
+   "Contract","--chequebook","SWARM_CHEQUEBOOK_ADDR","0x0","Swap chequebook contract address"
    "EnsRoot","--ens-addr","SWARM_ENS_ADDR", "ens.TestNetAddress","Ethereum Name Service contract address"
    "EnsApi","--ens-api","SWARM_ENS_API","<$GETH_DATADIR>/geth.ipc","Ethereum Name Service API address"
    "Path","--datadir","GETH_DATADIR","<$GETH_DATADIR>/swarm","Path to the geth configuration directory"
