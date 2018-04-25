@@ -4,7 +4,7 @@ Installation and Updates
 
 Installation
 =======================
-Swarm is part of the Ethereum stack, the reference implementation is currently at POC (proof of concept) version 0.2.
+Swarm is part of the Ethereum stack, the reference implementation is currently at POC3 (proof of concept 3), or version 0.3.
 
 The source code is found on github: https://github.com/ethereum/go-ethereum/tree/master/
 
@@ -19,7 +19,7 @@ Geth runs on all major platforms (linux, MacOSX, Windows, also raspberry pi, and
 Prerequisites
 ================
 
-building the swarm daemon :command:`swarm` requires the following packages:
+building the Swarm daemon :command:`go-swarm` requires the following packages:
 
 * go: https://golang.org
 * git: http://git.org
