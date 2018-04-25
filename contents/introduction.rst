@@ -2,7 +2,7 @@
 Introduction
 *******************
 
-..  * extention allows for per-format preference for image format
+..  * extension allows for per-format preference for image format
 
 ..  image:: img/swarm-logo.jpg
    :height: 300px
@@ -60,14 +60,14 @@ Swarm defines 3 crucial notions
   A reference is a unique identifier of a digital asset that allows clients to retrieve and access the content. For unencrypted content the document reference is cryptographic hash of the data and serves as its content address. This hash reference is a 32 byte hash, which is serialised with 64 hex bytes. In case of an encrypted document the reference has two equal-length components: the first 32 bytes are the content address of the encrypted asset, while the second 32 bytes are the decryption key, altogether 64 bytes, serialised as 128 hex bytes.
 
 :dfn:`manifest`
-  A manifests is a data structure describing document collections. A manifest is basically a mapping from strings to documemts. The bzz url scheme assumes that the content referenced in the domain is a manifest and renders the content entry whose path matches the one in the request path. Given this url based access to content, manifests can be regarded as routing tables for a website, which makes swarm able to offer virtual hosting, ie serve websites without servers.
+  A manifests is a data structure describing document collections. A manifest is basically a mapping from strings to documemts. The bzz URL scheme assumes that the content referenced in the domain is a manifest and renders the content entry whose path matches the one in the request path. Given this URL based access to content, manifests can be regarded as routing tables for a website, which makes swarm able to offer virtual hosting, ie serve websites without servers.
   Manifests can also be mapped to a filesystem directory tree, which allows for uploading and downloading directories.
   Finally, manifests can also be considered indexes, so it can be used to implement a simple key value store.
 
   Manifests specify paths and corresponding content hashes allowing for url based content retrieval.
   Manifests can therefore define a routing table for (static) assets (including dynamic content using for instance static javascript).
   This offers the functionality of :dfn:`virtual hosting`, storing entire directories or web(3)sites, similar to www but
-  without servers.d
+  without servers.
 
 In this guide, content is understood very broadly in a technical sense denoting any blob of data.
 Swarm defines a specific identifier for a piece of content. This identifier part of the reference serves as the retrieval address for the content.

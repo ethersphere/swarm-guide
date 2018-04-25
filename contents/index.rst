@@ -15,6 +15,7 @@ Contents:
    installation
    gettingstarted
    up-and-download
+   encryption
    configuration
    userguide
    apireference
