@@ -13,7 +13,7 @@ Arguably, uploading and downloading content is the raison d'être of Swarm. Uplo
 Uploading and downloading data can be done through the ``go-swarm`` command line interface (CLI) on the terminal or via the HTTP interface on ``http://localhost:8500``.
 
 
-Uploading using CLI
+Using CLI
 =====================
 
 Uploading a file to your local swarm node
@@ -136,10 +136,10 @@ There is no ``go-swarm down`` command dual to ``go-swarm up``. To download from 
 
 
 
-Up and Downloading using the HTTP API
-=====================================
+Using HTTP
+======================
 
-Swarm runs an HTTP API. Thus, a simple way to upload and download files to/from Swarm is through this API.
+Swarm offers an HTTP API. Thus, a simple way to upload and download files to/from Swarm is through this API.
 We can use the ``curl`` tool to exemplify how to interact with this API.
 
 .. note:: Files can be uploaded in a single HTTP request, where the body is either a single file to store, a tar stream (application/x-tar) or a multipart form (multipart/form-data).
@@ -173,7 +173,7 @@ The result should be your file:
 And that's it. Note that if you omit the trailing slash from the url then the request will result in a redirect.
 
 Tar stream upload
------------------
+------------------
 
 .. code-block:: none
 
@@ -223,7 +223,7 @@ Multipart form upload
   > some-data
 
 
-Files can also be added to an existing manifest:
+Files can also be added to an existing manifest
 ------------------------------------------------
 
 .. code-block:: none
@@ -238,7 +238,7 @@ Files can also be added to an existing manifest:
   > some-other-data
 
 
-Files can also be uploaded using a simple HTML form:
+Files can also be uploaded using a simple HTML form
 ----------------------------------------------------
 
 .. code-block:: html
