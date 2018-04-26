@@ -1,4 +1,4 @@
-Swarm BZZ URL schemes
+BZZ URL schemes
 =======================
 
 Swarm offers 8 distinct URL schemes:
