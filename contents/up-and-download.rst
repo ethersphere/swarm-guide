@@ -8,7 +8,7 @@ Introduction
 ==================================
 .. note:: This guide assumes you've installed the swarm client and have a running node that listens by default on port 8500. See "Getting Started" for details.
 
-Arguably, uploading and downloading content is the raison d'être of Swarm. Uploading content consists of "uploading" content to your local swarm node, followed by your local swarm node "syncing" the resulting chunks of data with its peers in the network. Meanwhile, downloading content consists of your local Swarm node querying its peers in the network for the relevant chunks of data and then reassembling the content locally.
+Arguably, uploading and downloading content is the raison d'être of Swarm. Uploading content consists of "uploading" content to your local Swarm node, followed by your local Swarm node "syncing" the resulting chunks of data with its peers in the network. Meanwhile, downloading content consists of your local Swarm node querying its peers in the network for the relevant chunks of data and then reassembling the content locally.
 
 Uploading and downloading data can be done through the ``go-swarm`` command line interface (CLI) on the terminal or via the HTTP interface on ``http://localhost:8500``.
 
@@ -16,7 +16,7 @@ Uploading and downloading data can be done through the ``go-swarm`` command line
 Using CLI
 =====================
 
-Uploading a file to your local swarm node
+Uploading a file to your local Swarm node
 ------------------------------------------
 .. note:: Once a file is uploaded to your local Swarm node, your node will `sync` the chunks of data with other nodes on the network. Thus, the file will eventually be available on the network even when your original node goes offline.
 
@@ -51,9 +51,9 @@ However, if you wish to retrieve this file, the browser can not be told unambigu
 In the context, the hash ``7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb`` does not refer to a manifest and any attempt to retrieve it over bzz will result in a 404 Not Found Error. In order to access this file, you would have to use the :ref:`bzz-raw` scheme.
 
 
-Uploading to a remote swarm node
+Uploading to a remote Swarm node
 -----------------------------------
-You can upload to a remote swarm node using the ``--bzzapi`` flag.
+You can upload to a remote Swarm node using the ``--bzzapi`` flag.
 For example, you can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
 
 .. note:: This treat is likely to disappear or be seriously restricted in the future. It currently also accepts limited file sizes.

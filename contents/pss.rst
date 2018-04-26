@@ -52,7 +52,7 @@ After you associate an encryption key with an address space they will be checked
   When using the internal encryption methods, you MUST associate keys (whether symmetric or asymmetric) with an address space AND a topic before you will be able to send anything.
 
 You can subscribe to incoming messages using a topic.
-You can subscribe to messages on topic 0x0000 and handle the encryption on your side,  This even enables you to use the swarm node as a multiplexer for different keypair identities.
+You can subscribe to messages on topic 0x0000 and handle the encryption on your side,  This even enables you to use the Swarm node as a multiplexer for different keypair identities.
 
 Sending a raw message
 ----------------------

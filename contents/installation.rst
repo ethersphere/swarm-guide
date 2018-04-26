@@ -158,7 +158,7 @@ and finally compile the swarm daemon ``go-swarm`` and the main go-ethereum clien
   go install -v ./cmd/go-swarm
 
 
-You can now run :command:`go-swarm` to start your swarm node.
+You can now run :command:`go-swarm` to start your Swarm node.
 Let's check if the installation of `go-swarm` was successful:
 
 .. code-block:: none

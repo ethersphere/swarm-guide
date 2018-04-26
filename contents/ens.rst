@@ -1,7 +1,7 @@
 Using ENS names
 ================
 
-.. note:: In order to `resolve` ENS names, your swarm node has to be connected to en Ethereum blockchain. See `Getting Started <./gettingstarted.html#connect-ens>`_ for instructions. This section explains how you can register your content to your ENS name.
+.. note:: In order to `resolve` ENS names, your Swarm node has to be connected to en Ethereum blockchain. See `Getting Started <./gettingstarted.html#connect-ens>`_ for instructions. This section explains how you can register your content to your ENS name.
 
 `ENS <http://ens.readthedocs.io/en/latest/introduction.html>`_ is the system that Swarm uses to permit content to be referred to by a human-readable name, such as "theswarm.eth". It operates analogously to the DNS system, translating human-readable names into machine identifiers - in this case, the swarm hash of the content you're referring to. By registering a name and setting it to resolve to the content hash of the root manifest of your site, users can access your site via a URL such as ``bzz://theswarm.eth/``.
 

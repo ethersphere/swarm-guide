@@ -66,7 +66,7 @@ General configuration parameters
    "BzzKey","n/a","n/a", "n/a","Swarm node base address (:math:`hash(PublicKey)hash(PublicKey))`. This is used to decide storage based on radius and routing by kademlia."
    "NetworkId","--bzznetworkid","SWARM_NETWORK_ID","3","Network ID"
    "SwapEnabled","--swap","SWARM_SWAP_ENABLE","false","Enable SWAP"
-   "SyncEnabled","--sync","SWARM_SYNC_ENABLE","true","Disable swarm node synchronization. This option will be deprecated. It is only for testing."
+   "SyncEnabled","--sync","SWARM_SYNC_ENABLE","true","Disable Swarm node synchronization. This option will be deprecated. It is only for testing."
    "SwapApi","--swap-api","SWARM_SWAP_API","","URL of the Ethereum API provider to use to settle SWAP payments"
    "Cors","--corsdomain","SWARM_CORS", "","Domain on which to send Access-Control-Allow-Origin header (multiple domains can be supplied separated by a ',')"
    "BzzAccount","--bzzaccount","SWARM_ACCOUNT", "","Swarm account key"
