@@ -141,32 +141,42 @@ PUT http://localhost:8500/bzz:/HASH|domain/some/path
 
 JavaScript
 ========================
-Swarm currently supports a Javascript API through the `swarm-js <https://github.com/MaiaVictor/swarm-js>`_ package which is available through `NPM <https://www.npmjs.com/package/swarm-js>`_ by issuing
+Swarm currently supports a Javascript API through a couple of packages:
+
+swarm-js
+^^^^^^^^^^^^^^^
+
+`swarm-js <https://github.com/MaiaVictor/swarm-js>`_ is available through `NPM <https://www.npmjs.com/package/swarm-js>`_ by issuing
 the following command:
 
 .. code-block:: none
   
   npm install swarm-js
 
-Usage is as simple as:
 
-.. code-block:: javascript
+.. note:: Full documentation is available on the `GitHub <https://github.com/MaiaVictor/swarm-js>`_ page.
 
-        const file = "test file"; // could also be an Uint8Array of binary data
-        swarm.upload(file).then(hash => {
-          console.log("Uploaded file. Address:", hash);
-        })
-        
-.. code-block:: javascript
+swarmgw
+^^^^^^^^^^
 
-        const fileHash = "a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23";
-        swarm.download(fileHash).then(array => {
-          console.log("Downloaded file:", swarm.toString(array));
-        });
+`swarmgw <https://github.com/axic/swarmgw>`_ is available through `NPM <https://www.npmjs.com/package/swarmgw>`_ by issuing
+the following command:
 
-.. note:: For the full documentation please refer to the `GitHub`_ page.
+.. code-block:: none
+  
+  npm install swarmgw
 
-.. _GitHub: https://github.com/MaiaVictor/swarm-js
+When installed globally, it can also be used directly from the CLI:
+
+.. code-block:: none
+
+  npm install -g swarmgw
+
+.. note:: Full documentation is available on the `GitHub <https://github.com/axic/swarmgw>`_ page.
+
+
+
+
 
 IPC
 ========================
@@ -216,11 +226,6 @@ FUSE
 
 BZZ Schemes
 ==============
-
-Swarm offers 8 distinct URL schemes, each has a different use case.
-In the following table you'll find the specifications of each.
-A locator part that ends with a question mark is `optional` (e.g. ``resource_path?``).
-
 
 bzz
 -----
