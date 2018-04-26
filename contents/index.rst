@@ -20,7 +20,6 @@ Contents:
    urlschemes
    configuration
    userguide
-   fuse
    pss
    apireference
    architecture
