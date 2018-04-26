@@ -2,9 +2,8 @@
 Encryption
 ===========
 
-Introduced in POC 0.3, symmetric encryption using ``SHA3 Keccak256`` is now readily available to be used with the ``go-swarm up`` upload command.
-The encryption mechanism is meant to protect your information and make the chunked data unreadable to any handling Swarm node, putting the
-concepts of plausible deniability and censorship resistence to work.
+Introduced in POC 0.3, symmetric encryption using is now readily available to be used with the ``go-swarm up`` upload command.
+The encryption mechanism is meant to protect your information and make the chunked data unreadable to any handling Swarm node.
 
 More info about how we handle encryption at Swarm can be found `here <https://github.com/ethersphere/swarm/wiki/Symmetric-Encryption-for-Swarm-Content>`_.
 

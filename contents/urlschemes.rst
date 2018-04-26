@@ -86,7 +86,3 @@ bzz-hash
 Swarm accepts GET requests for bzz-hash url scheme and responds with the hash value of the raw content, the same content returned by requests with bzz-raw scheme. Hash of the manifest is also the hash stored in ENS so bzz-hash can be used for ENS domain resolution.
 
 Response content type is *text/plain*.
-
-bzzr and bzzi
-^^^^^^^^^^^^^^
-Schemes with short names bzzr and bzzi are deprecated in favour of bzz-raw and bzz-immutable, respectively. They are kept for backward compatibility, and will be removed on the next release.
