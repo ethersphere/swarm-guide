@@ -2,7 +2,7 @@
 Getting started
 ******************************
 
-These instructions layout the simplest way to connect to the swarm.
+The first thing to do is to start up your Swarm node and connect it to the Swarm.
 
 How do I connect to Swarm?
 ===========================
@@ -107,25 +107,6 @@ Alternative Networks
 ====================
 
 Below are examples on ways to run swarm beyond just the default network.
-
-
-Connecting swarm only (no blockchain)
--------------------------------------
-
-..  note::  Even though you do not need the ethereum blockchain, you will need geth to generate a swarm account ($BZZKEY), since this account determines the base address that your swarm node is going to use.
-
-To suppress any ENS name resolution, use the ``--ens-api ''`` option.
-
-.. code-block:: none
-
-  go-swarm --bzzaccount $BZZKEY \
-         --datadir $DATADIR \
-         --ens-api ''
-
-
-The ``go-swarm`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
-
-
 
 Swarm in singleton mode (no peers)
 ------------------------------------
