@@ -43,7 +43,7 @@ Verifying that your local Swarm node is up
 
 When running, ``go-swarm`` is accessible through an HTTP API on port 8500. Confirm that it is up and running by pointing your browser to http://localhost:8500
 
-.. _connect-ens
+.. _connect-ens:
 
 How do I enable ENS name resolution?
 =====================================
@@ -112,7 +112,7 @@ Below are examples on ways to run swarm beyond just the default network.
 Connecting swarm only (no blockchain)
 -------------------------------------
 
-..  note::  Even though you do not need the ethereum blockchain, you will need geth to generate a swarm account ($BZZKEY), since this account determines the base address that your Swarm node is going to use.
+..  note::  Even though you do not need the ethereum blockchain, you will need geth to generate a swarm account ($BZZKEY), since this account determines the base address that your swarm node is going to use.
 
 To suppress any ENS name resolution, use the ``--ens-api ''`` option.
 
@@ -123,7 +123,7 @@ To suppress any ENS name resolution, use the ``--ens-api ''`` option.
          --ens-api ''
 
 
-The ``go-swarm`` daemon will seek out and connect to other Swarm nodes. It manages its own peer connections independent of ``geth``.
+The ``go-swarm`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
 
 
 
@@ -167,13 +167,13 @@ Without discovery, it is possible to manually start off the connection process b
 
   geth --exec='admin.addPeer("ENODE")' attach ipc:/path/to/bzzd.ipc
 
-Where ENODE is the enode record of a Swarm node. Such a record looks like the following:
+Where ENODE is the enode record of a swarm node. Such a record looks like the following:
 
 .. code-block:: none
 
   enode://01f7728a1ba53fc263bcfbc2acacc07f08358657070e17536b2845d98d1741ec2af00718c79827dfdbecf5cfcd77965824421508cc9095f378eb2b2156eb79fa@1.2.3.4:30399
 
-The enode of your Swarm node can be accessed using ``geth`` connected to ``bzzd.ipc``
+The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.ipc``
 
 .. code-block:: shell
 

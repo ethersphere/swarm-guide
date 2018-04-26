@@ -12,7 +12,7 @@ Suppose we upload a directory to Swarm containing (among other things) the file 
   go-swarm --recursive up /path/to/dir
   >2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
- If we then register the root hash as the content for ``theswarm.eth``, then we can access the pdf at
+If we then register the root hash as the content for ``theswarm.eth``, then we can access the pdf at
 
 .. code-block:: none
 
@@ -24,7 +24,7 @@ and get served the same content as with:
 
 .. code-block:: none
 
-  GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/example.pdf
+  http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/example.pdf
 
 Please refer to the `official ENS documentation <http://ens.readthedocs.io/en/latest/introduction.html>`_ for details.
 
@@ -35,6 +35,7 @@ The steps you must take are:
 3. Register the Swarm hash with the resolver as the ``content``.
 
 We recommend using https://manager.ens.domains/. This will make it easy for you to
+
 - Associate the default resolver with your name
 - Register a Swarm hash.
 
