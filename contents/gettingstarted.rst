@@ -72,9 +72,40 @@ After the connection is established, open another terminal window and connect to
 
 Verify that this was successful by pointing your browser to http://localhost:8500/bzz:/theswarm.eth/
 
+Using Swarm together with the testnet ENS
+------------------------------------------
 
-Examples
-==========
+It is also possible to use the Ropsten ENS test registrar for name resolution instead of the Ethereum main .eth ENS on mainnet.
+
+Run a geth node connected to the Ropsten testnet
+
+.. code-block:: none
+
+  geth --testnet
+
+Then launch the swarm; connecting it to the geth node (``--ens-api``).
+
+.. code-block:: none
+
+  go-swarm --ens-api $HOME/.ethereum/geth/testnet/geth.ipc
+
+Swarm will automatically use the ENS deployed on Ropsten.
+
+For other ethereum blockchains and other deployments of the ENS contracts, you can specify the contract addresses manually. For example the following command:
+
+.. code-block:: none
+
+  go-swarm --ens-api eth:314159265dD8dbb310642f98f50C066173C1259b@/home/user/.ethereum/geth.ipc \
+           --ens-api test:0x112234455C3a32FD11230C42E7Bccd4A84e02010@ws:1.2.3.4:5678 \
+           --ens-api 0x230C42E7Bccd4A84e02010112234455C3a32FD11@ws:8.9.0.1:2345
+
+Will use the ``geth.ipc`` to resolve ``.eth`` names using the contract at ``314159265dD8dbb310642f98f50C066173C1259b`` and it will use ``ws:1.2.3.4:5678`` to resolve ``.test`` names using the contract at ``0x112234455C3a32FD11230C42E7Bccd4A84e02010``. For all other names it will use the ENS contract at ``0x230C42E7Bccd4A84e02010112234455C3a32FD11`` on ``ws:8.9.0.1:2345``.
+
+Note that if a ``.eth`` or ``.test`` domain fails to resolve using the first two ens endpoints, the name will be resolved using the third one if possible.
+
+
+Alternative Networks
+====================
 
 Below are examples on ways to run swarm beyond just the default network.
 
@@ -94,30 +125,6 @@ To suppress any ENS name resolution, use the ``--ens-api ''`` option.
 
 
 The ``go-swarm`` daemon will seek out and connect to other swarm nodes. It manages its own peer connections independent of ``geth``.
-
-Using Swarm together with the Ropsten testnet blockchain ENS
--------------------------------------------------------------
-
-In case you don't yet have a testnet account, run
-
-.. code-block:: none
-
-  geth --testnet account new
-
-Run a geth node connected to the Ropsten testnet
-
-.. code-block:: none
-
-  geth --testnet
-
-Then launch the swarm; connecting it to the geth node (``--ens-api``).
-
-
-.. code-block:: none
-
-  go-swarm --bzzaccount $BZZKEY \
-         --keystore $HOME/.ethereum/geth/testnet/keystore \
-         --ens-api $HOME/.ethereum/geth/testnet/geth.ipc
 
 
 
@@ -216,5 +223,3 @@ To change IP to localhost:
 .. note::
     The steps in this section are not necessary if you simply want to connect to the public Swarm testnet.
     Since a bootnode to the testnet is set by default, your node will have a way to bootstrap its connections.
-
-

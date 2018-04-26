@@ -192,9 +192,9 @@ Now with popularity it may well happen that a node closest to the target address
 Smart syncronisation is a protocol of distribution which makes sure that these transfers happen. Apart from access count which nodes use to determine which content to delete if capacity is reached, chunks also store their first entry index. This is an arbitrary monotonically increasing index, and nodes publish their current top index, so virtually they serve as timestamps of creation. This index helps keeping track what content to syncronise with a peer.
 
 When two peers connect, they establish their synchronisation state by exchanging information in the protocol handshake.
-When a connection is peer connection is opened the first time, syncronisation does not specify an index count, meaning that all content in the relevant address space no matter how long ago it was entered is offered to the peer.
+When a connection is peer connection is opened the first time, synchronisation does not specify an index count, meaning that all content in the relevant address space no matter how long ago it was entered is offered to the peer.
 The address space relevant by default just designates all addresses that are closer to the receiving node than the source.
-Syncronisation goes both ways independently. Once all content up to the current index is syncronised, the receiving peer updates the syncornisation state with the current index given by the source node. The source providing a counter should mean that they have provided the recipient with all chunks they have upto that time.
+Syncronisation goes both ways independently. Once all content up to the current index is synchronised, the receiving peer updates the synchronisation state with the current index given by the source node. The source providing a counter should mean that they have provided the recipient with all chunks they have upto that time.
 
 All newly stored content during a live connection is also offered to the peer. Assuming enough bandwidth, peers are expected to be fully in sync meaning that the storage counter stored by the recipient about a source is not very far behind the source node's current storage count.
 
@@ -241,7 +241,7 @@ Peer management (hive, kademlia)
 
 Hive is the logistic manager of the swarm. It uses a generic kademlia nodetable to find best peer list for any target. This is used by the netstore to search for content in the swarm.
 When the node receives peer suggestions (bzz protocol peersMsgData exchange), the hive relays the peer addresses obtained from the message to the Kademlia table for db storage and filtering.
-Hive also manages connections and disconnections that allows for bootstapping as well as keeping the routing table uptodate.
+Hive also manages connections and disconnections that allows for bootstapping as well as keeping the routing table up-to-date.
 When the p2p server connects with a node capable of bzz protocol, the hive registers the node in the kademlia table and sends a :dfn:`self lookup`. A self lookup is basically just a retrieve request with intended target corresponding to the node's base address.
 The receiving node does not record self lookups as a request or forward it, just reply with peers.
 This can be improved by simply automatically sending all relevant peers to a connected peer at the time they become known. All peers sent to the connected node are cached so that no repeat sends happen during the session.
@@ -355,7 +355,7 @@ as a mature node, it fills short lines. All on demand.
 The bzz protocol
 ==========================
 
-BZZ implements the bzz subprotocol, the wire protocol of swarm. The bzz protocol is implemented as a subprotocol of the ethereum devp2p system.
+BZZ implements the bzz subprotocol, the wire protocol of Swarm. The bzz protocol is implemented as a subprotocol of the Ethereum devp2p system.
 The protocol instance is launched on each peer by the network layer if the
 BZZ protocol handler is registered on the p2p server.
 
@@ -365,31 +365,4 @@ dispaTching to netstore for handling the DHT logic, registering peers in the Kad
 
 .. note::
       the bzz protocol is in a flux, as the components on the roadmap get implemented
-      and the protocol solifies, a detailed wire protocol spec will be provided
-
-
-
-.. _incentivisation:
-
-Incentivisation
-===========================
-
-
-swap, swear & swindle
------------------------------
-
-.. _swap:
-
-SWAP -- Swarm Accounting Protocol
------------------------------------------------------------------------------------------------
-
-Swarm Accounting Protocol, Secured With Automated Payments
-
-
-SWEAR -- Storage With Enforced Archiving Rules or Swarm Enforcement And Registration
---------------------------------------------------------------------------------------------------------
-
-
-SWINDLE -- Secured With INsurance Deposit Litigation and Escrow
---------------------------------------------------------------------------------------------------------
-
+      and the protocol solidifies, a detailed wire protocol spec will be provided

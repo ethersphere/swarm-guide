@@ -39,8 +39,8 @@ This is the list of flags inherited from ``geth``:
 
 The following table illustrates the list of all configuration options and how they can be provided.
 
-Configuration options
-=======================
+Config File
+=============
 
 .. note:: ``go-swarm`` can be executed with the ``dumpconfig`` command, which prints a default configuration to STDOUT, and thus can be redirected to a file as a template for the config file.
 
@@ -71,5 +71,3 @@ General configuration parameters
    "Cors","--corsdomain","SWARM_CORS", "","Domain on which to send Access-Control-Allow-Origin header (multiple domains can be supplied separated by a ',')"
    "BzzAccount","--bzzaccount","SWARM_ACCOUNT", "","Swarm account key"
    "BootNodes","--boot-nodes","SWARM_BOOTNODES","","Boot nodes"
-
-
