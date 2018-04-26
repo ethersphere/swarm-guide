@@ -21,6 +21,7 @@ Contents:
    configuration
    userguide
    pss
+   mru
    apireference
    architecture
 
