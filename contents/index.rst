@@ -19,7 +19,7 @@ Contents:
    encryption
    urlschemes
    configuration
-   userguide
+   manifests
    pss
    mru
    apireference
