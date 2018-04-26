@@ -108,37 +108,6 @@ HTTP
 +---------------+--------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 
-
-GET http://localhost:8500/bzz:/domain/some/path
-  retrieve document at domain/some/path allowing domain to resolve via the `Ethereum Name Service`_
-
-GET http://localhost:8500/bzz-immutable:/HASH/some/path
-  retrieve document at HASH/some/path where HASH is a valid swarm hash
-
-GET http://localhost:8500/bzz-raw:/domain/some/path
-  retrieve the raw content at domain/some/path allowing domain to resolve via the `Ethereum Name Service`_
-
-POST http://localhost:8500/bzz:
-  The post request is the simplest upload method. Direct upload of files - no manifest is created.
-  It returns the hash of the uploaded file
-
-POST http://localhost:8500/bzz:/encrypt
-  The post request is the simplest upload method. Direct upload of files - no manifest is created.
-  It returns the hash of the uploaded file
-
-POST http://localhost:8500/bzz-raw:
-  The post request is the simplest upload method. Direct upload of files - no manifest is created.
-  It returns the hash of the uploaded file
-
-POST http://localhost:8500/bzz-raw:/encrypt
-  The post request is the simplest upload method. Direct upload of files - no manifest is created.
-  It returns the hash of the uploaded file
-
-PUT http://localhost:8500/bzz:/HASH|domain/some/path
-  The PUT request publishes the uploaded asset to the manifest. 
-  It looks for the manifest by domain or hash, makes a copy of it and updates its collection with the new asset.
-  It returns the hash of the newly created manifest.
-
 JavaScript
 ========================
 Swarm currently supports a Javascript API through a couple of packages:
@@ -183,10 +152,9 @@ IPC
 
 Swarm exposes an IPC API under the ``bzz`` namespace.
 
-.. note:: Note that this is not the recommended way for users or dapps to interact with swarm and is only meant for debugging ad testing purposes. Given that this module offers local filesystem access, allowing dapps to use this module or exposing it via remote connections creates a major security risk. For this reason ``swarm`` only exposes this api via local ipc (unlike geth not allowing websockets or http).
 
 FUSE
----------
+^^^^^^
 
 ``swarmfs.mount(HASH|domain, mountpoint))``
   mounts swarm contents represented by a swarm hash or a ens domain name to the specified local directory. The local directory has to be writable and should be empty.
@@ -197,8 +165,6 @@ FUSE
 
 ``swarmfs.listmounts()``
   For every active mount, this command display three things. The mountpoint, start HASH supplied and the latest HASH. Since the HASH is mounted in rw mode, when ever there is a change to the file system (adding file, removing file etc), a new HASH is computed. This hash is called the latest HASH.
-
-
 
 
 .. uncommentthisChequebook IPC API
@@ -222,103 +188,3 @@ FUSE
 .. uncommentthis``chequebook.deposit(amount)``
 .. uncommentthis  Transfers funds of amount  wei from your bzz base account to your swap chequebook contract.
 .. uncommentthis  It errors if no chequebook is set  or if your account has insufficient funds.
-
-
-BZZ Schemes
-==============
-
-bzz
------
-
-Example:
-
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz:/theswarm.test
-
-The bzz scheme assumes that the domain part of the url points to a manifest. When retrieving the asset addressed by the url, the manifest entries are matched against the url path. The entry with the longest matching path is retrieved and served with the content type specified in the corresponding manifest entry.
-
-Example:
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/read
-
-returns a readme.md file if the manifest at the given hash address contains such an entry.
-
-If the manifest contains multiple entries to which the URL could be resolved, like, in the example above, the manifest has entries for `readme.md` and `reading-list.txt`, the API returns a HTTP response "300 Multiple Choices", indicating that the request could not be unambiguously resolved. A list of available entries is returned via HTTP or JSON.
-
-
-This generic scheme supports name resolution for domains registered on the Ethereum Name Service
-(ENS, see `Ethereum Name Service`). This is a read-only scheme meaning that it only supports GET requests and serves to retrieve content from swarm.
-
-
-bzz-immutable
-^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-immutable:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
-
-The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzz-immutable url will always necessarily address the exact same fixed immutable content.
-
-.. _bzz-raw:
-
-bzz-resource
-^^^^^^^^^^^^^^^^^^^^
-
-``bzz-resource`` allows you to receive hash pointers to content that the ENS entry resolved to at different versions
-
-bzz-resource://<id> - get latest update
-bzz-resource://<id>/<n> - get latest update on period n
-bzz-resource://<id>/<n>/<m> - get update version m of period n
-<id> = ens name
-
-
-
-
-
-bzz-raw
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
-
-
-When responding to GET requests with the bzz-raw scheme, swarm does not assume a manifest, just serves the asset addressed by the url directly.
-
-The ``content_type`` query parameter can be supplied to specify the mime type you are requesting, otherwise content is served as an octet stream per default. For instance if you have a pdf document (not the manifest wrapping it) at hash ``6a182226...`` then the following url will properly serve it.
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-raw:/6a18222637cafb4ce692fa11df886a03e6d5e63432c53cbf7846970aa3e6fdf5?content_type=application/pdf
-
-
-Importantly and somewhat unusually for generic schemes, the raw scheme supports POST and PUT requests. This is a crucially important way in which swarm is different from the internet as we know it.
-
-The possibility to POST makes swarm an actual cloud service, bringing upload functionality to your browsing.
-
-In fact the command line tool ``swarm up`` uses the http proxy with the bzz raw scheme under the hood.
-
-bzz-list
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-list:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d/path
-
-Returns a list of all files contained in <manifest> under <path> grouped into common prefixes using ``/`` as a delimiter. If path is ``/``, all files in manifest are returned. The response is a JSON-encoded object with ``common_prefixes`` string field and ``entries`` list field.
-
-bzz-hash
-^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-hash:/theswarm.test
-
-
-Swarm accepts GET requests for bzz-hash url scheme and responds with the hash value of the raw content, the same content returned by requests with bzz-raw scheme. Hash of the manifest is also the hash stored in ENS so bzz-hash can be used for ENS domain resolution.
-
-Response content type is *text/plain*.
