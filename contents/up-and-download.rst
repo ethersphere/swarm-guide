@@ -103,7 +103,7 @@ and also at
 
   http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/
 
-This is especially useful when the hash (in this case ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b) is given a registered name like 'mysite.eth' in the `Ethereum Name Service`_.
+This is especially useful when the hash (in this case ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b) is given a registered name like 'mysite.eth' in the `Ethereum Name Service <./ens.html>`_.
 
 
 Adding entries to a manifest
