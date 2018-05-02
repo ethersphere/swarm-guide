@@ -17,29 +17,7 @@ Example:
 
 returns a readme.md file if the manifest at the given hash address contains such an entry.
 
-If the manifest contains multiple entries to which the URL could be resolved, like, in the example above, the manifest has entries for ``readme.md.1`` and ``readme.md.2``, the API returns a HTTP response "300 Multiple Choices", indicating that the request could not be unambiguously resolved. A list of available entries is returned via HTTP or JSON.
-
-
-bzz-immutable
-^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: none
-
-    GET http://localhost:8500/bzz-immutable:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
-
-The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzz-immutable url will always necessarily address the exact same fixed immutable content.
-
-
-
-bzz-resource
-^^^^^^^^^^^^^^^^^^^^
-
-``bzz-resource`` allows you to receive hash pointers to content that the ENS entry resolved to at different versions
-
-bzz-resource://<id> - get latest update
-bzz-resource://<id>/<n> - get latest update on period n
-bzz-resource://<id>/<n>/<m> - get update version m of period n
-<id> = ens name
+If the manifest does not contain an file at ``readme.md`` itself, but it does contain multiple entries to which the URL could be resolved, like, in the example above, the manifest has entries for ``readme.md.1`` and ``readme.md.2``, the API returns an HTTP response "300 Multiple Choices", indicating that the request could not be unambiguously resolved. A list of available entries is returned via HTTP or JSON.
 
 
 .. _bzz-raw:
@@ -86,3 +64,25 @@ bzz-hash
 Swarm accepts GET requests for bzz-hash url scheme and responds with the hash value of the raw content, the same content returned by requests with bzz-raw scheme. Hash of the manifest is also the hash stored in ENS so bzz-hash can be used for ENS domain resolution.
 
 Response content type is *text/plain*.
+
+
+bzz-immutable
+^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: none
+
+    GET http://localhost:8500/bzz-immutable:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
+
+The same as the generic scheme but there is no ENS domain resolution, the domain part of the path needs to be a valid hash. This is also a read-only scheme but explicit in its integrity protection. A particular bzz-immutable url will always necessarily address the exact same fixed immutable content.
+
+
+
+bzz-resource
+^^^^^^^^^^^^^^^^^^^^
+
+``bzz-resource`` allows you to receive hash pointers to content that the ENS entry resolved to at different versions
+
+bzz-resource://<id> - get latest update
+bzz-resource://<id>/<n> - get latest update on period n
+bzz-resource://<id>/<n>/<m> - get update version m of period n
+<id> = ens name
