@@ -2,7 +2,7 @@
 Encryption
 ===========
 
-Introduced in POC 0.3, symmetric encryption using is now readily available to be used with the ``go-swarm up`` upload command.
+Introduced in POC 0.3, symmetric encryption is now readily available to be used with the ``go-swarm up`` upload command.
 The encryption mechanism is meant to protect your information and make the chunked data unreadable to any handling Swarm node.
 
 More info about how we handle encryption at Swarm can be found `here <https://github.com/ethersphere/swarm/wiki/Symmetric-Encryption-for-Swarm-Content>`_.
@@ -12,9 +12,7 @@ More info about how we handle encryption at Swarm can be found `here <https://gi
   This might change in the future as we will refine and make Swarm a safer network.
 
 .. note::
-  When you upload content to Swarm using the `--encrypt` flag, the hash received in response will be
-  longer than the standard Swarm hash you're used to - that's because the resulting hash is a concatenated
-  string of the content hash and the encryption key used to encrypt the content.
+  When you upload content to Swarm using the ``--encrypt`` flag, the hash returned will be longer than the standard Swarm hash you're used to - that's because the resulting hash is a concatenation of the content hash and the encryption key.
 
 
 .. important::
@@ -29,4 +27,4 @@ Example usage:
   > c2ebba57da7d97bc4725a542ff3f0bd37163fd564e0298dd87f320368ae4faddd1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
   # note the longer response hash
 
-In the response hash, the first half is the Swarm hash of the manifest while the second half is the encryption-and-decryption key. 
+In the response hash, the first half is the Swarm hash of the manifest while the second half is the encryption-and-decryption key.
