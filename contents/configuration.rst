@@ -37,7 +37,6 @@ This is the list of flags inherited from ``geth``:
   --ipcpath
   --password
 
-The following table illustrates the list of all configuration options and how they can be provided.
 
 Config File
 =============
