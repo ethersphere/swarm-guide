@@ -48,7 +48,7 @@ When running, ``go-swarm`` is accessible through an HTTP API on port 8500. Confi
 How do I enable ENS name resolution?
 =====================================
 
-The `Ethereum Name Service <http://ens.readthedocs.io/en/latest/introduction.html>`_ is based on a suite of smart contracts running on the Ethereum main network. Thus, in order to use the ENS to resolve names to swarm content hashes, ``go-swarm`` has to connect to a ``geth`` instance that is connected to the Ethereum main net. This is done using the ``--ens-api '/path/to/geth/datadir/geth.ipc'``` flag.
+The `Ethereum Name Service <http://ens.readthedocs.io/en/latest/introduction.html>`_ is based on a suite of smart contracts running on the Ethereum main network. Thus, in order to use the ENS to resolve names to swarm content hashes, ``go-swarm`` has to connect to a ``geth`` instance that is connected to the Ethereum main net. This is done using the ``--ens-api '/path/to/geth/datadir/geth.ipc'`` flag.
 
 First you must start your geth node and establish connection with Ethereum main network with the following command:
 
@@ -132,9 +132,9 @@ and launch the Swarm; connecting it to the geth node.
         --nodiscover
 
 
-.. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply change the ens-api flag to ``--ens-api ''`` (an empty string).
+.. note:: In this example, running geth is optional, it is not strictly needed. To run without geth, simply set ``--ens-api ''`` (an empty string), or remove the ``--ens-api`` flag altogether.
 
-.. note:: In this example, ``--nodiscover`` is superfluous, because ``--maxpeers 0`` is already enough to suppress all discovery and connection attempts.
+.. note:: Strictly speaking, the ``--nodiscover`` flag is superfluous here, because ``--maxpeers 0`` is already enough to suppress all discovery and connection attempts.
 
 
 Adding enodes manually
@@ -163,7 +163,7 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 Running a private swarm
 -------------------------
 
-You can extend your singleton node into a private swarm. First you fire up a number of ``go-swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific into will reside under ``$DATADIR/bzz-$BZZKEY/``
+You can extend your singleton node into a private swarm. First you fire up a number of ``go-swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific info will reside under ``$DATADIR/bzz-$BZZKEY/``
 Make sure that you create an account for each instance of go-swarm you want to run.
 For simplicity we can assume you run one geth instance and each go-swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
 

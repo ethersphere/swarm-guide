@@ -114,17 +114,15 @@ Unpack it to the /usr/local
 
   sudo tar -C /usr/local -xzf go1.10.1.linux-amd64.tar.gz
 
-Set GOPATH and PATH
+Set GOPATH and PATH:
 
-For Go to work properly, you need to set the following two environment variables:
-
-Setup a go folder
+Setup a go folder and declare it as the GOPATH
 
 .. code-block:: none
 
   mkdir -p ~/go; echo "export GOPATH=$HOME/go" >> ~/.bashrc
 
-Update your path
+Update your PATH variable to include binaries installed with go
 
 .. code-block:: none
 
