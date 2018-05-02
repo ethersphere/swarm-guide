@@ -52,7 +52,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'swarm'
+project = u'Swarm'
 # copyright = u'2015, ΞTHΞЯSPHΞЯΞ'
 copyright = u'2018, Ethersphere'
 author = u'viktor trón, aron fischer, nick johnson, dániel a. nagy, zsolt felföldi, stan destinatis'
