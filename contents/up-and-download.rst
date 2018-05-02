@@ -61,7 +61,7 @@ For example, you can use one of the public gateways as a proxy, in which case yo
 
 .. code-block:: none
 
-    go-swarm --bzzapi http://swarm-gateways.net up /path/to/file/or/directory
+    go-swarm --bzzapi https://swarm-gateways.net up /path/to/file/or/directory
 
 
 
