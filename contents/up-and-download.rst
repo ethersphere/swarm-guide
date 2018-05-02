@@ -56,12 +56,12 @@ Uploading to a remote Swarm node
 You can upload to a remote Swarm node using the ``--bzzapi`` flag.
 For example, you can use one of the public gateways as a proxy, in which case you can upload to swarm without even running a node.
 
-.. note:: This treat is likely to disappear or be seriously restricted in the future. It currently also accepts limited file sizes.
-
 
 .. code-block:: none
 
     go-swarm --bzzapi https://swarm-gateways.net up /path/to/file/or/directory
+
+.. note:: This gateway currently only accepts uploads of limited size. In future, the ability to upload to this gateways is likely to disappear entirely.
 
 
 
