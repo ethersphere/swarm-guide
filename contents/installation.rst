@@ -19,7 +19,7 @@ THIS SECTION IS MISSING
 Installing Swarm from source
 =============================
 
-The source code is found on github: https://github.com/ethereum/go-ethereum/tree/master/
+The source code is found on github: https://github.com/ethersphere/go-ethereum/tree/swarm-network-rewrite/
 
 Prerequisites
 -------------
@@ -143,9 +143,9 @@ Once all prerequisites are met, download the go-ethereum source code
 
   mkdir -p $GOPATH/src/github.com/ethereum
   cd $GOPATH/src/github.com/ethereum
-  git clone https://github.com/ethereum/go-ethereum
+  git clone https://github.com/ethersphere/go-ethereum
   cd go-ethereum
-  git checkout master
+  git checkout swarm-network-rewrite
   go get github.com/ethereum/go-ethereum
 
 and finally compile the swarm daemon ``go-swarm`` and the main go-ethereum client ``geth``.
