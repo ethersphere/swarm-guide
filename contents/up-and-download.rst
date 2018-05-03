@@ -33,7 +33,7 @@ After uploading, you can access this example.md file from swarm by pointing your
 
 .. code-block:: none
 
-  http://localhost:8500/bzz:/d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
+  http://localhost:8500/bzz:/d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a/
 
 The manifest makes sure you could retrieve the file with the correct MIME type.
 
