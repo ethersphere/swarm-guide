@@ -40,11 +40,11 @@ There are a few prerequisits for sending a message over ``PSS``:
 Upon sending the message it is encrypted and passed on from peer to peer. Any node along the route that can successfully decrypt the message is regarded as a recipient. Recipients continue to pass on the message to their peers, to make traffic analysis attacks more difficult.
 
 .. note::
-The Address that is coupled with the encryption key is used for routing the message.
-This does *not* need to be a full address; the network will route the message to the best
-of its ability with the information that is available.
-If *no* address is given (zero-length byte slice), routing is effectively deactivated,
-and the message is passed to all peers by all peers.
+  The Address that is coupled with the encryption key is used for routing the message.
+  This does *not* need to be a full address; the network will route the message to the best
+  of its ability with the information that is available.
+  If *no* address is given (zero-length byte slice), routing is effectively deactivated,
+  and the message is passed to all peers by all peers.
 
 After you associate an encryption key with an address space they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address space of the message.
 
