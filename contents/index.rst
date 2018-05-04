@@ -24,6 +24,7 @@ Contents:
    mru
    apireference
    architecture
+   resources
 
 
 This document is licensed under the @emph{Creative Commons Attribution License}. To
