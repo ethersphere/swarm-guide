@@ -10,7 +10,7 @@ Introduction
 
 Arguably, uploading and downloading content is the raison d'être of Swarm. Uploading content consists of "uploading" content to your local Swarm node, followed by your local Swarm node "syncing" the resulting chunks of data with its peers in the network. Meanwhile, downloading content consists of your local Swarm node querying its peers in the network for the relevant chunks of data and then reassembling the content locally.
 
-Uploading and downloading data can be done through the ``go-swarm`` command line interface (CLI) on the terminal or via the HTTP interface on ``http://localhost:8500``.
+Uploading and downloading data can be done through the ``swarm`` command line interface (CLI) on the terminal or via the HTTP interface on ``http://localhost:8500``.
 
 
 Using CLI
@@ -24,7 +24,7 @@ The basic command for uploading to your local node is ``swarm up FILE``. For exa
 
 .. code-block:: none
 
-  go-swarm up /path/to/example.md
+  swarm up /path/to/example.md
   > d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
 
 The hash returned is the hash of a Swarm manifest. This manifest is a JSON file that contains the example.md file as its only entry. Both the primary content and the manifest are uploaded by default.
@@ -59,7 +59,7 @@ For example, you can use one of the public gateways as a proxy, in which case yo
 
 .. code-block:: none
 
-    go-swarm --bzzapi https://swarm-gateways.net up /path/to/file/or/directory
+    swarm --bzzapi https://swarm-gateways.net up /path/to/file/or/directory
 
 .. note:: This gateway currently only accepts uploads of limited size. In future, the ability to upload to this gateways is likely to disappear entirely.
 
@@ -72,7 +72,7 @@ Uploading directories is achieved with the ``--recursive`` flag.
 
 .. code-block:: none
 
-  go-swarm --recursive up /path/to/directory
+  swarm --recursive up /path/to/directory
   > ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30
 
 The returned hash refers to a root manifest referencing all the files in the directory. If there was a file called ``index.html`` in that directory, you could now access it under
@@ -88,7 +88,7 @@ It is possible to declare a default entry in a manifest. In the example above, i
 
 .. code-block:: none
 
-  go-swarm --defaultpath /path/to/directory/index.html --recursive up /path/to/directory
+  swarm --defaultpath /path/to/directory/index.html --recursive up /path/to/directory
   > ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b
 
 You can now access index.html at
@@ -108,31 +108,31 @@ This is especially useful when the hash (in this case ef6fc0747d1fbaf86d769b3eed
 
 Adding entries to a manifest
 -------------------------------
-The command for modifying manifests is ``go-swarm manifest``.
+The command for modifying manifests is ``swarm manifest``.
 
 To add an entry to a manifest, use the command:
 
 .. code-block:: none
 
-  go-swarm manifest add
+  swarm manifest add
 
 To remove an entry from a manifest, use the command:
 
 .. code-block:: none
 
-  go-swarm manifest remove
+  swarm manifest remove
 
 To modify the hash of an entry in a manifest, use the command:
 
 .. code-block:: none
 
-  go-swarm manifest update
+  swarm manifest update
 
 
 Downloading Swarm content from your local node
 -----------------------------------------------
 
-There is no ``go-swarm down`` command dual to ``go-swarm up``. To download from swarm you should use the HTTP interface. You can still download using a CLI with commands such as ``curl`` or ``wget``.
+There is no ``swarm down`` command dual to ``swarm up``. To download from swarm you should use the HTTP interface. You can still download using a CLI with commands such as ``curl`` or ``wget``.
 
 
 

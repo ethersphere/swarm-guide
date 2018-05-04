@@ -7,7 +7,7 @@ The first thing to do is to start up your Swarm node and connect it to the Swarm
 How do I connect to Swarm?
 ===========================
 
-To start a basic Swarm node you must have both geth and go-swarm installed on your machine. You can find the relevant instructions in the `Installation and Updates <./installation.html>`_  section.
+To start a basic Swarm node you must have both geth and swarm installed on your machine. You can find the relevant instructions in the `Installation and Updates <./installation.html>`_  section.
 
 If you do not yet have an Ethereum account that you wish to act as your Swarm account, create a new account by running the following command:
 
@@ -33,7 +33,7 @@ Using this account, connect to Swarm with
 
 .. code-block:: none
 
-  go-swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
+  swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 
 (replacing 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 with your address).
 
@@ -41,14 +41,14 @@ Using this account, connect to Swarm with
 Verifying that your local Swarm node is up
 -------------------------------------------
 
-When running, ``go-swarm`` is accessible through an HTTP API on port 8500. Confirm that it is up and running by pointing your browser to http://localhost:8500
+When running, ``swarm`` is accessible through an HTTP API on port 8500. Confirm that it is up and running by pointing your browser to http://localhost:8500
 
 .. _connect-ens:
 
 How do I enable ENS name resolution?
 =====================================
 
-The `Ethereum Name Service <http://ens.readthedocs.io/en/latest/introduction.html>`_ is based on a suite of smart contracts running on the Ethereum main network. Thus, in order to use the ENS to resolve names to swarm content hashes, ``go-swarm`` has to connect to a ``geth`` instance that is connected to the Ethereum main net. This is done using the ``--ens-api '/path/to/geth/datadir/geth.ipc'`` flag.
+The `Ethereum Name Service <http://ens.readthedocs.io/en/latest/introduction.html>`_ is based on a suite of smart contracts running on the Ethereum main network. Thus, in order to use the ENS to resolve names to swarm content hashes, ``swarm`` has to connect to a ``geth`` instance that is connected to the Ethereum main net. This is done using the ``--ens-api '/path/to/geth/datadir/geth.ipc'`` flag.
 
 First you must start your geth node and establish connection with Ethereum main network with the following command:
 
@@ -68,7 +68,7 @@ After the connection is established, open another terminal window and connect to
 
 .. code-block:: none
 
-  go-swarm --ens-api '$HOME/.ethereum/geth.ipc'
+  swarm --ens-api '$HOME/.ethereum/geth.ipc'
 
 Verify that this was successful by pointing your browser to http://localhost:8500/bzz:/theswarm.eth/
 
@@ -87,7 +87,7 @@ Then launch the swarm; connecting it to the geth node (``--ens-api``).
 
 .. code-block:: none
 
-  go-swarm --ens-api $HOME/.ethereum/geth/testnet/geth.ipc
+  swarm --ens-api $HOME/.ethereum/geth/testnet/geth.ipc
 
 Swarm will automatically use the ENS deployed on Ropsten.
 
@@ -95,7 +95,7 @@ For other ethereum blockchains and other deployments of the ENS contracts, you c
 
 .. code-block:: none
 
-  go-swarm --ens-api eth:314159265dD8dbb310642f98f50C066173C1259b@/home/user/.ethereum/geth.ipc \
+  swarm --ens-api eth:314159265dD8dbb310642f98f50C066173C1259b@/home/user/.ethereum/geth.ipc \
            --ens-api test:0x112234455C3a32FD11230C42E7Bccd4A84e02010@ws:1.2.3.4:5678 \
            --ens-api 0x230C42E7Bccd4A84e02010112234455C3a32FD11@ws:8.9.0.1:2345
 
@@ -111,7 +111,7 @@ Below are examples on ways to run swarm beyond just the default network.
 Swarm in singleton mode (no peers)
 ------------------------------------
 
-To launch in singleton mode, use the ``--maxpeers 0`` flag. This works on both ``geth`` and ``go-swarm``.
+To launch in singleton mode, use the ``--maxpeers 0`` flag. This works on both ``geth`` and ``swarm``.
 
 For example:
 
@@ -125,7 +125,7 @@ and launch the Swarm; connecting it to the geth node.
 
 .. code-block:: none
 
- go-swarm --bzzaccount $BZZKEY \
+ swarm --bzzaccount $BZZKEY \
         --datadir $DATADIR \
         --ens-api $DATADIR/geth.ipc \
         --maxpeers 0 \
@@ -140,7 +140,7 @@ and launch the Swarm; connecting it to the geth node.
 Adding enodes manually
 ------------------------
 
-By default, go-swarm will automatically seek out peers in the network. This can be suppressed using the ``--nodiscover`` flag.
+By default, swarm will automatically seek out peers in the network. This can be suppressed using the ``--nodiscover`` flag.
 
 Without discovery, it is possible to manually start off the connection process by adding a few peers using the ``admin.addPeer`` console command.
 
@@ -163,9 +163,9 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 Running a private swarm
 -------------------------
 
-You can extend your singleton node into a private swarm. First you fire up a number of ``go-swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific info will reside under ``$DATADIR/bzz-$BZZKEY/``
-Make sure that you create an account for each instance of go-swarm you want to run.
-For simplicity we can assume you run one geth instance and each go-swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
+You can extend your singleton node into a private swarm. First you fire up a number of ``swarm`` instances, following the instructions above. You can keep the same datadir, since all node-specific info will reside under ``$DATADIR/bzz-$BZZKEY/``
+Make sure that you create an account for each instance of swarm you want to run.
+For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
 
 Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the swarm console.
 
@@ -173,7 +173,7 @@ Once your ``n`` nodes are up and running, you can list all there enodes using ``
 
     geth --exec "console.log(admin.nodeInfo.enode)" attach /path/to/bzzd.ipc
 
-Then you can for instance connect each node with one particular node (call it bootnode) by injecting ``admin.addPeer(enode)`` into the go-swarm console (this has the same effect as if you created a :file:`static-nodes.json` file for devp2p:
+Then you can for instance connect each node with one particular node (call it bootnode) by injecting ``admin.addPeer(enode)`` into the swarm console (this has the same effect as if you created a :file:`static-nodes.json` file for devp2p:
 
 .. code-block:: shell
 
@@ -184,7 +184,7 @@ Fortunately there is also an easier short-cut for this, namely adding the ``--bo
 These relatively tedious steps of managing connections need to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
 
 .. note::
-    Note that if you run several go-swarm daemons locally on the same machine, you can use the same data directory ($DATADIR), each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
+    Note that if you run several swarm daemons locally on the same machine, you can use the same data directory ($DATADIR), each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
 
 In case you want to run several nodes locally and you are behind a firewall, connection between nodes using your external IP will likely not work. In this case, you need to substitute ``[::]`` (indicating localhost) for the IP address in the enode.
 

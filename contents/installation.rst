@@ -8,7 +8,7 @@ Swarm is part of the Ethereum stack, the reference implementation is currently a
 Swarm runs on all major platforms (linux, MacOSX, Windows, also raspberry pi, android OS, iOS).
 
 ..  note::
-  The go-swarm package has not been tested on platforms other than linux and OSX.
+  The swarm package has not been tested on platforms other than linux and OSX.
 
 Installing Swarm binaries
 =========================
@@ -24,7 +24,7 @@ The source code is found on github: https://github.com/ethersphere/go-ethereum/t
 Prerequisites
 -------------
 
-building the Swarm daemon :command:`go-swarm` requires the following packages:
+building the Swarm daemon :command:`swarm` requires the following packages:
 
 * go: https://golang.org
 * git: http://git.org
@@ -148,26 +148,26 @@ Once all prerequisites are met, download the go-ethereum source code
   git checkout swarm-network-rewrite
   go get github.com/ethereum/go-ethereum
 
-and finally compile the swarm daemon ``go-swarm`` and the main go-ethereum client ``geth``.
+and finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``geth``.
 
 .. code-block:: none
 
   go install -v ./cmd/geth
-  go install -v ./cmd/go-swarm
+  go install -v ./cmd/swarm
 
 
-You can now run :command:`go-swarm` to start your Swarm node.
-Let's check if the installation of `go-swarm` was successful:
-
-.. code-block:: none
-
-  go-swarm version
-
-or, if your `PATH` is not set and the `go-swarm` command can not be found, try:
+You can now run :command:`swarm` to start your Swarm node.
+Let's check if the installation of `swarm` was successful:
 
 .. code-block:: none
 
-  $GOPATH/bin/go-swarm version
+  swarm version
+
+or, if your `PATH` is not set and the `swarm` command can not be found, try:
+
+.. code-block:: none
+
+  $GOPATH/bin/swarm version
 
 This should return some relevant information. For example:
 
@@ -192,4 +192,4 @@ To update your client simply download the newest source code and recompile.
   git checkout master
   git pull
   go install -v ./cmd/geth
-  go install -v ./cmd/go-swarm
+  go install -v ./cmd/swarm
