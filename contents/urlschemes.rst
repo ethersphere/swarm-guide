@@ -42,7 +42,7 @@ Importantly and somewhat unusually for generic schemes, the raw scheme supports 
 
 The possibility to POST makes Swarm an actual cloud service, bringing upload functionality to your browsing.
 
-In fact the command line tool ``go-swarm up`` uses the HTTP proxy with the bzz-raw scheme under the hood.
+In fact the command line tool ``swarm up`` uses the HTTP proxy with the bzz-raw scheme under the hood.
 
 bzz-list
 ^^^^^^^^^^^^^^

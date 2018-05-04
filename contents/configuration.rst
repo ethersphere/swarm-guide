@@ -3,10 +3,10 @@ Configuration
 ******************************
 
 
-Command line options for go-swarm
+Command line options for swarm
 ====================================
 
-The ``go-swarm`` executable supports the following configuration options:
+The ``swarm`` executable supports the following configuration options:
 
 * Configuration file
 * Environment variables
@@ -41,7 +41,7 @@ This is the list of flags inherited from ``geth``:
 Config File
 =============
 
-.. note:: ``go-swarm`` can be executed with the ``dumpconfig`` command, which prints a default configuration to STDOUT, and thus can be redirected to a file as a template for the config file.
+.. note:: ``swarm`` can be executed with the ``dumpconfig`` command, which prints a default configuration to STDOUT, and thus can be redirected to a file as a template for the config file.
 
 
 A TOML configuration file is organized in sections. The below list of available configuration options is organized according to these sections. The sections correspond to `Go` modules, so need to be respected in order for file configuration to work properly. See `<https://github.com/naoina/toml>`_ for the TOML parser and encoder library for Golang, and `<https://github.com/toml-lang/toml>`_ for further information on TOML.
