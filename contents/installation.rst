@@ -29,25 +29,39 @@ Grab the relevant prerequisites and build from source.
 
 On linux (ubuntu/debian variants) use ``apt`` to install go and git
 
-.. code-block:: none
+.. code-block:: shell
 
   sudo apt install golang git
 
 while on Mac OSX you'd use :command:`brew`
 
-.. code-block:: none
+.. code-block:: shell
 
     brew install go git
 
-Then you must prepare your go environment as follows
+Then you must prepare your go environment setting your GOPATH environment variable.
 
-.. code-block:: none
+To do this, follow the instructions for your specific platform at `Setting GOPATH <https://github.com/golang/go/wiki/SettingGOPATH/>`_.
 
-  mkdir ~/go
-  export GOPATH="$HOME/go"
-  echo 'export GOPATH="$HOME/go"' >> ~/.profile
+As an example (for Linux) create your go workspace folder.
 
+.. code-block:: shell
 
+  mkdir ~/<your-own-go-workspace>
+
+Edit your ~/.bash_profile to add the following line:
+
+.. code-block:: shell
+
+  export GOPATH=$HOME/<your-own-go-workspace>
+
+Save and exit your editor.
+
+Then, source your ~/.bash_profile.
+
+.. code-block:: shell
+
+  source ~/.bash_profile
 
 Ubuntu
 ================
@@ -60,13 +74,13 @@ Other distros
 
 Download the latest distribution
 
-.. code-block:: none
+.. code-block:: shell
 
   curl -O https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz 
 
 Unpack it to the /usr/local (might require sudo)
 
-.. code-block:: none
+.. code-block:: shell
 
   tar -C /usr/local -xzf go1.9.2.linux-amd64.tar.gz
 
@@ -76,54 +90,51 @@ For Go to work properly, you need to set the following two environment variables
 
 Setup a go folder 
 
-.. code-block:: none
+.. code-block:: shell
 
   mkdir -p ~/go; echo "export GOPATH=$HOME/go" >> ~/.bashrc
 
 Update your path 
 
-.. code-block:: none
+.. code-block:: shell
 
   echo "export PATH=$PATH:$HOME/go/bin:/usr/local/go/bin" >> ~/.bashrc
 
 Read the environment variables into current session: 
 
-.. code-block:: none
+.. code-block:: shell
 
   source ~/.bashrc
 
 Installing from source
 =======================
 
-Once all prerequisites are met, download the go-ethereum source code
+Once all prerequisites are met, download and install packages and dependencies for go-ethereum;
 
-.. code-block:: none
+.. code-block:: shell
 
-  mkdir -p $GOPATH/src/github.com/ethereum
-  cd $GOPATH/src/github.com/ethereum
-  git clone https://github.com/ethereum/go-ethereum
-  cd go-ethereum
-  git checkout master
   go get github.com/ethereum/go-ethereum
+  cd $GOPATH/src/github.com/ethereum/go-ethereum
 
-and finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``geth``.
+This will download the master source code branch.
 
-.. code-block:: none
+Finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``geth``.
 
-  go install -v ./cmd/geth
+.. code-block:: shell
+
   go install -v ./cmd/swarm
-
+  go install -v ./cmd/geth
 
 You can now run :command:`swarm` to start your swarm node.
 Let's check `swarm`'s installation
 
-.. code-block:: none
+.. code-block:: shell
 
   $GOPATH/bin/swarm version
 
 Should give you some relevant information back
 
-.. code-block:: none
+.. code-block:: shell
 
   Swarm
   Version: 0.2
@@ -138,7 +149,7 @@ Updating your client
 
 To update your client simply download the newest source code and recompile.
 
-.. code-block:: none
+.. code-block:: shell
 
   cd $GOPATH/src/github.com/ethereum/go-ethereum
   git checkout master
