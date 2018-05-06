@@ -1,3 +1,5 @@
+.. _Ethereum Name Service:
+
 Using ENS names
 ================
 

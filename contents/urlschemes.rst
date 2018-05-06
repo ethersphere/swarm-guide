@@ -1,3 +1,5 @@
+.. _bzz protocol suite:
+
 BZZ URL schemes
 =======================
 
@@ -21,6 +23,7 @@ If the manifest does not contain an file at ``readme.md`` itself, but it does co
 
 
 .. _bzz-raw:
+
 bzz-raw
 ^^^^^^^^^^^^^^
 

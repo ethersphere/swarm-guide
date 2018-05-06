@@ -151,7 +151,7 @@ Data layer
 There are 4 different layers of data units relevant to swarm:
 
 
-* :dfn:`message`: p2p RLPx network layer. Messages are relevant for the devp2p wire protocols `The bzz protocol suite`_.
+* :dfn:`message`: p2p RLPx network layer. Messages are relevant for the devp2p wire protocols The :ref:`bzz protocol suite`.
 * :dfn:`chunk`: fixed size data unit of storage
 *  :dfn:`document`: in want of a better word, we call the smallest unit that is associated with a mime-type and not guaranteed to have integrity unless it is complete. This is the smallest unit semantic to the user, basically a file on a filesystem.
 *  :dfn:`collection`: a mapping of paths to documents is represented by the :dfn:`swarm manifest`. This layer has mapping to file system directory tree. Given trivial routing conventions, url can be mapped to documents in a standardised way, allowing manifests to mimic webservers on swarm.
@@ -183,7 +183,7 @@ The swarm manifest is a structure that defines a mapping between arbitrary paths
 The high level API to the manifests provides functionality to upload and download individual documents as files, collections (manifests) as directories. It also provides an interface to add documents to a collection on a path, delete a document from a collection. Note that deletion here only means that a new manifest is created in which the path in question is missing. There is no other notion of deletion in the swarm.
 
 API is the go implementation (and go API) for these high level functions. There is an http proxy interface as well as a RPC API for these functions. These all differ in their exact functionality due to inherent privilege differences or interface limitations.
-These are described in detail in :ref:`usage`.
+These are described in detail in the :ref:`API Reference` section.
 
 .. index::
    API
