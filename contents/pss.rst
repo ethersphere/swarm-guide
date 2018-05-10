@@ -2,15 +2,15 @@
 PSS
 *********
 
-``PSS`` (Postal Service over Swarm) is a messaging protocol over Swarm. With ``PSS`` you can send messages to any swarm in a network even though you're just connected to a single one. The messages are sent in the same manner as when you store data. However, instead of storing the data in the message, the message content will instead be passed on to _code handlers_ in the recipient nodes. 
+``pss`` (Postal Service over Swarm) is a messaging protocol over Swarm. With ``pss`` you can send messages to any swarm in a network even though you're just connected to a single one. The messages are sent in the same manner as when you store data. However, instead of storing the data in the message, the message content will instead be passed on to *code handlers* in the recipient nodes. 
 
 .. note::
-  ``PSS`` is still an experimental feature and under active development and is available as of POC3 of Swarm. Expect things to change.
+  ``pss`` is still an experimental feature and under active development and is available as of POC3 of Swarm. Expect things to change.
 
 Configuration
 ---------------
 
-``PSS`` has builtin encryption functionality. In fact, in the eyes of ``PSS``, a message recipient is not only who the message is _addressed_ to, but also just as much _who_ can _decrypt_ that message. Encryption can be done using asymmetric or symmetric encryption methods.
+``pss`` has builtin encryption functionality. In fact, in the eyes of ``pss``, a message recipient is not only who the message is _addressed_ to, but also just as much *who* can *decrypt* that message. Encryption can be done using asymmetric or symmetric encryption methods.
 
 .. note:: In case you would like to send just ``raw`` messages - defining an encryption key is not mandatory. See below for details.
 
@@ -29,7 +29,7 @@ After you associate an encryption key with an address they will be checked again
 Sending a message
 -------------------
 
-There are a few prerequisits for sending a message over ``PSS``:
+There are a few prerequisits for sending a message over ``pss``:
 
 1. ``Encryption key id`` - id of the stored recipient's encryption key.
 
@@ -63,7 +63,7 @@ It is also possible to send a message without using the builtin encryption. In t
 2. ``Address``- the swarm overlay address to use for the routing.
 
 .. important::
-  ``PSS`` does not guarantee message ordering (`Best-effort delivery <https://en.wikipedia.org/wiki/Best-effort_delivery>`_)
+  ``pss`` does not guarantee message ordering (`Best-effort delivery <https://en.wikipedia.org/wiki/Best-effort_delivery>`_)
   nor message delivery (e.g. messages to offline nodes will not be cached and replayed) at the moment.
 
 Advanced features
@@ -72,12 +72,12 @@ Advanced features
 .. note:: This functionalities are optional features in pss. They are compiled in by default, but can be omitted by providing the appropriate build tags.
 
 Handshakes
-^^^^^
+^^^^^^^^^^
 
-``PSS`` provides a convenience implementation of Diffie-Hellman handshakes using ephemeral symmetric keys. Peers keep separate sets of keys for a limited amount of incoming and outgoing communications, and create and exchange new keys when the keys expire.
+``pss`` provides a convenience implementation of Diffie-Hellman handshakes using ephemeral symmetric keys. Peers keep separate sets of keys for a limited amount of incoming and outgoing communications, and create and exchange new keys when the keys expire.
 
 
 Protocols
-^^^^^
+^^^^^^^^^
 
-A framework is also in place for making ``devp2p`` protocols available using ``PSS`` connections. This feature is only available using lower-level integration, and documentation is out of scope of this document.
+A framework is also in place for making ``devp2p`` protocols available using ``pss`` connections. This feature is only available using lower-level integration, and documentation is out of scope of this document.
