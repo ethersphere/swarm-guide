@@ -149,7 +149,7 @@ When installed globally, it can also be used directly from the CLI:
 
 
 
-IPC
+RPC
 ========================
 
 Swarm exposes an IPC API under the ``bzz`` namespace.
@@ -167,6 +167,63 @@ FUSE
 
 ``swarmfs.listmounts()``
   For every active mount, this command display three things. The mountpoint, start HASH supplied and the latest HASH. Since the HASH is mounted in rw mode, when ever there is a change to the file system (adding file, removing file etc), a new HASH is computed. This hash is called the latest HASH.
+
+PSS
+^^^^^
+
+``PSS`` methods are by default exposed via IPC. If websockets are activated on the node, they will also be available there _if_ the ``pss`` module is explicitly specified.
+
+All parameters are hex-encoded bytes or strings unless otherwise noted.
+
+``pss.getPublicKey()``
+  Retrieves the public key of the node, in hex format
+
+``pss.baseAddr()``
+  Retrieves the swarm overlay address of the node, in hex format
+
+``pss.stringToTopic(name)``
+  Creates a deterministic 4 byte topic value from an input name, returned in hex format
+
+``pss.setPeerPublicKey(publickey, topic, address)``
+  Register a peer's public key. This is done once for every topic that will be used with the peer. Address can be anything from 0 to 32 bytes inclusive of the peer's swarm address. The method has no return value.
+
+``pss.sendAsym(publickey, topic, message)``
+  Encrypts the message using the provided public key, and signs it using the node's private key. It then wraps it in an envelope containing the topic, and sends it to the network. The method has no return value.
+
+``pss.setSymmetricKey(symkey, topic, address, _bool_ decryption)``
+  Register a symmetric key shared with a peer. This is done once for every topic that will be used with the peer. Address can be anything from 0 to 32 bytes inclusive of the peer's swarm overlay address. If the fourth parameter is false, the key will not be added to the list of symmetric keys used for decryption attempts. The method returns an id used to reference the symmetric key in consecutive calls.
+
+``pss.sendSym(symkeyid, topic, message)``
+  Encrypts the message using the provided symmetric key, wraps it in an envelope containing the topic, and sends it to the network. The method has no return value.
+
+``pss.GetSymmetricAddressHint(topic, symkeyid)``
+  Return the swarm address associated with the peer registered with the given symmetric key and topic combination. If a match is found it returns the address data in hex format.
+
+``pss.GetAsymmetricAddressHint(topic, publickey)``
+  Return the swarm address associated with the peer registered with the given asymmetric key and topic combination. If a match is found it returns the address data in hex format.
+
+.. note:: The following methods are used to control the optional pss handshake module. This is an advanced feature, and not required for sending and receiving messages using pss. 
+
+``pss.addHandshake(topic)``
+  Activate handshake functionality on the specified topic. The method has no return value.
+
+``pss.removeHandshake(topic)``
+  Remove handshake functionality on the specified topic. The method has no return value.
+
+``pss.handshake(publickey, topic, _bool_ block, _bool_ flush)``
+  Instantiate handshake with peer, refreshing symmetric encryption keys. If parameter 3 is false the handshake will happen asynchronously. If parameter 4 is true, it will force expiry of all existing keys. The method returns a list of symmetric key ids created by the handshake. If the handshake is asynchronous, however, returned array will be empty.
+
+``pss.getHandshakeKeys(publickey, topic, _bool_ incoming, _bool_ outgoing)``
+  Returns the set of valid symmetric encryption keys for a specified peer and topic. If the incoming and outgoing parameters are set, the keys valid for the respective communcations directions are included.
+
+``pss.getHandshakeKeyCapacity(symkeyid)``
+  Returns the number of messages (uint16) a symmetric handshake key is valid for.
+
+``pss.getHandshakePublicKey(symkeyid)``
+  Returns the public key associated with the specified symmetric handshake key.
+
+``pss.releaseHandshakeKey(publickey, topic, symkeyid, _bool_ instant)`` 
+  Invalidate the specified symmetric handshake key. Normally, the key will be kept for a grace period to allow decryption of messages not yet received at the time of release. If the instant parameter is set, this grace period is omitted, and the key removed instantaneously. This method has no return value.
 
 
 .. uncommentthisChequebook IPC API
