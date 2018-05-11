@@ -250,35 +250,35 @@ Files can also be uploaded using a simple HTML form
   </form>
 
 
-  Listing files
-  -------------
+Listing files
+-------------
 
-  A `GET` request with ``bzz-list`` URL scheme returns a list of files contained under the path, grouped into common prefixes which represent directories:
+A `GET` request with ``bzz-list`` URL scheme returns a list of files contained under the path, grouped into common prefixes which represent directories:
 
-  .. code-block:: none
+.. code-block:: none
 
-     curl -s http://localhost:8500/bzz-list:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/ | jq .
-     > {
-        "common_prefixes": [
-          "dir1/",
-          "dir2/",
-          "dir3/"
-        ]
-      }
+   curl -s http://localhost:8500/bzz-list:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/ | jq .
+   > {
+      "common_prefixes": [
+        "dir1/",
+        "dir2/",
+        "dir3/"
+      ]
+    }
 
-  .. code-block:: none
+.. code-block:: none
 
-      curl -s http://localhost:8500/bzz-list:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/dir1/ | jq .
-      > {
-        "entries": [
-          {
-            "path": "dir1/file.txt",
-            "contentType": "text/plain",
-            "size": 9,
-            "mod_time": "2017-03-12T15:19:55.112597383Z",
-            "hash": "94f78a45c7897957809544aa6d68aa7ad35df695713895953b885aca274bd955"
-          }
-        ]
-      }
+    curl -s http://localhost:8500/bzz-list:/ccef599d1a13bed9989e424011aed2c023fce25917864cd7de38a761567410b8/dir1/ | jq .
+    > {
+      "entries": [
+        {
+          "path": "dir1/file.txt",
+          "contentType": "text/plain",
+          "size": 9,
+          "mod_time": "2017-03-12T15:19:55.112597383Z",
+          "hash": "94f78a45c7897957809544aa6d68aa7ad35df695713895953b885aca274bd955"
+        }
+      ]
+    }
 
-  Setting Accept: text/html returns the list as a browsable HTML document
+Setting Accept: text/html returns the list as a browsable HTML document
