@@ -37,6 +37,7 @@ After uploading, you can access this example.md file from swarm by pointing your
 
 The manifest makes sure you could retrieve the file with the correct MIME type.
 
+
 Suppressing automatic manifest creation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 You may wish to prevent a manifest from being created alongside with your content and only upload the raw content. You might want to include it in a custom index, or handle it as a data-blob known and used only by a certain application that knows its MIME type. For this you can set ``--manifest=false``:
@@ -49,6 +50,34 @@ You may wish to prevent a manifest from being created alongside with your conten
 This option suppresses automatic manifest upload. It uploads the content as-is.
 However, if you wish to retrieve this file, the browser can not be told unambiguously what that file represents.
 In the context, the hash ``7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb`` does not refer to a manifest and any attempt to retrieve it over bzz will result in a 404 Not Found Error. In order to access this file, you would have to use the :ref:`bzz-raw` scheme.
+
+
+Downloading a single file
+----------------------------
+
+To download single files, use the ``swarm down`` command. 
+Single files can be downloaded in the following different manners. The following examples assume ``<hash>`` resolves into a single-file manifest:
+
+.. code-block:: none
+
+  swarm down bzz:/<hash>            #downloads the file at <hash> to the current working directory
+  swarm down bzz:/<hash> file.tmp   #downloads the file at <hash> as ``file.tmp`` in the current working dir
+  swarm down bzz:/<hash> dir1/      #downloads the file at <hash> to ``dir1/``
+
+You can also specify a custom proxy with `--bzzapi`:
+
+.. code-block:: none
+
+  swarm --bzzapi http://localhost:8500 down bzz:/<hash>            #downloads the file at <hash> to the current working directory using the localhost node
+ 
+ 
+ Downloading a single file from a multi-entry manifest can be done with (``<hash>`` resolves into a multi-entry manifest):
+
+ .. code-block:: none
+
+  swarm down bzz:/<hash>/index.html            #downloads index.html to the current working directory
+  swarm down bzz:/<hash>/index.html file.tmp   #downloads index.html as file.tmp in the current working directory
+  swarm down bzz:/<hash>/index.html dir1/      #downloads index.html to dir1/
 
 
 Uploading to a remote Swarm node
@@ -103,7 +132,27 @@ and also at
 
   http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/
 
-This is especially useful when the hash (in this case ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b) is given a registered name like 'mysite.eth' in the `Ethereum Name Service <./ens.html>`_.
+This is especially useful when the hash (in this case ``ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b``) is given a registered name like ``mysite.eth`` in the `Ethereum Name Service <./ens.html>`_.
+
+
+Downloading a directory
+--------------------------
+
+To download a directory, use the ``swarm down --recursive`` command. 
+Directories can be downloaded in the following different manners. The following examples assume <hash> resolves into a multi-entry manifest:
+
+.. code-block:: none
+
+  swarm down --recursive bzz:/<hash>            #downloads the directory at <hash> to the current working directory
+  swarm down --recursive bzz:/<hash> dir1/      #downloads the file at <hash> to dir1/
+
+Similarly as with a single file, you can also specify a custom proxy with ``--bzzapi``:
+
+.. code-block:: none
+
+  swarm --bzzapi http://localhost:8500 down --recursive bzz:/<hash> #note the flag ordering
+
+
 
 
 Adding entries to a manifest
@@ -127,13 +176,6 @@ To modify the hash of an entry in a manifest, use the command:
 .. code-block:: none
 
   swarm manifest update
-
-
-Downloading Swarm content from your local node
------------------------------------------------
-
-There is no ``swarm down`` command dual to ``swarm up``. To download from swarm you should use the HTTP interface. You can still download using a CLI with commands such as ``curl`` or ``wget``.
-
 
 
 Using HTTP
