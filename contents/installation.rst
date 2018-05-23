@@ -19,7 +19,9 @@ THIS SECTION IS MISSING
 Installing Swarm from source
 =============================
 
-The source code is found on github: https://github.com/ethersphere/go-ethereum/tree/swarm-network-rewrite/
+The swarm source code can be found on github:
+
+https://github.com/ethersphere/go-ethereum/tree/swarm-network-rewrite/
 
 Prerequisites
 -------------
@@ -32,73 +34,23 @@ building the Swarm daemon :command:`swarm` requires the following packages:
 
 Grab the relevant prerequisites and build from source.
 
-On linux (ubuntu/debian variants) use ``apt`` to install git
+Ubuntu / Debian linux
+^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
 
   sudo apt install git
-
-and install go with
-
-.. code-block:: none
-
   sudo apt install golang
 
-**However**, at the time of writing the version of golang that is in the repositories for Ubuntu and Debian is too old. (See below_. for instructions on how to get the newer version)
-
-while on Mac OSX you'd use :command:`brew`
-
-.. code-block:: none
-
-    brew install go git
-
-Then you must prepare your go environment as follows
+Archlinux
+^^^^^^^^^
 
 .. code-block:: none
 
-  mkdir $HOME/go
-  export GOPATH=$HOME/go
-  echo 'export GOPATH=$HOME/go' >> ~/.bashrc
-  export PATH=$PATH:$GOPATH/bin
-  echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
-
-
-.. _below:
-
-Ubuntu
-^^^^^^^^
-
-At the time of writing, the Ubuntu repositories carry an older version of Go. Up to date instruction on how to install the newest version of Go in Ubuntu can always be found `here <https://github.com/golang/go/wiki/Ubuntu>`_.
-
-Ubuntu users can use the 'gophers' PPA to install an up to date version of Go. See https://launchpad.net/~gophers/+archive/ubuntu/archive for more information. Note that this PPA requires adding /usr/lib/go-1.X/bin to the executable PATH.
-Thus you would install golang 1.10 with
-
-.. code-block:: none
-
-  sudo add-apt-repository ppa:gophers/archive
-  sudo apt-get update
-  sudo apt-get install golang-1.10-go
-
-and then add ``/usr/lib/go-1.10/bin`` to your ``PATH`` environment variable.
-
-.. code-block:: none
-
-  export PATH="$PATH:/usr/lib/go-1.10/bin"
-  echo 'export PATH=$PATH:/usr/lib/go-1.10/bin' >> ~/.bashrc
-
-You must also set up a go folder and ``GOPATH``.
-
-.. code-block:: none
-
-  mkdir $HOME/go
-  export GOPATH=$HOME/go
-  echo 'export GOPATH=$HOME/go' >> ~/.bashrc
-  export PATH=$PATH:$GOPATH/bin
-  echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
-
+  pacman -S git go
 
 Generic linux
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^
 
 The latest version of golang can be found at https://golang.org/dl/
 
@@ -114,24 +66,25 @@ Unpack it to the /usr/local
 
   sudo tar -C /usr/local -xzf go1.10.1.linux-amd64.tar.gz
 
-Set GOPATH and PATH:
-
-Setup a go folder and declare it as the GOPATH
-
-.. code-block:: none
-
-  mkdir -p ~/go; echo "export GOPATH=$HOME/go" >> ~/.bashrc
-
-Update your PATH variable to include binaries installed with go
+Mac OSX
+^^^^^^^
 
 .. code-block:: none
 
-  echo "export PATH=$PATH:$HOME/go/bin:/usr/local/go/bin" >> ~/.bashrc
+    brew install go git
 
-Read the environment variables into current session:
+Configuration
+-------------
+
+You should then prepare your go environment, for example:
 
 .. code-block:: none
 
+  mkdir $HOME/go
+  export GOPATH=$HOME/go
+  echo 'export GOPATH=$HOME/go' >> ~/.bashrc
+  export PATH=$PATH:$GOPATH/bin
+  echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
   source ~/.bashrc
 
 Compiling and installing
