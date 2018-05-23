@@ -68,7 +68,11 @@ After the connection is established, open another terminal window and connect to
 
 .. code-block:: none
 
-  swarm --ens-api '$HOME/.ethereum/geth.ipc'
+  swarm --ens-api '$HOME/.ethereum/geth.ipc' \
+    --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
+
+.. note::
+  For Mac OS, replace "$HOME/.ethereum/" with "~/Library/Ethereum/"
 
 Verify that this was successful by pointing your browser to http://localhost:8500/bzz:/theswarm.eth/
 
