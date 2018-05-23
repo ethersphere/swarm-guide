@@ -42,6 +42,7 @@ Mount
 ^^^^^^^^
 
 To mount a Swarm manifest, first upload a content to Swarm using the `swarm up` command.
+You can also upload an empty folder using `swarm --recursive up`.
 Once you get the returned manifest hash, use it to mount the manifest to a mount point:
 
 .. code-block:: none
@@ -64,13 +65,11 @@ To unmount a swarmfs mount, either use the List Mounts command below, or use a k
 .. code-block:: none
 
 	swarm fs unmount --ipcpath <path-to-bzzd.ipc> <mount-point>
+	> 41e422e6daf2f4b32cd59dc6a296cce2f8cce1de9f7c7172e9d0fc4c68a3987a
 
-Your Swarm node should now show the following output:
-
-.. code-block:: none
-
-	UnMounting /path/to/mount/point succeeded 
-
+The returned hash is the latest manifest version that was mounted. 
+You can use this hash to remount the latest version.
+	 
 
 List Mounts
 ^^^^^^^^^^^^^^^^^^
