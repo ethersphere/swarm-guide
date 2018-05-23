@@ -29,3 +29,64 @@ Installing FUSE
 	brew update
 	brew install caskroom/cask/brew-cask
 	brew cask install osxfuse
+
+
+CLI Usage
+-----------
+
+The Swarm CLI now integrates commands to make FUSE usage easier and streamlined.
+
+.. note:: When using FUSE from the CLI, we assume you are running a local Swarm node on your machine. The FUSE commands attach to the running node through `bzzd.ipc`
+
+Mount
+^^^^^^^^
+
+To mount a Swarm manifest, first upload a content to Swarm using the `swarm up` command.
+You can also upload an empty folder using `swarm --recursive up`.
+Once you get the returned manifest hash, use it to mount the manifest to a mount point:
+
+.. code-block:: none
+
+	swarm fs mount --ipcpath <path-to-bzzd.ipc> <manifest-hash> <mount-point>
+
+Your running Swarm node terminal output should show something similar to the following in case the command returned successfuly:
+
+.. code-block:: none
+
+	Attempting to mount /path/to/mount/point  
+	Serving 6e4642148d0a1ea60e36931513f3ed6daf3deb5e499dcf256fa629fbc22cf247 at /path/to/mount/point
+	Now serving swarm FUSE FS                manifest=6e4642148d0a1ea60e36931513f3ed6daf3deb5e499dcf256fa629fbc22cf247 mountpoint=/path/to/mount/point
+
+
+Unmount
+^^^^^^^^
+To unmount a swarmfs mount, either use the List Mounts command below, or use a known mount point:
+
+.. code-block:: none
+
+	swarm fs unmount --ipcpath <path-to-bzzd.ipc> <mount-point>
+	> 41e422e6daf2f4b32cd59dc6a296cce2f8cce1de9f7c7172e9d0fc4c68a3987a
+
+The returned hash is the latest manifest version that was mounted. 
+You can use this hash to remount the latest version.
+	 
+
+List Mounts
+^^^^^^^^^^^^^^^^^^
+
+To see all existing swarmfs mount points, use the List Mounts command:
+
+.. code-block:: none
+
+	swarm fs list --ipcpath <path-to-bzzd.ipc>
+
+Example Output:
+
+.. code-block:: none
+
+	Found 1 swarmfs mount(s):
+	0:
+		Mount point: /path/to/mount/point
+		Latest Manifest: 6e4642148d0a1ea60e36931513f3ed6daf3deb5e499dcf256fa629fbc22cf247
+		Start Manifest: 6e4642148d0a1ea60e36931513f3ed6daf3deb5e499dcf256fa629fbc22cf247
+

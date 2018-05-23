@@ -22,6 +22,7 @@ Contents:
    manifests
    pss
    mru
+   fuse
    apireference
    architecture
    resources
