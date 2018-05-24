@@ -47,9 +47,9 @@ When running, ``swarm`` is accessible through an HTTP API on port 8500. Confirm 
 How do I enable ENS name resolution?
 =====================================
 
-The `Ethereum Name Service <http://ens.readthedocs.io/en/latest/introduction.html>`_ is the Ethereum equivalent of DNS in the classic web.
+.. note:: **ENS** is based on a suite of smart contracts running on the *Ethereum mainnet*.
 
-**ENS** based on a suite of smart contracts running on the *Ethereum mainnet*. Thus, in order to use **ENS** to resolve names to swarm content hashes, ``swarm`` has to connect to a ``geth`` instance that is connected to the *Ethereum mainnet*. This is done using the ``--ens-api`` flag.
+The `Ethereum Name Service <http://ens.readthedocs.io/en/latest/introduction.html>`_ is the Ethereum equivalent of DNS in the classic web. In order to use **ENS** to resolve names to swarm content hashes, ``swarm`` has to connect to a ``geth`` instance that is connected to the *Ethereum mainnet*. This is done using the ``--ens-api`` flag.
 
 First you must start your geth node and establish connection with Ethereum main network with the following command:
 
@@ -61,7 +61,7 @@ for a full geth node, or
 
 .. code-block:: none
 
-  geth --light
+  geth --syncmode=light
 
 for light client mode.
 
@@ -161,6 +161,10 @@ Without discovery, it is possible to manually start off the connection process b
 
   geth --exec='admin.addPeer("ENODE")' attach ipc:/path/to/bzzd.ipc
 
+.. note::
+
+  When you stop a node, all peer connections will be saved. When you start again, the node will try to reconnect to those peers automatically.
+
 Where ENODE is the enode record of a swarm node. Such a record looks like the following:
 
 .. code-block:: none
@@ -172,6 +176,9 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 .. code-block:: shell
 
     geth --exec "admin.nodeInfo.enode" attach /path/to/bzzd.ipc
+
+.. note::
+  Note how ``geth`` is used for two different purposes here: You use it to run an Ethereum Mainnet node for ENS lookups. But you also use it to "attach" to the Swarm node to send commands to it.
 
 Running a private swarm
 -------------------------
@@ -189,13 +196,17 @@ Once your ``n`` nodes are up and running, you can list all their respective enod
 
     geth --exec "admin.nodeInfo.enode" attach /path/to/bzzd.ipc
 
-Then you can for instance connect each node with one particular node (call it bootnode) by injecting ``admin.addPeer(enode)`` into the swarm console (this has the same effect as if you created a :file:`static-nodes.json` file for devp2p:
+Then you can for instance connect each node with one particular node:
 
 .. code-block:: shell
 
     geth --exec "admin.addPeer($BOOTNODE)" attach /path/to/bzzd.ipc
 
-Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start Swarm.
+Fortunately there is also an easier short-cut for this, namely adding the ``--bootnodes $BOOTNODE`` flag when you start Swarm. You can specify several bootnodes:
+
+.. code-block:: shell
+
+    swarm --bootnodes "$BOOTNODE_ONE $BOOTNODE_TWO"
 
 These relatively tedious steps of managing connections need to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
 
