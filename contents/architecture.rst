@@ -25,6 +25,9 @@ logarithm of the distance.
 It is calculated by counting the number of common leading zeros in the (MSB)
 binary representation of :math:`x XOR y` (0 farthest, 255 closest, 256 self).
 
+.. image:: img/distance.svg
+   :alt: Distance and Proximity
+
 Taking the :dfn:`proximity order` relative to a fix point :math:`x` classifies the points in
 the space (byte sequences of length :math:`n`) into bins. Items in each are at
 most half as distant from :math:`x` as items in the previous bin. Given a sample of
@@ -41,6 +44,9 @@ points. Since in every hop, the finite distance halves, as long as each relevant
 a guaranteed constant maximum limit on the number of hops needed to reach one
 node from the other.
 
+.. image:: img/topology.svg
+   :alt: Kademlia topology in swarm
+
 Kademlia topology
 ----------------------
 
@@ -56,6 +62,9 @@ The expected value of saturation depth in the network is log2(N). The last bin c
 The properties of a kademlia graph can be used for routing messages between nodes in a network using overlay addressing. Nodes in the swarm network are identified by the hash of the ethereum address of the swarm base account. This serves as their overlay address, the proximity order bins are calculated based on these addresses.
 Peers connected to a node define another, live kademlia table,
 where the graph edges represent devp2p rlpx connections.
+
+.. image:: img/kademlia.svg
+   :alt: Kademlia table for a sample node in swarm
 
 If each node in a set has a saturated kademlia table of connected peers, then the nodes `live connection' graph has kademlia topology.
 In a dfn:`forwarding kademlia` network, a message is said to be dfn:`routable` if there exists a path from sender node to destination node through which the message could be relayed.
@@ -86,6 +95,9 @@ Distributed preimage archive
 
 dfn:`Distributed hash tables` (DHTs) utilise an overlay network to implement a key-value store distributed over the nodes. The basic idea is that the keyspace is mapped onto the overlay address space, and information about an element in the container is to be found with nodes whose address is in the proximity of the key.
 DHTs for decentralised content addressed storage typically associate content fingerprints with a list of nodes (seeders) who can serve that content. However, the same structure can be used directly: it is not information about the location of content that is stored at the node closest to the address (fingerprint), but the content itself. We call this structure dfn:`distributed preimage archive` (DPA).
+
+.. image:: img/dpa-chunking.svg
+   :alt: The DPA and chunking in swarm 
 
 A DPA is opinionated about which nodes store what content and this implies a few more restrictions. (1) load balancing of content is required among nodes and is realised by splitting content into equal sized chunks (dfn:`chunking`). (2) there has to be a process whereby chunks get to where they are supposed to be stored dfn:`syncing`; and (3) since nodes do not have a say in what they store, measures of dfn:`plausible deniability` should be employed.
 
@@ -127,7 +139,7 @@ Given absolute limits on popularity, there might be an actual upper limit on a s
 This storage protocol is designed to result in an autoscaling elastic cloud where a growth in popularity automatically scales. An order of magnitude increase in popularity will result in an order of magnitude more nodes actually caching the chunk resulting in fewer hops to route the chunk, ie., a lower latency retrieval.
 
 
-Syncronisation
+Synchronisation
 -------------------
 
 
@@ -143,6 +155,9 @@ started). Some node is said to have completed dfn:`session syncing` with its ups
 
 In order to reduce network traffic resulting from receiving chunks from multiple sources, all store requests can go via a confirmation roundtrip.
 For each peer connection in both directions, the source peer sends an :dfn:`offeredHashes` message containing a batch of hashes offered to push to the recipient. Recipient responds with a :dfn:`wantedHashes`.
+
+.. image:: img/syncing-high-level.svg
+   :alt: Syncing chunks in the swarm network 
 
 
 Data layer
@@ -164,6 +179,9 @@ There are 4 different layers of data units relevant to swarm:
 
 The actual storage layer of swarm consists of two main components, the :dfn:`localstore (LOC)` and the :dfn:`netstore (NET)`. The local store provides consists of an in-memory fast cache (:dfn:`memory store (MEM)`) and a persistent disk storage (:dfn:`dbstore (DBS)`).
 The NetStore is extending local store to a distributed storage of swarm and is the interface to .
+
+.. image:: img/storage-layer.svg
+   :alt: High level storage layer in swarm 
 
 The :dfn:`distributed preimage archive (DPA)` is the local interface for storage and retrieval of documents. When a document is handed to the DPA for storage, it chunks the document into a merkle hashtree and hands back its root key to the caller (DPA). This key can later be used to retrieve the document in question in part or whole.
 
