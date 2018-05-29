@@ -2,6 +2,7 @@
 Manifests
 ***************************
 
+.. _swarm-manifest:
 
 Manifests in Swarm
 ----------------------
