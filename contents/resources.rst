@@ -17,6 +17,10 @@ Viktor Trón, Aron Fischer, Daniel A. Nagy; May 4, 2018
 ------------
 
 
+Podcasts
+=========
+https://oktahedron.diskordia.org/?podcast=oh003-swarm
+
 
 
 
@@ -190,5 +194,98 @@ Doug Petkanics (Livepeer): Realtime video streaming on swarm - swarm orange summ
 .. raw:: html
 
   <iframe width="560" height="315" src="https://www.youtube.com/embed/pQjwySXLm6Y" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+-------
+
+Nick Johnson on the Ethereum Name System
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/pLDDbCZXvTE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+
+-------
+
+Viktor Trón, Aron Fischer: Swap, Swear and Swindle. Swarm Incentivisation.	
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/DZbhjnhP5g4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+
+-------
+
+Viktor Trón: Towards Web3 Infrastructure.	
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/RF8L6V_E-MM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+-------
+
+Dániel A. Nagy: Developing Scalable Decentralized Applications for Swarm and Ethereum	
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/xrw9rvee7rc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+-------
+
+Aron Fischer, Dániel A. Nagy, Viktor Trón: Swarm - Ethereum.	
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/Y9kch84cbPA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+
+-------
+
+Viktor Trón, Nick Johnson: Swarm, web3, and the Ethereum Name Service.	
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/BAAAhZI7qRQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+-------
+
+Nagy Dániel, Trón Viktor: Ethereum és Swarm: okos szerződések és elosztott világháló.	
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/vD8PAJvhH-4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+-------
+
+Dániel Nagy: Swarm: Distributed storage for Ethereum, the Turing-complete blockchain.	
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/N_vtxw6nfmQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+-------
+
+Viktor Trón, Dániel A. Nagy: Swarm. Ethereum Devcon1, London, Nov 2015.	
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/VOC45AgZG5Q" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+-------
+
+Dániel A. Nagy: Keeping the public record safe and accessible. Ethereum Devcon0, Berlin, Dec 2014.	
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/QzYZQ03ON2o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 
