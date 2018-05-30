@@ -137,8 +137,8 @@ Swarm is code by Ethersphere `https://github.com/ethersphere`
 
 The team behind swarm:
 
-* Viktor TrÃ³n @zelig
-* DÃ¡niel A. Nagy @nagydani
+* Viktor Trón @zelig
+* Daniel A. Nagy @nagydani
 * Aron Fischer @homotopycolimit
 * Janos Gulyas @janos
 * Louis Holbrook @nolash
