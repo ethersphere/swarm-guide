@@ -158,7 +158,7 @@ Special thanks to
 * Jeffrey Wilcke and the go team for continued support, testing and direction;
 * Gavin Wood and Vitalik Buterin for the vision;
 * Nick Johnson @Arachnid for ENS and ENS swarm integration
-* Zsolt FelfÃ¶ldi @zsfelfoldi for his contribution early in the project
+* Zsolt Felföldi @zsfelfoldi for his contribution early in the project
 * Alex Van der Sande, Fabian Vogelsteller, Bas van Kervel, Victor Maia, Everton Fraga and the Mist team
 * Elad Verbin, Nick Savers, Alex Beregszaszi, Daniel Varga, Juan Benet for inspiring discussions and ideas
 * Participants of the orange lounge research group and the swarm orange summits
