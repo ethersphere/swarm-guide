@@ -144,6 +144,7 @@ The team behind swarm:
 * Louis Holbrook @nolash
 * Anton Evangelatov @nonsense
 * Fabio Barone @holisticode
+* Balint Gabor @gbalint
 * Elad Nachmias @justelad
 * Lewis Marshal @lmars
 
