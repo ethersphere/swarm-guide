@@ -171,7 +171,7 @@ You can extend your singleton node into a private swarm. First you fire up a num
 Make sure that you create an account for each instance of swarm you want to run.
 For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
 
-Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the swarm console.
+Once your ``n`` nodes are up and running, you can list all their enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the swarm console.
 
 .. code-block:: shell
 
