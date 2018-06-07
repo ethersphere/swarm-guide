@@ -188,7 +188,7 @@ Fortunately there is also an easier short-cut for this, namely adding the ``--bo
 These relatively tedious steps of managing connections need to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
 
 .. note::
-    Note that if you run several swarm daemons locally on the same machine, you can use the same data directory ($DATADIR), each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
+    Note that if you run several swarm daemons locally on the same machine, they will each need their own bzzaccount, but you can use the same data directory ($DATADIR). Each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
 
 In case you want to run several nodes locally and you are behind a firewall, connection between nodes using your external IP will likely not work. In this case, you need to substitute ``[::]`` (indicating localhost) for the IP address in the enode.
 
