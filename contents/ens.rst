@@ -47,6 +47,8 @@ We recommend using https://manager.ens.domains/. This will make it easy for you 
 
 .. note:: When you register a Swarm hash with https://manager.ens.domains/ you MUST prefix the hash with 0x. For example 0x2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
+Overview of ENS (video)
+-----------------------
 
 Nick Johnson on the Ethereum Name System
 
