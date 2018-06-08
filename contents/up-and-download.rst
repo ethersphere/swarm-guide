@@ -6,7 +6,7 @@ Uploading and Downloading
 
 Introduction
 ==================================
-.. note:: This guide assumes you've installed the swarm client and have a running node that listens by default on port 8500. See "Getting Started" for details.
+.. note:: This guide assumes you've installed the swarm client and have a running node that listens by default on port 8500. See `Getting Started <./gettingstarted.html>`_ for details.
 
 Arguably, uploading and downloading content is the raison d'être of Swarm. Uploading content consists of "uploading" content to your local Swarm node, followed by your local Swarm node "syncing" the resulting chunks of data with its peers in the network. Meanwhile, downloading content consists of your local Swarm node querying its peers in the network for the relevant chunks of data and then reassembling the content locally.
 
@@ -55,7 +55,7 @@ In the context, the hash ``7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6
 Downloading a single file
 ----------------------------
 
-To download single files, use the ``swarm down`` command. 
+To download single files, use the ``swarm down`` command.
 Single files can be downloaded in the following different manners. The following examples assume ``<hash>`` resolves into a single-file manifest:
 
 .. code-block:: none
@@ -69,8 +69,8 @@ You can also specify a custom proxy with `--bzzapi`:
 .. code-block:: none
 
   swarm --bzzapi http://localhost:8500 down bzz:/<hash>            #downloads the file at <hash> to the current working directory using the localhost node
- 
- 
+
+
  Downloading a single file from a multi-entry manifest can be done with (``<hash>`` resolves into a multi-entry manifest):
 
  .. code-block:: none
@@ -138,7 +138,7 @@ This is especially useful when the hash (in this case ``ef6fc0747d1fbaf86d769b3e
 Downloading a directory
 --------------------------
 
-To download a directory, use the ``swarm down --recursive`` command. 
+To download a directory, use the ``swarm down --recursive`` command.
 Directories can be downloaded in the following different manners. The following examples assume <hash> resolves into a multi-entry manifest:
 
 .. code-block:: none

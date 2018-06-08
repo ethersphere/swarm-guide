@@ -171,7 +171,7 @@ You can extend your singleton node into a private swarm. First you fire up a num
 Make sure that you create an account for each instance of swarm you want to run.
 For simplicity we can assume you run one geth instance and each swarm daemon process connects to that via ipc if they are on the same computer (or local network), otherwise you can use http or websockets as transport for the eth network traffic.
 
-Once your ``n`` nodes are up and running, you can list all there enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the swarm console.
+Once your ``n`` nodes are up and running, you can list all their enodes using ``admin.nodeInfo.enode`` (or cleaner: ``console.log(admin.nodeInfo.enode)``) on the swarm console.
 
 .. code-block:: shell
 
@@ -188,7 +188,7 @@ Fortunately there is also an easier short-cut for this, namely adding the ``--bo
 These relatively tedious steps of managing connections need to be performed only once. If you bring up the same nodes a second time, earlier peers are remembered and contacted.
 
 .. note::
-    Note that if you run several swarm daemons locally on the same machine, you can use the same data directory ($DATADIR), each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
+    Note that if you run several swarm daemons locally on the same machine, they will each need their own bzzaccount, but you can use the same data directory ($DATADIR). Each swarm  will automatically use its own subdirectory corresponding to the bzzaccount. This means that you can store all your keys in one keystore directory: $DATADIR/keystore.
 
 In case you want to run several nodes locally and you are behind a firewall, connection between nodes using your external IP will likely not work. In this case, you need to substitute ``[::]`` (indicating localhost) for the IP address in the enode.
 

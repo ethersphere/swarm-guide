@@ -23,7 +23,7 @@ If we register the root hash as the ``content`` for ``theswarm.eth``, then we ca
 if we are using a Swarm enabled browser, or at
 
 .. code-block:: none
-  
+
   http://localhost:8500/bzz:/theswarm.eth/example.pdf
 
 via a local gateway. We will get served the same content as with:
@@ -40,13 +40,15 @@ In short, the steps you must take are:
 2. Associate a resolver with that name.
 3. Register the Swarm hash with the resolver as the ``content``.
 
-We recommend using https://manager.ens.domains/. This will make it easy for you to
+We recommend using https://manager.ens.domains/. This will make it easy for you to:
 
 - Associate the default resolver with your name
 - Register a Swarm hash.
 
 .. note:: When you register a Swarm hash with https://manager.ens.domains/ you MUST prefix the hash with 0x. For example 0x2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
+Overview of ENS (video)
+-----------------------
 
 Nick Johnson on the Ethereum Name System
 
