@@ -56,7 +56,7 @@ The above example is limited to updating swarm web content. But Mutable Resource
   curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth/raw --data bar
   curl -X GET http://localhost:8500/bzz-resource:/yourdomainname.eth
 
-The above two commands pairs will return "foo" and "bar" repectively.
+The above two HTTP GET requests with curl will return "foo" and "bar" repectively.
 
 .. important:: 
   Updates made using the *raw* subpath are served with the ``applcation/octet-stream`` mime type. This means that the receiving application needs to know itself how to interpret the underlying data.
