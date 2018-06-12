@@ -228,8 +228,15 @@ In particular, it can take advantage of parallelisation for faster calculation a
 
 Swarm Hash is constructed using any hash function (in our case, Keccak 256 bit SHA3) with a generalization of Merkle's tree hash scheme. The basic unit of hashing is a :dfn:`chunk`, that can be either a :dfn:`data chunk` containing a section of the content to be hashed or an :dfn:`intermediate chunk` containing hashes of its children, which can be of either variety.
 
+.. image:: img/chunk.png
+   :alt:  A swarm chunk consists of 4096 bytes of the file or a sequence of 128 subtree hashes 
+
 Hashes of data chunks are defined as the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content and the content itself. Because of the inclusion of the length, it is resistant to [length extension attacks](http://en.wikipedia.org/wiki/Length_extension_attack), even if the underlying hash function is not.
 Hashes of intermediate chunks are defined as the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content hashed by the entire (sub-) tree rooted on this chunk and the references of its children.
+
+.. image:: img/bmt.png
+   :alt:  The swarm tree is the data structure encoding how a document is split into chunks
+
 
 To distinguish between the two, one should compare the length of the chunk to the 64-bit number with which every chunk begins. If the chunk is exactly 8 bytes longer than this number, it is a data chunk. If it is shorter than that, it is an inner chunk. Otherwise, it is not a valid Swarm Hash chunk.
 
