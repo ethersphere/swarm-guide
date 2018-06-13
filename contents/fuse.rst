@@ -42,7 +42,7 @@ Mount
 ^^^^^^^^
 
 One use case to mount a Swarm hash via FUSE is a file sharing feature accessible via your local file system.
-Files you uploaded on swarm become accessible via the local file system as if it were a local directory.
+Files uploaded to swarm are then transparently accessible via your local file system, just as if they were stored locally.
 
 To mount a Swarm resource, first upload some content to Swarm using the `swarm up <resource>` command.
 You can also upload a complete folder using `swarm --recursive up <directory>`.
@@ -74,7 +74,7 @@ In your OS, via terminal or file browser, you now should be able to access the c
 
 Access
 ^^^^^^^^
-Through your terminal or file browser, you can interact with your new mount as if it were a local directory. Thus you can add, remove, edit, create files and directories just as on a local directory. Every such action will interact with swarm, taking effect on the Swarm distributed storage. Every such action also will result **in a new hash** for your mounted directory. If you would unmount and remount the same directory with the previous hash, your changes would seem to have been lost (effectively you are just mounting the previous version). While you change the current mount, this happens under the hood and your mount remains up-to-date.
+Through your terminal or file browser, you can interact with your new mount as if it was a local directory. Thus you can add, remove, edit, create files and directories just as on a local directory. Every such action will interact with swarm, taking effect on the Swarm distributed storage. Every such action also will result **in a new hash** for your mounted directory. If you would unmount and remount the same directory with the previous hash, your changes would seem to have been lost (effectively you are just mounting the previous version). While you change the current mount, this happens under the hood and your mount remains up-to-date.
 
 Unmount
 ^^^^^^^^

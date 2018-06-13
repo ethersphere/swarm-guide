@@ -40,7 +40,7 @@ Let's create a directory containing the two orange papers and an html index file
 We now use the ``swarm up`` command to upload the directory to swarm to create a mini virtual site.
 
 .. note::
-   In this example we are using the public gateway through the `bzz-api` option in order to upload. The examples below the use a node running on localhost to access content. Make sure to run a local node to reproduce these examples 
+   In this example we are using the public gateway through the `bzz-api` option in order to upload. The examples below assume a node running on localhost to access content. Make sure to run a local node to reproduce these examples 
 
 .. code-block:: none
 
@@ -154,7 +154,7 @@ The current manifest for the ``theswarm.test`` homepage is as follows:
     ]}
 
 
-Note the ``path`` for entry ``b17868...``: It is ``f``. This means, there are more than one entries for this manifest which start with an `f`, and all those entries will be retrieved by requesting the hash ``b17868...``:  
+Note the ``path`` for entry ``b17868...``: It is ``f``. This means, there are more than one entries for this manifest which start with an `f`, and all those entries will be retrieved by requesting the hash ``b17868...`` and through that arrive at the matching manifest entry:  
 
 .. code-block:: none
   
@@ -164,7 +164,7 @@ Note the ``path`` for entry ``b17868...``: It is ``f``. This means, there are mo
                {"hash":"97cfd23f9e36ca07b02e92dc70de379a49be654c7ed20b3b6b793516c62a1a03","path":"onts/glyphicons-halflings-regular.","contentType":"application/bzz-manifest+json","mod_time":"0001-01-01T00:00:00Z"}
     ]}
 
-So we can see that the ``f`` entry in the root hash resolves to a manifest containing ``avicon.ico`` and ``onts/glyphicons-halflings-regular``. The latter is interesting in itself: its ``content_type`` is ``application/bzz-manifest+json``, so it points to another manifest. Its ``path`` also does contain a path separator, but that does not result in a new manifest after the path separator like a directory (e.g. at ``onts/``). The reason is that on the file system on the hard disk, the ``fonts`` directory only contains *one* directory named ``glyphicons-halflings-regular``, thus creating a new manifest for just ``onts/`` would result in an unnecessary lookup. This general approach has been chosen to limit unnecessary lookups that would only slow down retrieval, and manifest "forks" happen in order to have logarythmic bandwidth to match in a directory with thousands of files.
+So we can see that the ``f`` entry in the root hash resolves to a manifest containing ``avicon.ico`` and ``onts/glyphicons-halflings-regular``. The latter is interesting in itself: its ``content_type`` is ``application/bzz-manifest+json``, so it points to another manifest. Its ``path`` also does contain a path separator, but that does not result in a new manifest after the path separator like a directory (e.g. at ``onts/``). The reason is that on the file system on the hard disk, the ``fonts`` directory only contains *one* directory named ``glyphicons-halflings-regular``, thus creating a new manifest for just ``onts/`` would result in an unnecessary lookup. This general approach has been chosen to limit unnecessary lookups that would only slow down retrieval, and manifest "forks" happen in order to have the logarythmic bandwidth needed to retrieve a file in a directory with thousands of files.
 
 When requesting ``wget -O- "http://open.swarm-gateways.net/bzz-raw:/theswarm.test/favicon.ico``, swarm will first retrieve the manifest at the root hash, match on the first ``f`` in the entry list, resolve the hash for that entry and finally resolve the hash for the ``favicon.ico`` file.
 
