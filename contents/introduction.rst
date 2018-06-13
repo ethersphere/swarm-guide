@@ -24,6 +24,10 @@ Overview
 Swarm is set out to provide base layer infrastructure for a new decentralised internet.
 Swarm is a peer to peer network of nodes providing distributed digital services by contributing resources (storage, message forwarding, payment processing) to each other. These contributions are accurately accounted for on a peer to peer basis, allowing nodes to trade resource for resource, but offering monetary compensation to nodes consuming less than they serve.
 
+.. image:: img/swarm-intro.svg
+   :alt: Swarm storage and message routing 
+   :width: 500 
+
 The Ethereum Foundation swarm team is operating a swarm testnet where swarm can be tried out.
 Everyone can join the network by running the swarm client node on their server, desktop, laptop or mobile device.
 The Swarm client is part of the Ethereum stack, the reference implementation is written in golang and found under the go-ethereum repository. Currently at POC (proof of concept) version 0.3 is running on all nodes.
@@ -68,6 +72,10 @@ Swarm defines 3 crucial notions
   Manifests can therefore define a routing table for (static) assets (including dynamic content using for instance static javascript).
   This offers the functionality of :dfn:`virtual hosting`, storing entire directories or web(3)sites, similar to www but
   without servers.
+
+.. image:: img/dapp-page.svg
+   :alt: Example of how swarm could serve a web page
+   :width: 400 
 
 In this guide, content is understood very broadly in a technical sense denoting any blob of data.
 Swarm defines a specific identifier for a piece of content. This identifier part of the reference serves as the retrieval address for the content.

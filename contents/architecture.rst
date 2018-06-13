@@ -27,6 +27,7 @@ binary representation of :math:`x XOR y` (0 farthest, 255 closest, 256 self).
 
 .. image:: img/distance.svg
    :alt: Distance and Proximity
+   :width: 500
 
 Taking the :dfn:`proximity order` relative to a fix point :math:`x` classifies the points in
 the space (byte sequences of length :math:`n`) into bins. Items in each are at
@@ -46,6 +47,7 @@ node from the other.
 
 .. image:: img/topology.svg
    :alt: Kademlia topology in swarm
+   :width: 500
 
 Kademlia topology
 ----------------------
@@ -65,6 +67,7 @@ where the graph edges represent devp2p rlpx connections.
 
 .. image:: img/kademlia.svg
    :alt: Kademlia table for a sample node in swarm
+   :width: 600
 
 If each node in a set has a saturated kademlia table of connected peers, then the nodes `live connection' graph has kademlia topology.
 In a dfn:`forwarding kademlia` network, a message is said to be dfn:`routable` if there exists a path from sender node to destination node through which the message could be relayed.
@@ -98,6 +101,7 @@ DHTs for decentralised content addressed storage typically associate content fin
 
 .. image:: img/dpa-chunking.svg
    :alt: The DPA and chunking in swarm 
+   :width: 500
 
 A DPA is opinionated about which nodes store what content and this implies a few more restrictions. (1) load balancing of content is required among nodes and is realised by splitting content into equal sized chunks (dfn:`chunking`). (2) there has to be a process whereby chunks get to where they are supposed to be stored dfn:`syncing`; and (3) since nodes do not have a say in what they store, measures of dfn:`plausible deniability` should be employed.
 
@@ -158,6 +162,7 @@ For each peer connection in both directions, the source peer sends an :dfn:`offe
 
 .. image:: img/syncing-high-level.svg
    :alt: Syncing chunks in the swarm network 
+   :width: 500
 
 
 Data layer
@@ -179,9 +184,6 @@ There are 4 different layers of data units relevant to swarm:
 
 The actual storage layer of swarm consists of two main components, the :dfn:`localstore (LOC)` and the :dfn:`netstore (NET)`. The local store provides consists of an in-memory fast cache (:dfn:`memory store (MEM)`) and a persistent disk storage (:dfn:`dbstore (DBS)`).
 The NetStore is extending local store to a distributed storage of swarm and is the interface to .
-
-.. image:: img/storage-layer.svg
-   :alt: High level storage layer in swarm 
 
 The :dfn:`distributed preimage archive (DPA)` is the local interface for storage and retrieval of documents. When a document is handed to the DPA for storage, it chunks the document into a merkle hashtree and hands back its root key to the caller (DPA). This key can later be used to retrieve the document in question in part or whole.
 
@@ -226,8 +228,15 @@ In particular, it can take advantage of parallelisation for faster calculation a
 
 Swarm Hash is constructed using any hash function (in our case, Keccak 256 bit SHA3) with a generalization of Merkle's tree hash scheme. The basic unit of hashing is a :dfn:`chunk`, that can be either a :dfn:`data chunk` containing a section of the content to be hashed or an :dfn:`intermediate chunk` containing hashes of its children, which can be of either variety.
 
+.. image:: img/chunk.png
+   :alt:  A swarm chunk consists of 4096 bytes of the file or a sequence of 128 subtree hashes 
+
 Hashes of data chunks are defined as the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content and the content itself. Because of the inclusion of the length, it is resistant to [length extension attacks](http://en.wikipedia.org/wiki/Length_extension_attack), even if the underlying hash function is not.
 Hashes of intermediate chunks are defined as the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content hashed by the entire (sub-) tree rooted on this chunk and the references of its children.
+
+.. image:: img/bmt.png
+   :alt:  The swarm tree is the data structure encoding how a document is split into chunks
+
 
 To distinguish between the two, one should compare the length of the chunk to the 64-bit number with which every chunk begins. If the chunk is exactly 8 bytes longer than this number, it is a data chunk. If it is shorter than that, it is an inner chunk. Otherwise, it is not a valid Swarm Hash chunk.
 
