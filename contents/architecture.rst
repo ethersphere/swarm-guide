@@ -10,6 +10,62 @@ data storage can use the swarm network as a distributed preimage archive.
 
 ..  contents::
 
+Preface
+=============
+
+Swarm defines 3 crucial notions
+
+:dfn:`chunk`
+  Chunks are pieces of data of limited size (max 4K), the basic unit of storage and retrieval in the swarm. The network layer only knows about chunks and has no notion of document or collection.
+
+:dfn:`reference`
+  A reference is a unique identifier of a digital asset that allows clients to retrieve and access the content. For unencrypted content the document reference is cryptographic hash of the data and serves as its content address. This hash reference is a 32 byte hash, which is serialised with 64 hex bytes. In case of an encrypted document the reference has two equal-length components: the first 32 bytes are the content address of the encrypted asset, while the second 32 bytes are the decryption key, altogether 64 bytes, serialised as 128 hex bytes.
+
+:dfn:`manifest`
+  A manifests is a data structure describing document collections. A manifest is basically a mapping from strings to documemts. The bzz URL scheme assumes that the content referenced in the domain is a manifest and renders the content entry whose path matches the one in the request path. Given this URL based access to content, manifests can be regarded as routing tables for a website, which makes swarm able to offer virtual hosting, ie serve websites without servers.
+  Manifests can also be mapped to a filesystem directory tree, which allows for uploading and downloading directories.
+  Finally, manifests can also be considered indexes, so it can be used to implement a simple key value store.
+
+  Manifests specify paths and corresponding content hashes allowing for url based content retrieval.
+  Manifests can therefore define a routing table for (static) assets (including dynamic content using for instance static javascript).
+  This offers the functionality of :dfn:`virtual hosting`, storing entire directories or web(3)sites, similar to www but
+  without servers.
+
+.. image:: img/dapp-page.svg
+   :alt: Example of how swarm could serve a web page
+   :width: 400 
+
+In this guide, content is understood very broadly in a technical sense denoting any blob of data.
+Swarm defines a specific identifier for a piece of content. This identifier part of the reference serves as the retrieval address for the content.
+This address needs to be
+
+* collision free (two different blobs of data will never map to the same identifier)
+* deterministic (same content will always receive the same identifier)
+* uniformly distributed
+
+The choice of identifier in swarm is the hierarchical swarm hash described in :ref:`swarm_hash`.
+The properties above let us view the hash as addresses at which content is expected to be found.
+Since hashes can be assumed to be collision free, they are bound to one specific version of a content, i.e. Hash addressing therefore is immutable in the strong sense that you cannot even express mutable content: "changing the content changes the hash".
+
+Users of the web, however, are accustomed to mutable resources, looking up domains and expect to see the most up to date version of the 'site'. Mutable resources are made possible by the ethereum name service (ENS) and Mutable Resource Updates (MRU).
+The ENS is a smart contract on the ethereum blockchain which enables domain owners to register a content reference to their domain.
+Using ENS for domain name resolution, the url scheme provides
+content retrieval based on mnemonic (or branded) names, much like the DNS of the world wide web, but without servers.
+MRU is an off-chain solution for communicating updates to a resource, it offers cheaper and faster updates than ENS, yet the updates can be consolidated on ENS by any third party willing to pay for the transaction.
+
+Just as content in swarm is identified via a swarm hash, so too is every Swarm node in the network. All Swarm nodes have their own :dfn:`base address` which is derived as the (keccak 256bit sha3) hash of the public key of an ethereum account, the so called :dfn:`swarm base account` of the node. These node addresses define a location in the same address space as the data.
+
+When content is uploaded to swarm it is chopped up into pieces called chunks. Each chunk is accessed at the address defined by its swarm hash. The hashes of data chunks themselves are packaged into a chunk which in turn has its own hash. In this way the content gets mapped to a chunk tree. This hierarchical swarm hash construct allows for merkle proofs for chunks within a piece of content, thus providing swarm with integrity protected random access into (large) files (allowing for instance skipping safely in a streaming video or looking up a key in a database file).
+
+Swarm implements a :dfn:`strictly content addressed distributed hash table` (DHT). Here 'strictly content addressed' means that the node(s) closest to the address of a chunk do not only serve information about the content but actually host the data. (Note that although it is part of the protocol, we cannot have any sort of guarantee that it will be preserved. this is a caveat worth stating again: no guarantee of permanence and persistence). In other words, in order to retrieve a piece of content (as a part of a larger collection/document until storage insurance is implemented) a chunk must reach its destination from the uploader to the storer when storing/uploading and must also be served back to a requester when retrieving/downloading.
+The viability of both hinges on the assumption that any node (uploader/requester) can 'reach' any other node (storer). This assumption is guaranteed with a special :dfn:`network topology` (called :dfn:`kademlia`), which guarantees a maximum time for lookups logarithmic in the network size.
+
+.. note:: There is no such thing as delete/remove in swarm. Once data is uploaded there is no way you can initiate her to revoke it.
+
+Nodes cache content that they pass on at retrieval, resulting in an auto scaling elastic cloud: popular (oft-accessed) content is replicated throughout the network decreasing its retrieval latency. Caching also results in a :dfn:`maximum resource utilisation` in as much as nodes will fill their dedicated storage space with data passing through them. If capacity is reached, least accessed chunks are purged by a garbage collection process. As a consequence, unpopular content will end up
+getting deleted. Storage insurance (to be implemented in POC4 by Q1 of 2019) will offer users a secure guarantee to protect important content from being purged.
+
+
 Overlay network
 =====================
 
