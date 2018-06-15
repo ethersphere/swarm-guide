@@ -3,9 +3,11 @@
 Using ENS names
 ================
 
-.. note:: In order to `resolve` ENS names, your Swarm node has to be connected to en Ethereum blockchain. See `Getting Started <./gettingstarted.html#connect-ens>`_ for instructions. This section explains how you can register your content to your ENS name.
+.. note:: In order to `resolve` ENS names, your Swarm node has to be connected to an Ethereum blockchain (mainnet, or testnet). See `Getting Started <./gettingstarted.html#connect-ens>`_ for instructions. This section explains how you can register your content to your ENS name.
 
 `ENS <http://ens.readthedocs.io/en/latest/introduction.html>`_ is the system that Swarm uses to permit content to be referred to by a human-readable name, such as "theswarm.eth". It operates analogously to the DNS system, translating human-readable names into machine identifiers - in this case, the Swarm hash of the content you're referring to. By registering a name and setting it to resolve to the content hash of the root manifest of your site, users can access your site via a URL such as ``bzz://theswarm.eth/``.
+
+.. note:: Currently The `bzz` scheme is not supported in major browsers such as Chrome, Firefox or Safari. If you want to access the `bzz` scheme through these browsers, currently you have to either use an HTTP gateway, such as https://swarm-gateways.net/bzz:/theswarm.eth/ or use a browser which supports the `bzz` scheme, such as Mist <https://github.com/ethereum/mist>.
 
 Suppose we upload a directory to Swarm containing (among other things) the file ``example.pdf``.
 
@@ -20,7 +22,7 @@ If we register the root hash as the ``content`` for ``theswarm.eth``, then we ca
 
   bzz://theswarm.eth/example.pdf
 
-if we are using a Swarm enabled browser, or at
+if we are using a Swarm-enabled browser, or at
 
 .. code-block:: none
 
