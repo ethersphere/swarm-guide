@@ -7,7 +7,7 @@ The first thing to do is to start up your Swarm node and connect it to the Swarm
 How do I connect to Swarm?
 ===========================
 
-To start a basic Swarm node you must have both geth and swarm installed on your machine. You can find the relevant instructions in the `Installation and Updates <./installation.html>`_  section.
+To start a basic Swarm node you must have both ``geth`` and ``swarm`` installed on your machine. You can find the relevant instructions in the `Installation and Updates <./installation.html>`_  section.
 
 To start Swarm you need an Ethereum account. You can create a new account by running the following command:
 

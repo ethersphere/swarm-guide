@@ -4,6 +4,8 @@
 Uploading and Downloading
 ***************************
 
+..  contents::
+
 Introduction
 ==================================
 .. note:: This guide assumes you've installed the swarm client and have a running node that listens by default on port 8500. See `Getting Started <./gettingstarted.html>`_ for details.

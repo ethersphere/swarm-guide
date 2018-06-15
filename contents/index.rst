@@ -15,17 +15,11 @@ Contents:
    installation
    gettingstarted
    up-and-download
-   ens
-   encryption
-   urlschemes
-   configuration
-   manifests
+   usage
    pss
-   mru
-   fuse
    apireference
+   configuration
    architecture
-   resources
 
 
 This document is licensed under the @emph{Creative Commons Attribution License}. To

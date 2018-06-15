@@ -56,7 +56,15 @@ We say that a node has :dfn:`kademlia connectivity` if (1) it is connected to at
 
 If each point of a connected subgraph has kademlia connectivity, then we say the subgraph has  :dfn:`kademlia topology`. In a graph with kademlia topology, (1) a path between any two points exists, (2) it can be found using only local decisions on each hop and (3) is guaranteed to terminate in no more steps than the depth of the destination plus one.
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 Given a set of points uniformly distributed in the space (e.g., the results of a hash function applied to swarm data) the proximity bins map onto a series of subsets with cardinalities on a negative exponential scale, i.e., PO bin 0 has half of the points of any random sample, PO bin 1 has one fourth, PO bin 2 one eighth, etc.
+=======
+Given a set of points uniformly distributed in the space (e.g., the results of a hash function applied to swarm data) the proximity bins map onto a series of subsets with cardinalities on a negative exponential scale, i.e., PO bin 0 has half of the points of any random sample, PO bin 1 has one fourth, PO bin 2 on eighth, etc.
+>>>>>>> b805ae1... architecture improved based on reviews
+=======
+Given a set of points uniformly distributed in the space (e.g., the results of a hash function applied to swarm data) the proximity bins map onto a series of subsets with cardinalities on a negative exponential scale, i.e., PO bin 0 has half of the points of any random sample, PO bin 1 has one fourth, PO bin 2 one eighth, etc.
+>>>>>>> 9e9a540... architecture: minor fixes based on review
 The expected value of saturation depth in the network of :math:`N` nodes is :math:`log2(N)``. The last bin can just merge all bins deeper than the depth and is called the :dfn:`most proximate bin`.
 
 Nodes in the swarm network are identified by the hash of the ethereum address of the swarm base account. This serves as their overlay address, the proximity order bins are calculated based on these addresses.
@@ -123,7 +131,15 @@ Such fallback options are not available if the storer nodes go down. Therefore r
 
 The area of the fully connected neighbourhood defines an :dfn:`area of responsibility`.
 A storer node is responsible for (storing) a chunk if the chunk falls within the node's area of responsibility.
+<<<<<<< HEAD
+<<<<<<< HEAD
 Let us assume, then, (1) a forwarding strategy that relays requests along stable nodes and (2) a storage strategy that each node in the nearest neighbourhood (of mimimum R peers) stores all chunks within the area of responsibility. As long as these assumptions hold, each chunk is retrievable even if :math:`R-1` storer nodes drop offline simultaneously. As for (2), we still need to assume that every node in the nearest neighbour set can store each chunk.
+=======
+Let us assume then (1) a forwarding strategy that relays requests along stable nodes and (2) a storage strategy that each node in the nearest neighbourhood (of mimimum R peers) stores all chunks within the area of responsibility. As long as these assumptions hold, each chunk is retrievable even if :math:`R-1` storer nodes drop offline simultaneously. As for (2), we still need to assume that every node in the nearest neighbour set can store each chunk.
+>>>>>>> b805ae1... architecture improved based on reviews
+=======
+Let us assume, then, (1) a forwarding strategy that relays requests along stable nodes and (2) a storage strategy that each node in the nearest neighbourhood (of mimimum R peers) stores all chunks within the area of responsibility. As long as these assumptions hold, each chunk is retrievable even if :math:`R-1` storer nodes drop offline simultaneously. As for (2), we still need to assume that every node in the nearest neighbour set can store each chunk.
+>>>>>>> 9e9a540... architecture: minor fixes based on review
 
 In POC 4 further measures of redundancy with erasure codes will be implemented. (https://en.wikipedia.org/wiki/Erasure_code), see
 the orange papers for our specific application)
@@ -137,7 +153,15 @@ On the one hand, this is backed by an incentive system rewarding serving chunks.
 This directly translates to a motivation, that a content needs to be served with frequency X in order to make storing it profitable. On the one hand , frequency of access directly translates to storage count. On the other hand, it provides a way to combine proximity and popularity to dictate what is stored.
 
 Based on distance alone (all else being equal, assuming random popularity of chunks), a node could be expected to store chunks up to a certain proximity radius.
+<<<<<<< HEAD
+<<<<<<< HEAD
 However, it is always possible to look for further content that is popular enough to make it worth storing. Given the power law of popularity rank and the uniform distribution of chunks in address space, one can be sure that any node can expand their storage with content where popularity of a stored chunk makes up for their distance.
+=======
+However, it is always possible to look for further content that is popular enough to make it worth while storing. Given the power law of popularity rank and the uniform distribution of chunks in address space, one can be sure that any node can expand their storage with content where popularity of a stored chunk makes up for their distance.
+>>>>>>> b805ae1... architecture improved based on reviews
+=======
+However, it is always possible to look for further content that is popular enough to make it worth storing. Given the power law of popularity rank and the uniform distribution of chunks in address space, one can be sure that any node can expand their storage with content where popularity of a stored chunk makes up for their distance.
+>>>>>>> 9e9a540... architecture: minor fixes based on review
 
 Given absolute limits on popularity, there might be an actual upper limit on a storage capacity for a single base address that maximises profitablity. In order to efficiently utilise excess capacity, several nodes should be run in parallel.
 
