@@ -13,7 +13,7 @@ data storage can use the swarm network as a distributed preimage archive.
 Preface
 =============
 
-Swarm defines 3 crucial notions
+Swarm defines 3 crucial notions:
 
 :dfn:`chunk`
   Chunks are pieces of data of limited size (max 4K), the basic unit of storage and retrieval in the swarm. The network layer only knows about chunks and has no notion of document or collection.
