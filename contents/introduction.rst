@@ -31,12 +31,10 @@ From the end user's perspective, Swarm is not that different from WWW, except th
 
   <iframe width="560" height="315" src="https://www.youtube.com/embed/xrw9rvee7rc" style="margin-bottom: 30px;" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-Please refer to our `development roadmap <https://github.com/ethersphere/swarm/wiki/roadmap>`_ to track our progress, actively participate in Swarm's development or synchronize your product's timeline with our development pace.
+Please refer to our `development roadmap <https://github.com/ethersphere/swarm/wiki/roadmap>`_ and our `roadmap board <https://github.com/orgs/ethersphere/projects/5>`_ to track our progress, actively participate in Swarm's development or synchronize your product's timeline with our development pace.
 
 Overview
 ========================
-
-
 
 Swarm is set out to provide base layer infrastructure for a new decentralised internet.
 Swarm is a peer-to-peer network of nodes providing distributed digital services by contributing resources (storage, message forwarding, payment processing) to each other. These contributions are accurately accounted for on a peer to peer basis, allowing nodes to trade resource for resource, but offering monetary compensation to nodes consuming less than they serve.
@@ -57,7 +55,7 @@ The Swarm client is part of the Ethereum stack, the reference implementation is 
 Swarm defines the :dfn:`bzz suite of devp2p subprotocols` running on the ethereum devp2p network. The bzz subprotocol is in flux, the
 specification of the wire protocol is considered stable only with POC4 expected 2019.
 
-The Swarm is the collection of nodes of the devp2p network each of which run the bzz protocol suite on the same network id.
+The Swarm is the collection of nodes of the devp2p network each of which run the :ref:`bzz protocol suite` on the same network id.
 
 Swarm nodes can also connect with one (or several) ethereum blockchains for domain name resolution and one ethereum blockchain for bandwidth and storage compensation.
 Nodes running the same network id are supposed to connect to the same blockchain for payments. A swarm network is identified by its network id which is an arbitrary integer.
@@ -82,12 +80,10 @@ Available APIs
 ================
 
 Swarm offers a few APIs that could be used to interact with the Swarm network:
- - JSON-RPC - available through the Ethereum Geth client using IPC
- - CLI interface
- - HTTP interface - every Swarm node exposes a local HTTP proxy that exposes the bzz protocol suite
- - Javascript - available through the swarm-js or swarmgw packages
-
-
+ * CLI interface
+ * JSON-RPC - available through the Ethereum Geth client using IPC
+ * HTTP interface - every Swarm node exposes a local HTTP proxy that exposes the :ref:`bzz protocol suite`
+ * Javascript - available through the swarm-js or swarmgw packages
 
 
 About
