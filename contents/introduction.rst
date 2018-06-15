@@ -73,16 +73,16 @@ be accessible due to the 'synchronization' procedure in which nodes continuously
 .. note::
   Swarm POC3 allows for encryption. Upload of unencrypted sensitive and private data is highly discouraged as there is no way to undo an upload. Users should refrain from  uploading  illegal, controversial or unethical content.
 
-You can read more about these components in :ref:`architecture`.
+You can read more about these components in the :ref:`architecture` section.
 
 
 Available APIs
 ================
 
-Swarm offers a few APIs that could be used to interact with the Swarm network:
- * CLI interface
- * JSON-RPC - available through the Ethereum Geth client using IPC
- * HTTP interface - every Swarm node exposes a local HTTP proxy that exposes the :ref:`bzz protocol suite`
+Swarm offers several APIs:
+ * CLI
+ * JSON-RPC - using web3.0 bindings over Geth's IPC
+ * HTTP interface - every Swarm node exposes a local HTTP proxy that implements the :ref:`bzz protocol suite`
  * Javascript - available through the swarm-js or swarmgw packages
 
 
