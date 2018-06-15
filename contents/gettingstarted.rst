@@ -73,7 +73,11 @@ After the connection is established, open another terminal window and connect to
 
 .. code-block:: none
 
-  swarm --ens-api '$HOME/.ethereum/geth.ipc'
+  swarm --ens-api '$HOME/.ethereum/geth.ipc' \
+    --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
+
+.. note::
+  For Mac OS, replace "$HOME/.ethereum/" with "~/Library/Ethereum/"
 
 Verify that this was successful by pointing your browser to http://localhost:8500/bzz:/theswarm.eth/
 
@@ -179,4 +183,3 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 
 .. note::
   Note how ``geth`` is used for two different purposes here: You use it to run an Ethereum Mainnet node for ENS lookups. But you also use it to "attach" to the Swarm node to send commands to it.
-

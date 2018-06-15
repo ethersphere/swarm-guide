@@ -18,11 +18,15 @@ Swarm's broader objective  is to provide infrastructure services for developers 
 
 From the end user's perspective, Swarm is not that different from WWW, except that uploads are not hosted on a specific server. Swarm aims to offer a peer-to-peer storage and serving solution that is DDOS-resistant, zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer-to-peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution, service payments and content availability insurance (the latter is to be implemented in POC 0.4 by Q1 2019).
 
-Basics
+Overview
 ========================
 
 Swarm is set out to provide base layer infrastructure for a new decentralised internet.
 Swarm is a peer to peer network of nodes providing distributed digital services by contributing resources (storage, message forwarding, payment processing) to each other. These contributions are accurately accounted for on a peer to peer basis, allowing nodes to trade resource for resource, but offering monetary compensation to nodes consuming less than they serve.
+
+.. image:: img/swarm-intro.svg
+   :alt: Swarm storage and message routing 
+   :width: 500 
 
 The Ethereum Foundation swarm team is operating a swarm testnet where swarm can be tried out.
 Everyone can join the network by running the swarm client node on their server, desktop, laptop or mobile device.
@@ -69,6 +73,10 @@ Swarm defines 3 crucial notions
   This offers the functionality of :dfn:`virtual hosting`, storing entire directories or web(3)sites, similar to www but
   without servers.
 
+.. image:: img/dapp-page.svg
+   :alt: Example of how swarm could serve a web page
+   :width: 400 
+
 In this guide, content is understood very broadly in a technical sense denoting any blob of data.
 Swarm defines a specific identifier for a piece of content. This identifier part of the reference serves as the retrieval address for the content.
 This address needs to be
@@ -87,7 +95,7 @@ Using ENS for domain name resolution, the url scheme provides
 content retrieval based on mnemonic (or branded) names, much like the DNS of the world wide web, but without servers.
 MRU is an off-chain solution for communicating updates to a resource, it offers cheaper and faster updates than ENS, yet the updates can be consolidated on ENS by any third party willing to pay for the transaction.
 
-Just as content in swarm is identified via a swarm hash, so too is every Swarm node in the network. All Swarm nodes have their own :dfn:`base address` which is derived as the (keccak 256bit sha3) hash of an ethereum address, the so called :dfn:`swarm base account` of the node. These node addresses define a location in the same address space as the data.
+Just as content in swarm is identified via a swarm hash, so too is every Swarm node in the network. All Swarm nodes have their own :dfn:`base address` which is derived as the (keccak 256bit sha3) hash of the public key of an ethereum account, the so called :dfn:`swarm base account` of the node. These node addresses define a location in the same address space as the data.
 
 When content is uploaded to swarm it is chopped up into pieces called chunks. Each chunk is accessed at the address defined by its swarm hash. The hashes of data chunks themselves are packaged into a chunk which in turn has its own hash. In this way the content gets mapped to a chunk tree. This hierarchical swarm hash construct allows for merkle proofs for chunks within a piece of content, thus providing swarm with integrity protected random access into (large) files (allowing for instance skipping safely in a streaming video or looking up a key in a database file).
 
@@ -135,16 +143,17 @@ Credits
 
 Swarm is code by Ethersphere `https://github.com/ethersphere`
 
-the team behind swarm:
+The team behind swarm:
 
-* Viktor TrÃ³n @zelig
-* DÃ¡niel A. Nagy @nagydani
+* Viktor Trón @zelig
+* Daniel A. Nagy @nagydani
 * Aron Fischer @homotopycolimit
 * Balint Gabor @gbalint
 * Janos Gulyas @janos
 * Louis Holbrook @nolash
 * Anton Evangelatov @nonsense
 * Fabio Barone @holisticode
+* Balint Gabor @gbalint
 * Elad Nachmias @justelad
 * Lewis Marshal @lmars
 
@@ -158,7 +167,7 @@ Special thanks to
 * Jeffrey Wilcke and the go team for continued support, testing and direction;
 * Gavin Wood and Vitalik Buterin for the vision;
 * Nick Johnson @Arachnid for ENS and ENS swarm integration
-* Zsolt FelfÃ¶ldi @zsfelfoldi for his contribution early in the project
+* Zsolt Felföldi @zsfelfoldi for his contribution early in the project
 * Alex Van der Sande, Fabian Vogelsteller, Bas van Kervel, Victor Maia, Everton Fraga and the Mist team
 * Elad Verbin, Nick Savers, Alex Beregszaszi, Daniel Varga, Juan Benet for inspiring discussions and ideas
 * Participants of the orange lounge research group and the swarm orange summits
@@ -191,23 +200,37 @@ Please include the commit and branch when reporting an issue.
 
 Pull requests should by default commit on the `master` branch (edge).
 
-Roadmap and Resources
---------------------------
+Roadmap and resources
+=====================
 
 Swarm roadmap and tentative plan for features and POC series are found on the wiki:
 
 * https://github.com/ethereum/go-ethereum/wiki/swarm-roadmap
 * https://github.com/ethereum/go-ethereum/wiki/swarm---POC-series
 
-the *Swarm homepage* is accessible via swarm at bzz://theswarm.eth or the gateway http://swarm-gateways.net/bzz:/theswarm.eth/
+Public gateways
+---------------
+
+*  http://swarm-gateways.net/
+
+Homepage
+--------
+
+the *Swarm homepage* is accessible via swarm at `theswarm.eth`. The page can be accessed through the public gateway on http://swarm-gateways.net/bzz:/theswarm.eth/
 
 The swarm page also contains a list of Swarm-related talks (video recording and slides).
 
 You can also find the ethersphere orange papers there.
 
-Public gateways:  http://swarm-gateways.net/
+Example dapps
+-------------
 
-Example dapps: bzz://swarmapps.eth, source code: https://github.com/ethereum/swarm-dapps
+* bzz://swarmapps.eth
+  
+source code: https://github.com/ethereum/swarm-dapps
+
+Code
+----
 
 Source code is at https://github.com/ethereum/go-ethereum/ and our team working copy  https://github.com/ethersphere/go-ethereum/
 
