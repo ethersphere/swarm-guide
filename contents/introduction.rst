@@ -159,7 +159,6 @@ Daily development and discussions are ongoing in various gitter channels:
 * https://gitter.im/ethereum/swarm: general public chatroom about Swarm dev
 * https://gitter.im/ethersphere/orange-lounge: our reading/writing/working group and R&D sessions
 * https://gitter.im/ethersphere/pss: about postal services on Swarm - messaging with deterministic routing
-* https://gitter.im/ethereum/swatch: variable bitrate media streaming and multicast/broadcast solution
 
 Swarm discussions also on the Ethereum subreddit: http://www.reddit.com/r/ethereum
 
