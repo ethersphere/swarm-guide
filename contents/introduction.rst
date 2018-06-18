@@ -29,7 +29,7 @@ Swarm is a peer to peer network of nodes providing distributed digital services 
    :width: 500
 
 The Ethereum Foundation Swarm team is operating a Swarm testnet where Swarm can be tried out.
-Everyone can join the network by running the Swarm client node on their server, desktop, laptop or mobile device.
+Everyone can join the network by running the Swarm client node on their server, desktop, laptop or mobile device. See `Getting Started` for how to do this.
 The Swarm client is part of the Ethereum stack, the reference implementation is written in golang and found under the go-ethereum repository. Currently at POC (proof of concept) version 0.3 is running on all nodes.
 
 Swarm offers a local http proxy API that dapps or command line tools can use to interact with Swarm. Some modules like messaging are   only available through RPC-JSON API. The foundation servers on the testnet are offering public gateways, which serve to easily demonstrate functionality and allow free access so that people can try Swarm without even running their own node.
@@ -103,6 +103,9 @@ Swarm implements a :dfn:`strictly content addressed distributed hash table` (DHT
 The viability of both hinges on the assumption that any node (uploader/requester) can 'reach' any other node (storer). This assumption is guaranteed with a special :dfn:`network topology` (called :dfn:`kademlia`), which guarantees a maximum time for lookups logarithmic in the network size.
 
 .. note:: There is no such thing as delete/remove in Swarm. Once data is uploaded there is no way you can initiate her to revoke it.
+This is because content is disseminated to swarm nodes who are incentivised to serve it.
+Always use encryption for sensitive content.
+For encrypted content, uploaded data is 'protected' (ie., only those that know the reference to the root chunk (the swarm hash of the file as well as the decryption key) can access the content. Since publishing this reference (on ENS or with MRU) requires an extra step, users are mildly protected against careless publishing as long as they use encryption. Eventhough there is no guarantees for removal, unaccessed content that is not explicitly insured will eventually disappear from the swarm, as nodes will be incentivised to garbage collect it in case of storage capacity limits.
 
 Nodes cache content that they pass on at retrieval, resulting in an auto scaling elastic cloud: popular (oft-accessed) content is replicated throughout the network decreasing its retrieval latency. Caching also results in a :dfn:`maximum resource utilisation` in as much as nodes will fill their dedicated storage space with data passing through them. If capacity is reached, least accessed chunks are purged by a garbage collection process. As a consequence, unpopular content will end up
 getting deleted. Storage insurance (to be implemented in POC4 by Q1 of 2019) will offer users a secure guarantee to protect important content from being purged.
@@ -180,21 +183,22 @@ Swarm is code by Ethersphere `https://github.com/ethersphere`
 The Core team
 ----------------
 
-* Viktor Trón @zelig
-* Daniel A. Nagy @nagydani
-* Aron Fischer @homotopycolimit
-* Louis Holbrook @nolash
-* Lewis Marshal @lmars
-* Fabio Barone @holisticode
-* Anton Evangelatov @nonsense
-* Janos Gulyas @janos
-* Balint Gabor @gbalint
-* Elad Nachmias @justelad
+* Viktor Trón - @zelig
+* Daniel A. Nagy - @nagydani
+* Aron Fischer- @homotopycolimit
+* Louis Holbrook- @nolash
+* Lewis Marshal- @lmars
+* Fabio Barone- @holisticode
+* Anton Evangelatov- @nonsense
+* Janos Gulyas- @janos
+* Balint Gabor- @gbalint
+* Elad Nachmias- @justelad
 
-was on the core team:
-* Zahoor Mohamed @jmozah
-* Zsolt Felföldi @zsfelfoldi
-* Nick Johnson @Arachnid
+were on the core team:
+
+* Zahoor Mohamed- @jmozah
+* Zsolt Felföldi- @zsfelfoldi
+* Nick Johnson- @Arachnid
 
 Sponsors and collaborators
 -----------------------------
@@ -218,19 +222,26 @@ Sponsors and collaborators
 Special thanks
 ------------------
 
-* Felix Lange, Alex Leverington for inventing and implementing devp2p/rlpx;
-* Jeffrey Wilcke and the go team for continued support, testing and direction;
-* Gavin Wood and Vitalik Buterin for the vision;
-* Nick Johnson @Arachnid for ENS and ENS Swarm integration
+* Felix Lange, Alex Leverington for inventing and implementing devp2p/rlpx
+* Jeffrey Wilcke, Peter Szilagyi and the entire ethereum foundation go team for continued support, testing and direction
+* Gavin Wood and Vitalik Buterin for the holy trinity vision of web3
+* Nick Johnson for ENS and ENS Swarm integration
 * Alex Van der Sande, Fabian Vogelsteller, Bas van Kervel, Victor Maia, Everton Fraga and the Mist team
-* Elad Verbin, Nick Savers, Alexei Akhunov, Alex Beregszaszi, Daniel Varga, Juan Benet, Carl Youngblood for inspiring discussions and ideas
-* Ralph Pilcher for implementing the swap swear and swindle contract suite in solidity/truffle
-* Jarrad Hope and Carl Bennet for their support
+* Elad Verbin for his continued technical involvement as an advisor and ideator
+* Nick Savers for his unrelenting support and meticulous reviews of our papers
+* Gregor Zavcer, Alexei Akhunov, Alex Beregszaszi, Daniel Varga, Julien Boutloup for inspiring discussions and ideas
+* Juan Benet and the IPFS team for continued inspiration
+* Carl Youngblood, Shane Howley, Paul De Cam, Doug Leonard and the mainframe team for their contribution to PSS and MRU
+* Sourabh Niyogi and the entire Wolk team for the inspiring collaboration on databases
+* Ralph Pilcher for implementing the swap swear and swindle contract suite in solidity/truffle and Oren Sokolowsky for the initial version
+* Javier Peletier from Epiclabs (ethergit) for his contribution to MRUs
+* Jarrad Hope and Carl Bennet (Status) for their support
 * Participants of the orange lounge research group and the Swarm orange summits
-* Roman Mandeleil and Anton Nashatyrev for the java implementation
+* Roman Mandeleil and Anton Nashatyrev for an early java implementation of swarm
 * Igor Sharudin, Dean Vaessen for example dapps
 * Community contributors for feedback and testing
-
+* Daniel Kalman, Benjamin Kampmann, Daniel Lengyel, Anand Jaisingh for contributing to the swarm websites
+* Felipe Santana, Paolo Perez and Paratii team for filming at the 2017 swarm summit and making the summit website
 
 Community
 -------------------
@@ -286,13 +297,14 @@ Swarm Orange Summit
 Orange papers
 --------------
 
-Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for Swarm. May 2016 - https://30399.open.swarm-gateways.net/bzz:/theSwarm.test/ethersphere/orange-papers/1/sw^3.pdf
-Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for Swarm secured by masked audit secret hash. May 2016 - https://30399.open.swarm-gateways.net/bzz:/theSwarm.test/ethersphere/orange-papers/2/smash.pdf
-Viktor Trón, Aron Fischer, Fabio Barone, ?: swap swear and swindle games: scalable infrastructure for decentralised service economies. June 2018 - https://www.sharelatex.com/1452913241cqmzrpfpjkym
-Viktor Trón, Aron Fischer, Daniel A. Nagy. Swarm: a decentralised peer-to-peer network for messaging and storage June 13, 2018 - https://www.sharelatex.com/6741568343dhhjfkjpnfwz
-Viktor Trón, Elad Verbin. P.O.T data structures on swarm. in preparation
-Viktor Trón. Mutable Resource Updates.
-
+* Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for Swarm. May 2016 - https://30399.open.swarm-gateways.net/bzz:/theSwarm.test/ethersphere/orange-papers/1/sw^3.pdf
+* Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for Swarm secured by masked audit secret hash. May 2016 - https://30399.open.swarm-gateways.net/bzz:/theSwarm.test/ethersphere/orange-papers/2/smash.pdf
+* Viktor Trón, Aron Fischer, Ralph Pilcher, Fabio Barone: swap swear and swindle games: scalable infrastructure for decentralised service economies. Work in progress. June 2018. - https://www.sharelatex.com/1452913241cqmzrpfpjkym
+* Viktor Trón, Aron Fischer, Daniel A. Nagy. Swarm: a decentralised peer-to-peer network for messaging and storage. Work in progress. June, 2018. - https://www.sharelatex.com/6741568343dhhjfkjpnfwz
+* P.O.T. data structures and databases on swarm. In preparation.
+* Mutable Resource Updates. An off-chain scheme for versioning content in Swarm. In preparation.
+* Privacy on swarm. Encryption, access control, private browsing in Swarm. Tentative.
+* Analysis of attack resilience of swarm storage. Tentative.
 
 
 Podcasts
