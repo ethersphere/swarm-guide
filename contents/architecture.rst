@@ -52,8 +52,9 @@ When content is uploaded to swarm it is chopped up into pieces called chunks.
 Each chunk is accessed at the address deterministically derived from its content (using the chunk hash). 
 The references of data chunks are themselves packaged into a chunk which in turn has its own hash. In this way the content gets mapped into a merkle tree. This hierarchical swarm hash construct allows for merkle proofs for chunks within a piece of content, thus providing swarm with integrity protected random access into (large) files (allowing for instance skipping safely in a streaming video or looking up a key in a database file).
 
-Swarm implements a :dfn:`strictly content addressed distributed hash table` (DHT). Here 'strictly content addressed' means that the node(s) closest to the address of a chunk do not only serve information about the content but actually host the data. (Note that although it is part of the protocol, we cannot have any sort of guarantee that it will be preserved. This is a caveat worth stating again: no guarantee of permanence and persistence). In other words, in order to retrieve a piece of content (as part of a larger collection/document until storage insurance is implemented) a chunk must reach its destination from the uploader to the storer when storing/uploading and must also be served back to a requester when retrieving/downloading.
-The viability of both hinges on the assumption that any node (uploader/requester) can 'reach' any other node (storer). This assumption is guaranteed with a special :dfn:`network topology` (called :dfn:`kademlia`), which guarantees a maximum time for lookups logarithmic in the network size.
+Swarm implements a :dfn:`distributed preimage archive`, which is essentially a specific type of content addressed distributed hash table, where the node(s) closest to the address of a chunk do not only serve information about the content but actually host the data.
+
+The viability of both hinges on the assumption that any node (uploader/requester) can 'reach' any other node (storer). This assumption is guaranteed with a special :dfn:`network topology` (called :dfn:`kademlia`), which guarantees the existence as well a maximum number of forwarding hops logarithmic in network size.
 
 .. note:: There is no such thing as delete/remove in Swarm. Once data is uploaded there is no way to revoke it.
 
