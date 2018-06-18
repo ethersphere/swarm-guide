@@ -174,7 +174,7 @@ Response content type is *text/plain*.
 
 .. code-block:: none
 
-    $ curl http://localhost:8500/bzz-hash:/theswarm.test/
+    $ curl http://localhost:8500/bzz-hash:/theswarm.eth/
     7a90587bfc04ac4c64aeb1a96bc84f053d3d84cefc79012c9a07dd5230dc1fa4%
 
 bzz-immutable
@@ -192,9 +192,9 @@ The same as the generic scheme but there is no ENS domain resolution, the domain
     ## Hello Swarm!
 
     Swarm is awesome%
-    $ curl -H "Accept:application/json" http://localhost:8500/bzz-immutable:/theswarm.test/ | jq .
+    $ curl -H "Accept:application/json" http://localhost:8500/bzz-immutable:/theswarm.eth/ | jq .
     {
-        "Msg": "cannot resolve theswarm.test: immutable address not a content hash: \"theswarm.test\"",
+        "Msg": "cannot resolve theswarm.eth: immutable address not a content hash: \"theswarm.eth\"",
         "Code": 404,
         "Timestamp": "Fri, 15 Jun 2018 13:22:27 UTC",
         "Details": ""
