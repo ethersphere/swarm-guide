@@ -124,6 +124,7 @@ The team behind Swarm:
 * Viktor Trón @zelig
 * Daniel A. Nagy @nagydani
 * Aron Fischer @homotopycolimit
+* Balint Gabor @gbalint
 * Janos Gulyas @janos
 * Louis Holbrook @nolash
 * Anton Evangelatov @nonsense

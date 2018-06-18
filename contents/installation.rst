@@ -5,15 +5,31 @@ Installation and Updates
 Swarm is part of the Ethereum stack, the reference implementation is currently at POC3 (proof of concept 3), or version 0.3.
 
 
-Swarm runs on all major platforms (linux, MacOSX, Windows, also raspberry pi, android OS, iOS).
+Swarm runs on all major platforms (Linux, macOS, Windows, Raspberry Pi, Android, iOS).
 
 ..  note::
-  The swarm package has not been tested on platforms other than linux and OSX.
+  The swarm package has not been extensively tested on platforms other than Linux and macOS.
 
-Installing Swarm binaries
-=========================
+Installing Swarm from a package manager
+=======================================
 
-THIS SECTION IS MISSING
+Install on Ubuntu via PPAs
+--------------------------
+
+The simplest way to install Swarm on Ubuntu distributions is via the built in launchpad PPAs (Personal Package Archives). We provide a single PPA repository that contains our stable releases for Ubuntu versions trusty, xenial, artful, bionic and cosmic.
+
+To enable our launchpad repository please run:
+
+.. code-block:: none
+
+  sudo add-apt-repository -y ppa:ethereum/ethereum
+
+After that you can install the stable version of Swarm:
+
+F. code-block:: none
+
+  sudo apt-get update
+  sudo apt-get install ethereum-swarm
 
 
 Installing Swarm from source
@@ -28,7 +44,7 @@ https://github.com/ethereum/go-ethereum/
 Prerequisites
 -------------
 
-building the Swarm daemon :command:`swarm` requires the following packages:
+Building the Swarm daemon :command:`swarm` requires the following packages:
 
 * go: https://golang.org
 * git: http://git.org
@@ -36,7 +52,7 @@ building the Swarm daemon :command:`swarm` requires the following packages:
 
 Grab the relevant prerequisites and build from source.
 
-Ubuntu / Debian linux
+Ubuntu / Debian
 ^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: none
@@ -51,12 +67,12 @@ Archlinux
 
   pacman -S git go
 
-Generic linux
+Generic Linux
 ^^^^^^^^^^^^^
 
-The latest version of golang can be found at https://golang.org/dl/
+The latest version of Go can be found at https://golang.org/dl/
 
-To install it, download the tar.gz file
+To install it, download the tar.gz file for your architecture
 
 .. code-block:: none
 
@@ -68,7 +84,7 @@ Unpack it to the /usr/local
 
   sudo tar -C /usr/local -xzf go1.10.1.linux-amd64.tar.gz
 
-Mac OSX
+macOS
 ^^^^^^^
 
 .. code-block:: none
@@ -107,8 +123,8 @@ and finally compile the swarm daemon ``swarm`` and the main go-ethereum client `
 
 .. code-block:: none
 
-  go install -v ./cmd/geth
-  go install -v ./cmd/swarm
+  go install ./cmd/geth
+  go install ./cmd/swarm
 
 
 You can now run :command:`swarm` to start your Swarm node.
@@ -146,5 +162,5 @@ To update your client simply download the newest source code and recompile.
   cd $GOPATH/src/github.com/ethereum/go-ethereum
   git checkout master
   git pull
-  go install -v ./cmd/geth
-  go install -v ./cmd/swarm
+  go install ./cmd/geth
+  go install ./cmd/swarm
