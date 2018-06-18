@@ -46,7 +46,13 @@ Using ENS for domain name resolution, the url scheme provides
 content retrieval based on mnemonic (or branded) names, much like the DNS of the world wide web, but without servers.
 MRU is an off-chain solution for communicating updates to a resource, it offers cheaper and faster updates than ENS, yet the updates can be consolidated on ENS by any third party willing to pay for the transaction.
 
-Just as content in Swarm is addressed with a 32-byte hash, so is every Swarm node in the network associated with a 32-byte hash address. All Swarm nodes have their own :dfn:`base address` which is derived as the (keccak 256bit sha3) hash of the public key of an ethereum account, the so called :dfn:`swarm base account` of the node. These node addresses define a location in the same address space as the data.
+Just as content in Swarm is addressed with a 32-byte hash, so is every Swarm node in the network associated with a 32-byte hash address. 
+All Swarm nodes have their own :dfn:`base address` which is derived as the (Keccak 256bit SHA3) hash of the public key of an ethereum account:
+
+.. note::
+
+  `Swarm node address = sha3(ethereum account public key)` - the so called :dfn:`swarm base account` of the node.
+  These node addresses define a location in the same address space as the data.
 
 When content is uploaded to Swarm it is chopped up into pieces called chunks. 
 Each chunk is accessed at the address deterministically derived from its content (using the chunk hash). 
