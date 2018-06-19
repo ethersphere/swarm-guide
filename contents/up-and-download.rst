@@ -218,7 +218,7 @@ And that's it.
 Tar stream upload
 ------------------
 
-Tar is a traditional unix/linux file format for packing a directory structure into a single file. Swawrm provides a convenient way of using this format to make it possible to perform recursive uploads using the HTTP API.
+Tar is a traditional unix/linux file format for packing a directory structure into a single file. Swarm provides a convenient way of using this format to make it possible to perform recursive uploads using the HTTP API.
 
 .. code-block:: none
 
