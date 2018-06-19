@@ -26,7 +26,7 @@ To enable our launchpad repository please run:
 
 After that you can install the stable version of Swarm:
 
-F. code-block:: none
+.. code-block:: none
 
   sudo apt-get update
   sudo apt-get install ethereum-swarm
