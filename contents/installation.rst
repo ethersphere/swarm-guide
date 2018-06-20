@@ -26,7 +26,7 @@ To enable our launchpad repository please run:
 
 After that you can install the stable version of Swarm:
 
-F. code-block:: none
+.. code-block:: none
 
   sudo apt-get update
   sudo apt-get install ethereum-swarm
@@ -35,9 +35,11 @@ F. code-block:: none
 Installing Swarm from source
 =============================
 
-The swarm source code can be found on github:
-
+The latest Swarm source code can be found on github:
 https://github.com/ethersphere/go-ethereum/tree/swarm-network-rewrite/
+
+The latest **stable** version can be found on:
+https://github.com/ethereum/go-ethereum/
 
 Prerequisites
 -------------
