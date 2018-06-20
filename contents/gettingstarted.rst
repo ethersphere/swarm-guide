@@ -191,5 +191,4 @@ If you would like to join the public Swarm cluster operated by the Ethereum Foun
 
 https://gist.github.com/homotopycolimit/db446fa3269a199762e67b2ca037dbeb
 
-The advantage of this cluster that there are also free to use public gateways to access Swarm content without operating a Swarm node.
-To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` url.
+The cluster functions as a free-to-use public access gateway to the Swarm, without the need to run a local node. To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` url.
