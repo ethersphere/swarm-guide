@@ -3,7 +3,7 @@ Node-to-node messaging with PSS
 *******************************
 
 ``pss`` (Postal Service over Swarm) is a messaging protocol over Swarm with strong privacy features.
-The PSS API is exposed through a JSON RPC interface described in the `API Reference <./apireference.rst#PSS>`_,
+The pss API is exposed through a JSON RPC interface described in the `API Reference <./apireference.rst#PSS>`_,
 here we explain the basic concepts and features.
 
 
@@ -109,4 +109,4 @@ Handshakes
 Protocols
 -----------
 
-A framework is also in place for making ``devp2p`` protocols available using ``pss`` connections. This feature is only available using the internal golang API, and documentation is out of scope of this document.
+A framework is also in place for making ``devp2p`` protocols available using ``pss`` connections. This feature is only available using the internal golang API, read more in the GoDocs or the codes.
