@@ -73,7 +73,7 @@ There are a few prerequisites for sending a message over ``pss``:
   If *no* address is given (zero-length byte slice), routing is effectively deactivated,
   and the message is passed to all peers by all peers.
 
-Upon sending the message it is encrypted and passed on from peer to peer. Any node along the route that can successfully decrypt the message is regarded as a recipient. If the destination is a neighbourhood, the message is passed around so ultimately it reached the intended recipient which also forwards the message to their peers, to make it harder for anyone spying on the traffic to tell where the message "ended up."
+Upon sending the message it is encrypted and passed on from peer to peer. Any node along the route that can successfully decrypt the message is regarded as a recipient. If the destination is a neighbourhood, the message is passed around so ultimately it reached the intended recipient which also forwards the message to their peers, recipients will continue to pass on the message to their peers, to make it harder for anyone spying on the traffic to tell where the message "ended up."n
 
 After you associate an encryption key with a destination they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address in the message.
 

@@ -18,8 +18,11 @@ Uploading and downloading data can be done through the ``swarm`` command line in
 Using CLI
 =====================
 
+.. _swarmup:
+
 Uploading a file to your local Swarm node
 ------------------------------------------
+
 .. note:: Once a file is uploaded to your local Swarm node, your node will `sync` the chunks of data with other nodes on the network. Thus, the file will eventually be available on the network even when your original node goes offline.
 
 The basic command for uploading to your local node is ``swarm up FILE``. For example, issue the following command to upload the file example.md file to your local Swarm node
@@ -29,7 +32,7 @@ The basic command for uploading to your local node is ``swarm up FILE``. For exa
   swarm up /path/to/example.md
   > d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
 
-The hash returned is the hash of a Swarm manifest. This manifest is a JSON file that contains the example.md file as its only entry. Both the primary content and the manifest are uploaded by default.
+The hash returned is the hash of a :ref:`swarm manifest <swarm-manifest>`. This manifest is a JSON file that contains the ``example.md`` file as its only entry. Both the primary content and the manifest are uploaded by default.
 
 After uploading, you can access this example.md file from swarm by pointing your browser to:
 
@@ -51,7 +54,7 @@ You may wish to prevent a manifest from being created alongside with your conten
 
 This option suppresses automatic manifest upload. It uploads the content as-is.
 However, if you wish to retrieve this file, the browser can not be told unambiguously what that file represents.
-In the context, the hash ``7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb`` does not refer to a manifest and any attempt to retrieve it over bzz will result in a 404 Not Found Error. In order to access this file, you would have to use the :ref:`bzz-raw` scheme.
+In the context, the hash ``7149075b7f485411e5cc7bb2d9b7c86b3f9f80fb16a3ba84f5dc6654ac3f8ceb`` does not refer to a manifest. Therefore, any attempt to retrieve it using the ``bzz:/`` scheme will result in a ``404 Not Found`` error. In order to access this file, you would have to use the :ref:`bzz-raw` scheme.
 
 
 Downloading a single file
@@ -106,16 +109,12 @@ Uploading directories is achieved with the ``--recursive`` flag.
   swarm --recursive up /path/to/directory
   > ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30
 
-The returned hash refers to a root manifest referencing all the files in the directory. If there was a file called ``index.html`` in that directory, you could now access it under
-
-.. code-block:: none
-
-  http://localhost:8500/bzz:/ab90f84c912915c2a300a94ec5bef6fc0747d1fbaf86d769b3eed1c836733a30/index.html
+The returned hash refers to a root manifest referencing all the files in the directory.
 
 Directory with default entry
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-It is possible to declare a default entry in a manifest. In the example above, if ``index.html`` is declared as the default, then it is no longer required to append ``/index.html`` after the HASH.
+It is possible to declare a default entry in a manifest. In the example above, if ``index.html`` is declared as the default, then a request for a resource with an empty path will show the contents of the file ``/index.html``
 
 .. code-block:: none
 
@@ -126,16 +125,19 @@ You can now access index.html at
 
 .. code-block:: none
 
-  http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/index.html
-
+  http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/
+ 
 and also at
 
 .. code-block:: none
 
-  http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/
+  http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/index.html
 
-This is especially useful when the hash (in this case ``ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b``) is given a registered name like ``mysite.eth`` in the `Ethereum Name Service <./ens.html>`_.
+This is especially useful when the hash (in this case ``ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b``) is given a registered name like ``mysite.eth`` in the `Ethereum Name Service <./ens.html>`_. In this case the lookup would be even simpler:
 
+.. code-block:: none
+
+  http://localhost:8500/bzz:/mysite.eth/
 
 Downloading a directory
 --------------------------
@@ -154,9 +156,6 @@ Similarly as with a single file, you can also specify a custom proxy with ``--bz
 
   swarm --bzzapi http://localhost:8500 down --recursive bzz:/<hash> #note the flag ordering
 
-
-
-
 Adding entries to a manifest
 -------------------------------
 The command for modifying manifests is ``swarm manifest``.
@@ -165,19 +164,19 @@ To add an entry to a manifest, use the command:
 
 .. code-block:: none
 
-  swarm manifest add
+  swarm manifest add <manifest-hash> <path> <hash> [content-type]
 
 To remove an entry from a manifest, use the command:
 
 .. code-block:: none
 
-  swarm manifest remove
+  swarm manifest remove <manifest-hash> <path>
 
 To modify the hash of an entry in a manifest, use the command:
 
 .. code-block:: none
 
-  swarm manifest update
+  swarm manifest update <manifest-hash> <path> <new-hash>
 
 
 Using HTTP
@@ -192,7 +191,7 @@ To upload a single file, run this:
 
 .. code-block:: none
 
-  curl -H "Content-Type: text/plain" --data-binary "some-data" http://localhost:8500/bzz:/
+  curl -H "Content-Type: text/plain" --data "some-data" http://localhost:8500/bzz:/
 
 Once the file is uploaded, you will receive a hex string which will look similar to.
 
@@ -200,7 +199,7 @@ Once the file is uploaded, you will receive a hex string which will look similar
 
   027e57bcbae76c4b6a1c5ce589be41232498f1af86e1b1a2fc2bdffd740e9b39
 
-This is the address string of your content inside Swarm.
+This is the address string of your content inside Swarm. It is the same hash that would have been returned by using the :ref:`swarm up <swarmup>` command
 
 To download a file from Swarm, you just need the file's address string. Once you have it the process is simple. Run:
 
@@ -214,10 +213,14 @@ The result should be your file:
 
   some-data
 
-And that's it. Note that if you omit the trailing slash from the url then the request will result in a redirect.
+And that's it.
+
+.. note:: If you omit the trailing slash from the url then the request will result in a HTTP redirect. The semantically correct way to access the root path of a swarm manifest is using the trailing slash.
 
 Tar stream upload
 ------------------
+
+Tar is a traditional unix/linux file format for packing a directory structure into a single file. Swarm provides a convenient way of using this format to make it possible to perform recursive uploads using the HTTP API.
 
 .. code-block:: none
 
@@ -267,8 +270,8 @@ Multipart form upload
   > some-data
 
 
-Files can also be added to an existing manifest
-------------------------------------------------
+Add files to an existing manifest using multipart form
+------------------------------------------------------
 
 .. code-block:: none
 
@@ -282,8 +285,8 @@ Files can also be added to an existing manifest
   > some-other-data
 
 
-Files can also be uploaded using a simple HTML form
-----------------------------------------------------
+Upload files using a simple HTML form
+-------------------------------------
 
 .. code-block:: html
 
@@ -296,6 +299,8 @@ Files can also be uploaded using a simple HTML form
 
 Listing files
 -------------
+
+.. note:: The ``jq`` command mentioned below is a separate application that can be used to pretty-print the json data retrieved from the ``curl`` request
 
 A `GET` request with ``bzz-list`` URL scheme returns a list of files contained under the path, grouped into common prefixes which represent directories:
 
