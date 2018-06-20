@@ -183,3 +183,12 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 
 .. note::
   Note how ``geth`` is used for two different purposes here: You use it to run an Ethereum Mainnet node for ENS lookups. But you also use it to "attach" to the Swarm node to send commands to it.
+
+Connecting to the public Swarm cluster
+--------------------------------------
+
+If you would like to join the public Swarm cluster operated by the Ethereum Foundation and other contributors, you can use one of the bootnodes avaible from this list:
+
+https://gist.github.com/homotopycolimit/db446fa3269a199762e67b2ca037dbeb
+
+The cluster functions as a free-to-use public access gateway to the Swarm, without the need to run a local node. To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` url.
