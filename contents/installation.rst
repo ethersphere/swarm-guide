@@ -20,17 +20,16 @@ The simplest way to install Swarm on Ubuntu distributions is via the built in la
 
 To enable our launchpad repository please run:
 
-.. code-block:: none
+.. code-block:: shell
 
   sudo add-apt-repository -y ppa:ethereum/ethereum
 
 After that you can install the stable version of Swarm:
 
-.. code-block:: none
+.. code-block:: shell
 
   sudo apt-get update
   sudo apt-get install ethereum-swarm
-
 
 Installing Swarm from source
 =============================
@@ -55,7 +54,7 @@ Grab the relevant prerequisites and build from source.
 Ubuntu / Debian
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: none
+.. code-block:: shell
 
   sudo apt install git
   sudo apt install golang
@@ -63,7 +62,7 @@ Ubuntu / Debian
 Archlinux
 ^^^^^^^^^
 
-.. code-block:: none
+.. code-block:: shell
 
   pacman -S git go
 
@@ -74,20 +73,20 @@ The latest version of Go can be found at https://golang.org/dl/
 
 To install it, download the tar.gz file for your architecture
 
-.. code-block:: none
+.. code-block:: shell
 
   curl -O https://dl.google.com/go/go1.10.1.linux-amd64.tar.gz
 
 Unpack it to the /usr/local
 
-.. code-block:: none
+.. code-block:: shell
 
   sudo tar -C /usr/local -xzf go1.10.1.linux-amd64.tar.gz
 
 macOS
 ^^^^^^^
 
-.. code-block:: none
+.. code-block:: shell
 
     brew install go git
 
@@ -108,9 +107,9 @@ You should then prepare your go environment, for example:
 Compiling and installing
 -------------------------
 
-Once all prerequisites are met, download the go-ethereum source code
+Once all prerequisites are met, download and install packages and dependencies for go-ethereum;
 
-.. code-block:: none
+.. code-block:: shell
 
   mkdir -p $GOPATH/src/github.com/ethereum
   cd $GOPATH/src/github.com/ethereum
@@ -118,10 +117,11 @@ Once all prerequisites are met, download the go-ethereum source code
   cd go-ethereum
   git checkout swarm-network-rewrite
   go get github.com/ethereum/go-ethereum
+  cd $GOPATH/src/github.com/ethereum/go-ethereum
 
-and finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``geth``.
+This will download the master source code branch.
 
-.. code-block:: none
+Finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``geth``.
 
   go install ./cmd/geth
   go install ./cmd/swarm
@@ -136,13 +136,13 @@ Let's check if the installation of `swarm` was successful:
 
 or, if your `PATH` is not set and the `swarm` command can not be found, try:
 
-.. code-block:: none
+.. code-block:: shell
 
   $GOPATH/bin/swarm version
 
 This should return some relevant information. For example:
 
-.. code-block:: none
+.. code-block:: shell
 
   Swarm
   Version: 0.3
@@ -157,7 +157,7 @@ Updating your client
 
 To update your client simply download the newest source code and recompile.
 
-.. code-block:: none
+.. code-block:: shell
 
   cd $GOPATH/src/github.com/ethereum/go-ethereum
   git checkout master
