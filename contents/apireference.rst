@@ -1,7 +1,7 @@
 .. _API Reference:
 
 *************************
-API Reference
+API reference
 *************************
 
 

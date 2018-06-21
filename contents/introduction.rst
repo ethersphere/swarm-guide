@@ -12,7 +12,7 @@ Introduction
    :align: right
 
 
-Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum :dfn:`Web3.0` stack. The primary objective of Swarm is to provide a sufficiently decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as blockchain data. From an economic point of view, it allows participants to efficiently pool their storage and bandwidth resources in order to provide these services to all participants of the network, all while being incentivised by Ethereum.
+Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum :dfn:`web3` stack. The primary objective of Swarm is to provide a sufficiently decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as blockchain data. From an economic point of view, it allows participants to efficiently pool their storage and bandwidth resources in order to provide these services to all participants of the network, all while being incentivised by Ethereum.
 
 .. raw:: html
 
@@ -82,7 +82,7 @@ Available APIs
 
 Swarm offers several APIs:
  * CLI
- * JSON-RPC - using web3.0 bindings over Geth's IPC
+ * JSON-RPC - using web3 bindings over Geth's IPC
  * HTTP interface - every Swarm node exposes a local HTTP proxy that implements the :ref:`bzz protocol suite`
  * Javascript - available through the `swarm-js <https://github.com/MaiaVictor/swarm-js>`_ or `swarmgw <https://www.npmjs.com/package/swarmgw>`_ packages
 

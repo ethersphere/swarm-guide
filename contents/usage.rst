@@ -1,5 +1,5 @@
 ***************************
-Working with Content
+Working with content
 ***************************
 
 In this chapter, we demonstrate features of Swarm related to storage and retrieval. First we discuss how to solve mutability of resources in a content addressed system using the Ethereum Name Service on the blockchain, then using Mutable Resource Updates in Swarm.
