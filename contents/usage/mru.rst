@@ -26,7 +26,7 @@ Let's say we will want to update some data every 42 blocks (roughly every 10 min
 
 .. code-block:: none
 
-  SWARMHASH=`swarm up foo.html` && curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth/42 --data $SWARMPAGE
+  SWARMHASH=`swarm up foo.html` && curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth/42 --data $SWARMHASH
 
 This will result in json output along the lines of:
 
@@ -40,7 +40,7 @@ Now for the magic; to change this resource, you issue:
 
 .. code-block:: none
 
-  SWARMHASH=`swarm up bar.html` && curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth --data $SWARMPAGE
+  SWARMHASH=`swarm up bar.html` && curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth --data $SWARMHASH
 
 After this, when you enter ``http://localhost:8500/bzz:/yourdomainname.eth`` in the browser, you will see the contents of ``bar.html`` instead. Note that no update to ``ENS`` has been made in the meantime. You've saved a bit of money, and the update happens at the speed of storing a Swarm chunk.
 
