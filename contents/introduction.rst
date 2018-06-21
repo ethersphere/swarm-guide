@@ -2,237 +2,280 @@
 Introduction
 *******************
 
-..  * extention allows for per-format preference for image format
+..  * extension allows for per-format preference for image format
 
-..  image:: img/swarm-logo.jpg
+..  image:: img/swarm.png
    :height: 300px
-   :width: 300 px
+   :width: 238px
    :scale: 50 %
    :alt: swarm-logo
    :align: right
 
 
-Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum :dfn:`web 3` stack. The primary objective of Swarm is to provide a sufficiently decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as block chain data. From an economic point of view, it allows participants to efficiently pool their storage and bandwidth resources in order to provide the aforementioned services to all participants.
+Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum :dfn:`web3` stack. The primary objective of Swarm is to provide a sufficiently decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as blockchain data. From an economic point of view, it allows participants to efficiently pool their storage and bandwidth resources in order to provide these services to all participants of the network, all while being incentivised by Ethereum.
 
-From the end user's perspective, Swarm is not that different from WWW, except that uploads are not to a specific server. The objective is to offer a peer-to-peer storage and serving solution that is DDOS-resistant, zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer-to-peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution, service payments and content availability insurance (the latter is to be implemented in POC 0.4 by Q2 2018).
+.. raw:: html
 
-This document provides you with information on :
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/VgTZV471WFM" style="margin-bottom: 30px;" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-* how to run and configure a local swarm node
-* how to connect to the test network
-* how to store and access content on swarm
-* swarm architecture and concepts such as chunk, hash and manifest
-* command line tools relevant to swarm
-* API documentation for the http swarm proxy
-* API documentation for the bzz RPC module
-* how to register swarm domains with the Ethereum Name Service
-* how to test, manage logging, debug and report issues
 
-Background
-=================
 
-The primary objective of Swarm is to provide a sufficiently
-decentralized and redundant store of Ethereum's public record, in
-particular to store and distribute Đapp code and data as well as
-block chain data. [Note that the latter is not part of the current release].
+Objective
+==========
 
-From an economic point of view, it allows participants to efficiently
-pool their storage and bandwidth resources in order to provide the
-aforementioned services to all participants.
+Swarm's broader objective is to provide infrastructure services for developers of decentralised web applications (dapps), notably: messaging, data streaming, peer to peer accounting, mutable resource updates, storage insurance, proof of custody scan and repair, payment channels and database services.
 
-These objectives entail the following design requirements:
+From the end user's perspective, Swarm is not that different from the world wide web, with the exception that uploads are not hosted on a specific server. Swarm offers a peer-to-peer storage and serving solution that is DDoS-resistant, has zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer-to-peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution (using ENS), service payments and content availability insurance.
 
-.. this list is confusing. what is it a list of? what do "inclusivity" or "self-managed sustainability" mean? does the reader know?
-.. TODO: reformulate?
+.. raw:: html
 
-* distributed storage, inclusivity, long tail of power law
-* flexible expansion of space without hardware investment decisions, unlimited growth
-* zero downtime
-* immutable, unforgeable, verifiable yet plausibly deniable storage
-* no single point of failure, fault and attack resilience
-* censorship resistance, universally accessible permanent public record
-* sustainability due to a incentive system
-* efficient market driven pricing. tradeable trade off of memory, persistent storage, bandwidth
-* efficient use of the blockchain by the swarm accounting protocol
-* deposit-challenge based guaranteed storage [planned for POC 0.4 by Q2 2018]
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/xrw9rvee7rc" style="margin-bottom: 30px;" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-Basics
+Please refer to our `development roadmap <https://github.com/ethersphere/swarm/wiki/roadmap>`_ and our `roadmap board <https://github.com/orgs/ethersphere/projects/5>`_ to stay informed with our progress.
+
+Overview
 ========================
 
+Swarm is set out to provide base layer infrastructure for a new decentralised internet.
+Swarm is a peer-to-peer network of nodes providing distributed digital services by contributing resources (storage, message forwarding, payment processing) to each other. These contributions are accurately accounted for on a peer to peer basis, allowing nodes to trade resource for resource, but offering monetary compensation to nodes consuming less than they serve.
 
+.. image:: img/swarm-intro.svg
+   :alt: Swarm storage and message routing
+   :width: 500
 
-Swarm client is part of the Ethereum stack, the reference implementation is written in golang and found under the go-ethereum repository. Currently at POC (proof of concept) version 0.2 is running on all nodes.
+The Ethereum Foundation operates a Swarm testnet that can be used to test out functionality in a similar manner to the Ethereum testnet (ropsten).
+Everyone can join the network by running the Swarm client node on their server, desktop, laptop or mobile device. See :ref:`Getting Started` for how to do this.
+The Swarm client is part of the Ethereum stack, the reference implementation is written in golang and found under the go-ethereum repository. Currently at POC (proof of concept) version 0.3 is running on all nodes.
 
-Swarm defines the :dfn:`bzz subprotocol` running on the ethereum devp2p network. The bzz subprotocol is in flux, the
-specification of the wire protocol is considered stable only with POC 0.4 expected in Q2 2018.
+Swarm offers a **local HTTP proxy** API that dapps or command line tools can use to interact with Swarm. Some modules like `messaging  <PSS>`_ are   only available through RPC-JSON API. The foundation servers on the testnet are offering public gateways, which serve to easily demonstrate functionality and allow free access so that people can try Swarm without even running their own node.
 
-The swarm of Swarm is the collection of nodes of the devp2p network each of which run the bzz protocol on the same network id.
+.. note::
+  The Swarm public gateways are temporary and users should not rely on their existence for production services.
 
-Swarm nodes are also connected to an ethereum blockchain.
-Nodes running the same network id are supposed to connect to the same blockchain.
-Such a swarm network is identified by its network id which is an arbitrary integer.
+The Swarm is the collection of nodes of the devp2p network each of which run the :ref:`bzz protocol suite` on the same network id.
 
-Swarm allows for :dfn:`upload and disappear` which means that any node can just upload content to the swarm and
+Swarm nodes can also connect with one (or several) ethereum blockchains for domain name resolution and one ethereum blockchain for bandwidth and storage compensation.
+Nodes running the same network id are supposed to connect to the same blockchain for payments. A Swarm network is identified by its network id which is an arbitrary integer.
+
+Swarm allows for :dfn:`upload and disappear` which means that any node can just upload content to the Swarm and
 then is allowed to go offline. As long as nodes do not drop out or become unavailable, the content will still
 be accessible due to the 'synchronization' procedure in which nodes continuously pass along available data between each other.
 
 .. note::
-  Uploaded content is not guaranteed to persist until storage insurance is implemented (expected in POC 0.4 by Q2 2018). All participating nodes should consider  voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard swarm as safe storage until the incentive system is functional.
+  Uploaded content is not guaranteed to persist on the testnet until storage insurance is implemented (expected in POC4 2019). All participating nodes should consider participation a  voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard Swarm as safe storage until the incentive system is functional.
 
 .. note::
-  Swarm POC 0.2 uses no encryption. Upload of sensitive and private data is highly discouraged as there is no way to undo an upload. Users should refrain from uploading unencrypted sensitive data, in other words
+  The Swarm public gateways are temporary and users should not rely on their existence for production services.
 
-  * no valuable personal content
-  * no illegal, controversial or unethical content
+.. note::
+  Uploaded content is not guaranteed to persist on the testnet until storage insurance is implemented (expected in POC4 2019). All participating nodes should consider participation a voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard Swarm as safe storage until the incentive system is functional.
 
-Swarm defines 3 crucial notions
+.. note::
+  Swarm POC3 allows for encryption. Upload of unencrypted sensitive and private data is highly discouraged as there is no way to undo an upload. Users should refrain from uploading illegal, controversial or unethical content.
 
-:dfn:`chunks`
-  pieces of data (max 4K), the basic unit of storage and retrieval in the swarm
+.. note:: The Swarm is a `Persistent Data Structure <https://en.wikipedia.org/wiki/Persistent_data_structure>`_, therefore there is no notion of delete/remove action in Swarm. This is because content is disseminated to swarm nodes who are incentivised to serve it.
 
-:dfn:`hash`
-  cryptographic hash of data that serves as its unique identifier and address
+.. important:: Always use encryption for sensitive content! For encrypted content, uploaded data is 'protected', i.e. only those that know the reference to the root chunk (the swarm hash of the file as well as the decryption key) can access the content. Since publishing this reference (on ENS or with MRU) requires an extra step, users are mildly protected against careless publishing as long as they use encryption. Even though there is no guarantees for removal, unaccessed content that is not explicitly insured will eventually disappear from the Swarm, as nodes will be incentivised to garbage collect it in case of storage capacity limits.
 
-:dfn:`manifest`
-  data structure describing collections allow for url based access to content
+Available APIs
+================
 
-In this guide, content is understood very broadly in a technical sense denoting any blob of data.
-Swarm defines a specific identifier for a piece of content. This identifier serves as the retrieval address for the content.
-Identifiers need to be
+Swarm offers several APIs:
+ * CLI
+ * JSON-RPC - using web3 bindings over Geth's IPC
+ * HTTP interface - every Swarm node exposes a local HTTP proxy that implements the :ref:`bzz protocol suite`
+ * Javascript - available through the `swarm-js <https://github.com/MaiaVictor/swarm-js>`_ or `swarmgw <https://www.npmjs.com/package/swarmgw>`_ packages
 
-* collision free (two different blobs of data will never map to the same identifier)
-* deterministic (same content will always receive the same identifier)
-* uniformly distributed
 
-The choice of identifier in swarm is the hierarchical swarm hash described in :ref:`swarm_hash`.
-The properties above let us view the identifiers as addresses at which content is expected to be found.
-Since hashes can be assumed to be collision free, they are bound to one specific version of a content, i.e. Hash addressing therefore is immutable in the strong sense that you cannot even express mutable content: "changing the content changes the hash".
+Code
+========
 
-Users, however, usually use some discovery and or semantic access to data, which is implemented by the ethereum name service (ENS).
-The ENS enables content retrieval based on mnemonic (or branded) names, much like the DNS of the world wide web, but without servers.
-
-Swarm nodes participating in the network also have their own :dfn:`base address (also called bzzkey)` which is derived as the (keccak 256bit sha3) hash of an ethereum address, the so called :dfn:`swarm base account` of the node. These node addresses define a location in the same address space as the data.
-
-When content is uploaded to swarm it is chopped up into pieces called chunks. Each chunk is accessed at the address defined by its swarm hash. The hashes of data chunks themselves are packaged into a chunk which in turn has its own hash. In this way the content gets mapped to a chunk tree. This hierarchical swarm hash construct allows for merkle proofs for chunks within a piece of content, thus providing swarm with integrity protected random access into (large) files (allowing for instance skipping safely in a streaming video).
-
-The current version of swarm implements a :dfn:`strictly content addressed distributed hash table` (DHT). Here 'strictly content addressed' means that the node(s) closest to the address of a chunk do not only serve information about the content but actually host the data. (Note that although it is part of the protocol, we cannot have any sort of guarantee that it will be preserved. this is a caveat worth stating again: no guarantee of permanence and persistence). In other words, in order to retrieve a piece of content (as a part of a larger collection/document) a chunk must reach its destination from the uploader to the storer when storing/uploading and must also be served back to a requester when retrieving/downloading.
-The viability of both hinges on the assumption that any node (uploader/requester) can 'reach' any other node (storer). This assumption is guaranteed with a special :dfn:`network topology` (called :dfn:`kademlia`), which offers (very low) constant time for lookups logarithmic to the network size.
-
-.. note:: There is no such thing as delete/remove in swarm. Once data is uploaded there is no way you can initiate her to revoke it.
-
-Nodes cache content that they pass on at retrieval, resulting in an auto scaling elastic cloud: popular (oft-accessed) content is replicated throughout the network decreasing its retrieval latency. Caching also results in a :dfn:`maximum resource utilisation` in as much as nodes will fill their dedicated storage space with data passing through them. If capacity is reached, least accessed chunks are purged by a garbage collection process. As a consequence, unpopular content will end up
-getting deleted. Storage insurance (to be implemented in POC 0.4 expected by Q2 of 2018) will be used to protect important content from this fate.
-
-Swarm content access is centred around the notion of a manifest. A manifest file describes a document collection, e.g.,
-
-* a filesystem directory
-* an index of a database
-* a virtual server
-
-Manifests specify paths and corresponding content hashes allowing for url based content retrieval.
-Manifests can therefore define a routing table for (static) assets (including dynamic content using for instance static javascript).
-This offers the functionality of :dfn:`virtual hosting`, storing entire directories or web(3)sites, similar to www but
-without servers.
-
-You can read more about these components in :ref:`architecture`.
-
-About
-===================
-
-This document
----------------------
-
-This document's source code is found at https://github.com/ethersphere/swarm-guide
-The most up-to-date swarm book in various formats is available on the old web
-http://ethersphere.org/swarm/docs as well as on swarm bzz://swarm/guide
-
+Source code is at https://github.com/ethereum/go-ethereum/ and our team's working copy is at https://github.com/ethersphere/go-ethereum/
 
 Status
 ---------------
 
-The status of swarm is proof of concept vanilla prototype tested on a toy network.
-This version is POC 0.2.5
+* The status of Swarm is proof of concept 3 release series (POC3).
+* Roadmap time board https://github.com/orgs/ethersphere/projects/5
+* https://github.com/ethersphere/Swarm/wiki/roadmap
+* https://github.com/ethereum/go-ethereum/wiki/Swarm---POC-series
 
-.. note:: Swarm is experimental code and untested in the wild. Use with extreme care.
+.. note:: Swarm is experimental code and untested in the wild. Use with extreme care. We encourage developers to connect to the testnet with their permanent nodes and give us feedback.
+
+Testnets with public gateways
+-------------------------------
+
+* Public alpha testnet running POC3 with gateway https://swarm-gateways.net/
+* Staging network running experimental code with gateway https://open.swarm-gateways.net/
+
+.. note:: The Swarm public gateways are temporary and users should not rely on their existence for production services.
 
 License
 -------------
 
+Swarm is part of the go-ethereum library and (i.e. all code outside of the `cmd` directory) is licensed under the
+`GNU Lesser General Public License v3.0 <https://www.gnu.org/licenses/lgpl-3.0.en.html>`_, also
+included in our repository in the `COPYING.LESSER <https://github.com/ethereum/go-ethereum/blob/master/COPYING.LESSER>`_ file.
 
-Credits
+The go-ethereum binaries (i.e. all code inside of the `cmd` directory) is licensed under the
+`GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.en.html>`_, also included
+in our repository in the `COPYING <https://github.com/ethereum/go-ethereum/blob/master/COPYING.LESSER>`_ file.
+
+
+Example dapps
+-------------
+
+* http://swarm-gateways.net/bzz://swarmapps.eth
+* source code: https://github.com/ethersphere/Swarm-dapps
+
+
+Swarm dev onboarding
 ---------------------
 
-Swarm is code by Ethersphere (ΞTHΞRSPHΞЯΞ) `https://github.com/ethersphere`
+https://github.com/ethersphere/Swarm/wiki/Swarm
 
-the team behind swarm:
+Reporting a bug and contributing
+-------------------------------------
 
-* Viktor Trón @zelig
-* Dániel A. Nagy @nagydani
-* Aron Fischer @homotopycolimit
-* Nick Johnson @Arachnid
-* Zsolt Felföldi @zsfelfoldi
+Issues are tracked on GitHub and GitHub only. Swarm related issues and PRs are labeled with Swarm:
 
-Swarm is funded by the Ethereum Foundation.
+* https://github.com/ethereum/go-ethereum/labels/Swarm
+* https://github.com/ethersphere/go-ethereum/issues
+* `Good first issues <https://github.com/ethersphere/go-ethereum/issues?utf8=✓&q=is%3Aopen+is%3Aissue+label%3A"good+first+issue">`_
 
-Special thanks to
+Please include the commit and branch when reporting an issue.
 
-* Felix Lange, Alex Leverington for inventing and implementing devp2p/rlpx;
-* Jeffrey Wilcke and the go team for continued support, testing and direction;
-* Gavin Wood and Vitalik Buterin for the vision;
-* Alex Van der Sande, Fabian Vogelsteller, Bas van Kervel and the Mist team
-* Nick Savers, Alex Beregszaszi, Daniel Varga, Juan Benet for inspiring discussions and ideas
-* Participants of the orange lounge research group
-* Roman Mandeleil and Anton Nashatyrev for the java implementation
-* Igor Sharudin for example dapps
+Pull requests should by default commit on the `master` branch (edge).
+
+Prospective contributors please read `the Developer's Guide <>`
+
+
+Credits
+===============
+
+Swarm is funded by the Ethereum Foundation and industry sponsors.
+
+Swarm is code by Ethersphere `https://github.com/ethersphere`
+
+The Core team
+----------------
+
+* Viktor Trón - @zelig
+* Daniel A. Nagy - @nagydani
+* Aron Fischer- @homotopycolimit
+* Louis Holbrook- @nolash
+* Lewis Marshal- @lmars
+* Fabio Barone- @holisticode
+* Anton Evangelatov- @nonsense
+* Janos Gulyas- @janos
+* Balint Gabor- @gbalint
+* Elad Nachmias- @justelad
+
+were on the core team:
+
+* Zahoor Mohamed- @jmozah
+* Zsolt Felföldi- @zsfelfoldi
+* Nick Johnson- @Arachnid
+
+Sponsors and collaborators
+-----------------------------
+
+* http://status.im
+* http://livepeer.org
+* http://jaak.io
+* http://datafund.io
+* http://mainframe.com
+* http://wolk.com
+* http://riat.at
+* http://datafund.org
+* http://216.com
+* http://cofound.it
+* http://iconomi.net
+* http://infura.io
+* http://epiclabs.io
+* http://asseth.fr
+
+
+Special thanks
+------------------
+
+* Felix Lange, Alex Leverington for inventing and implementing devp2p/rlpx
+* Jeffrey Wilcke, Peter Szilagyi and the entire ethereum foundation go team for continued support, testing and direction
+* Gavin Wood and Vitalik Buterin for the holy trinity vision of web3
+* Nick Johnson for ENS and ENS Swarm integration
+* Alex Van der Sande, Fabian Vogelsteller, Bas van Kervel, Victor Maia, Everton Fraga and the Mist team
+* Elad Verbin for his continued technical involvement as an advisor and ideator
+* Nick Savers for his unrelenting support and meticulous reviews of our papers
+* Gregor Zavcer, Alexei Akhunov, Alex Beregszaszi, Daniel Varga, Julien Boutloup for inspiring discussions and ideas
+* Juan Benet and the IPFS team for continued inspiration
+* Carl Youngblood, Shane Howley, Paul De Cam, Doug Leonard and the mainframe team for their contribution to PSS and MRU
+* Sourabh Niyogi and the entire Wolk team for the inspiring collaboration on databases
+* Ralph Pilcher for implementing the swap swear and swindle contract suite in solidity/truffle and Oren Sokolowsky for the initial version
+* Javier Peletier from Epiclabs (ethergit) for his contribution to MRUs
+* Jarrad Hope and Carl Bennet (Status) for their support
+* Participants of the orange lounge research group and the Swarm orange summits
+* Roman Mandeleil and Anton Nashatyrev for an early java implementation of swarm
+* Igor Sharudin, Dean Vaessen for example dapps
 * Community contributors for feedback and testing
-
+* Daniel Kalman, Benjamin Kampmann, Daniel Lengyel, Anand Jaisingh for contributing to the swarm websites
+* Felipe Santana, Paolo Perez and Paratii team for filming at the 2017 swarm summit and making the summit website
 
 Community
 -------------------
 
 Daily development and discussions are ongoing in various gitter channels:
 
-* https://gitter.im/ethereum/swarm: general public chatroom about swarm dev
-* https://gitter.im/ethersphere/orange-lounge: our reading/writing/working group and R&D sessions
-* https://gitter.im/ethereum/pss: about postal services on swarm - messaging with deterministic routing
-* https://gitter.im/ethereum/swatch: variable bitrate media streaming and multicast/broadcast solution
+* https://gitter.im/ethereum/swarm: general public chatroom about Swarm dev support
+* https://gitter.im/ethersphere/orange-lounge: our open engine room
+* https://gitter.im/ethersphere/pss: about postal services on Swarm - messaging with deterministic routing
+* https://gitter.im/ethersphere/hq: our internal engine room
 
 Swarm discussions also on the Ethereum subreddit: http://www.reddit.com/r/ethereum
 
-Reporting a bug and contributing
--------------------------------------
 
-Issues are tracked on github and github only. Swarm related issues and PRs are labeled with swarm:
-https://github.com/ethereum/go-ethereum/labels/swarm
+Swarm Hangouts
+-------------------
 
-Please include the commit and branch when reporting an issue.
+* https://hangouts.google.com/hangouts/_/ethereum.org/Swarm
+* standup: Monday to Friday 4pm CEST
+* weekly roundtable: Tuesday 4.30pm CEST
 
-Pull requests should by default commit on the `master` branch (edge).
 
-Roadmap and Resources
---------------------------
+Documentation and resources
+==================================
 
-Swarm roadmap and tentative plan for features and POC series are found on the wiki:
-https://github.com/ethereum/go-ethereum/wiki/swarm-roadmap
-https://github.com/ethereum/go-ethereum/wiki/swarm---POC-series
+Swarm guide (this document)
+-------------------------------
 
-the *swarm homepage* is accessible via swarm at bzz://swarm or the gateway http://swarm-gateways.net/bzz:/swarm/
+* This document's source code is found at https://github.com/ethersphere/Swarm-guide
+* The HTML rendered version is available at https://swarm-guide.readthedocs.io/en/latest/
 
-The swarm page also contains a list of swarm-related talks (video recording and slides).
+Homepage
+--------
 
-You can also find the (first 2) ethersphere orange papers there.
+the *Swarm homepage* is accessible via Swarm at `theswarm.eth`. The page can be accessed through the public gateway on http://swarm-gateways.net/bzz:/theswarm.eth/
 
-Public gateways are:
+POC2 blogpost
+---------------
 
-* http://swarm-gateways.net/
-* http://web3.download/
-* http://ethereum-swarm.net/
+https://blog.ethereum.org/2016/12/15/Swarm-alpha-public-pilot-basics-Swarm/
 
-Swarm testnet monitor: http://stats.ens.domains/
+Swarm Orange Summit
+----------------------
 
-Source code is at https://github.com/ethereum/go-ethereum/
+* `Swarm summit 2018 promo video <https://swarm-gateways.net/bzz:/079b4f4155d7e8b5ee76e8dd4e1a6a69c5b483d499654f03d0b3c588571d6be9/>`_
+* `2018 May 7-11 Ljubljana <https://ethersphere.github.io/swarm-summit-2018/>`_
+* 2017 June 4-10 Berlin
 
-Example dapps are at https://github.com/ethereum/swarm-dapps
 
-This document source https://github.com/ethersphere/swarm-guide
+Orange papers
+--------------
 
+* `Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for Swarm. May 2016 <https://open.swarm-gateways.net/bzz:/theswarm.test/ethersphere/orange-papers/1/sw^3.pdf>`_
+* `Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for Swarm secured by masked audit secret hash. May 2016 <https://open.swarm-gateways.net/bzz:/theswarm.test/ethersphere/orange-papers/2/smash.pdf>`_
+* `Viktor Trón, Aron Fischer, Ralph Pilcher, Fabio Barone: swap swear and swindle games: scalable infrastructure for decentralised service economies. Work in progress. June 2018. <https://www.sharelatex.com/1452913241cqmzrpfpjkym>`_
+* `Viktor Trón, Aron Fischer, Daniel A. Nagy. Swarm: a decentralised peer-to-peer network for messaging and storage. Work in progress. June, 2018. <https://www.sharelatex.com/6741568343dhhjfkjpnfwz>`_
+* P.O.T. data structures and databases on swarm. In preparation.
+* Mutable Resource Updates. An off-chain scheme for versioning content in Swarm. In preparation.
+* Privacy on swarm. Encryption, access control, private browsing in Swarm. Tentative.
+* Analysis of attack resilience of swarm storage. Tentative.

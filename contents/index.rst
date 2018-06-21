@@ -1,22 +1,36 @@
-.. swarm documentation master file, created by
-   sphinx-quickstart on Sun Dec 20 19:19:54 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-Welcome to the swarm documentation!
+
+Welcome to the Swarm documentation!
 ===================================
 
-Contents:
+..  image:: img/swarm.png
+   :height: 300px
+   :width: 238px
+   :scale: 50 %
+   :alt: swarm-logo
+   :align: left
+
+Swarm is a distributed storage platform and content distribution network, a native base layer service of the Ethereum **web3** stack. 
+
+This documentation was created with curious end-users, third web enterpreneurs and developers in mind. It should make you thoroughly educated about Swarm within a reasonable amount of time.
+
+|
+
+Table of contents:
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
 
    introduction
    installation
-   simpleuser
-   runninganode
+   gettingstarted
+   up-and-download
    usage
+   pss
+   apireference
+   configuration
    architecture
+   resources
 
 
 This document is licensed under the @emph{Creative Commons Attribution License}. To
