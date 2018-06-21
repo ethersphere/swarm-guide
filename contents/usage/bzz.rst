@@ -6,8 +6,7 @@ BZZ URL schemes
 Swarm offers 6 distinct URL schemes:
 
 bzz
-^^^^^
-
+-----
 
 The bzz scheme assumes that the domain part of the url points to a manifest. When retrieving the asset addressed by the URL, the manifest entries are matched against the URL path. The entry with the longest matching path is retrieved and served with the content type specified in the corresponding manifest entry.
 
@@ -20,6 +19,7 @@ Example:
 returns a readme.md file if the manifest at the given hash address contains such an entry.
 
 .. code-block:: none
+
     $ ls
     readme.md
     $ swarm --recursive up .
@@ -71,7 +71,7 @@ If the manifest does not contain an file at ``readme.md`` itself, but it does co
 .. _bzz-raw:
 
 bzz-raw
-^^^^^^^^^^^^^^
+-------------
 
 .. code-block:: none
 
@@ -131,7 +131,7 @@ The ``content_type`` query parameter can be supplied to specify the MIME type yo
     some-data%
 
 bzz-list
-^^^^^^^^^^^^^^
+-------------
 
 .. code-block:: none
 
@@ -162,7 +162,7 @@ Returns a list of all files contained in <manifest> under <path> grouped into co
         }
 
 bzz-hash
-^^^^^^^^^^^^^^
+-------------
 
 .. code-block:: none
 
@@ -178,7 +178,7 @@ Response content type is *text/plain*.
     7a90587bfc04ac4c64aeb1a96bc84f053d3d84cefc79012c9a07dd5230dc1fa4%
 
 bzz-immutable
-^^^^^^^^^^^^^^^^^^^^
+-------------
 
 .. code-block:: none
 
@@ -201,7 +201,7 @@ The same as the generic scheme but there is no ENS domain resolution, the domain
     }
 
 bzz-resource
-^^^^^^^^^^^^^^^^^^^^
+-------------
 
 ``bzz-resource`` allows you to receive hash pointers to content that the ENS entry resolved to at different versions
 

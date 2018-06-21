@@ -1,21 +1,22 @@
+
 Mutable Resource Updates
 ========================
 
 .. note::
-  Mutable Resource Updates is a highly experimental feature, available from swarm POC3. It is under active development, so expect things to change.
+  Mutable Resource Updates is a highly experimental feature, available from Swarm POC3. It is under active development, so expect things to change.
 
-We have previously learned in this guide that when we make changes in data in swarm, the hash returned when we upload that data will change in totally unpredictable ways. With *Mutable Resource Updates*, swarm provides a built-in way of keeping a persistent identifier to changing data.
+We have previously learned in this guide that when we make changes in data in Swarm, the hash returned when we upload that data will change in totally unpredictable ways. With *Mutable Resource Updates*, Swarm provides a built-in way of keeping a persistent identifier to changing data.
 
 The usual way of keeping the same pointer to changing data is using the Ethereum Name Service ``ENS``. However, ``ENS`` is an on-chain feature, which limits functionality in some areas:
 
-1. Every update to an ``ENS`` resolver will cost you gas to execute
+1. Every update to an ``ENS`` resolver will cost you gas to execute.
 2. It is not be possible to change the data faster than the rate that new blocks are mined.
 3. Correct ``ENS`` resolution requires that you are always synced to the blockchain.
 
-Using *Mutable Resource Updates* you only need to register the data resource *once* with ``ENS``. After this, your lookup calls to that ``ENS`` name will automatically resolve to the latest update existing in swarm.
+Using *Mutable Resource Updates* you only need to register the data resource *once* with ``ENS``. After this, your lookup calls to that ``ENS`` name will automatically resolve to the latest update existing in Swarm.
 
 Creating a mutable resource
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------
 .. important::
   If you run your node with the ``--ens-api`` flag, the node will make an ``ENS`` lookup on create and update operations to ensure that the node account is the owner of the ``ENS`` name before allowing the updates to go through. If you run the node *without* this flag, updates will *not* be checked, but will still be checked by other nodes in the network. Updates from illegitimate owners will be discarded by other nodes, and will not propagate in the network.
 
@@ -41,12 +42,12 @@ Now for the magic; to change this resource, you issue:
 
   SWARMHASH=`swarm up bar.html` && curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth --data $SWARMPAGE
 
-After this, when you enter ``http://localhost:8500/bzz:/yourdomainname.eth`` in the browser, you will see the contents of ``bar.html`` instead. Note that no update to ``ENS`` has been made in the meantime. You've saved a bit of money, and the update happens at the speed of storing a swarm chunk.
+After this, when you enter ``http://localhost:8500/bzz:/yourdomainname.eth`` in the browser, you will see the contents of ``bar.html`` instead. Note that no update to ``ENS`` has been made in the meantime. You've saved a bit of money, and the update happens at the speed of storing a Swarm chunk.
 
 Retrieving a mutable resource
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------------------
 
-The above example is limited to updating swarm web content. But Mutable Resource Updates can just as well be used to store and retrieve "raw" data aswell. This is done using the ``/raw`` subpath in the url upon update. An example:
+The above example is limited to updating Swarm web content. But Mutable Resource Updates can just as well be used to store and retrieve "raw" data aswell. This is done using the ``/raw`` subpath in the url upon update. An example:
 
 .. code-block:: none
 
@@ -58,18 +59,18 @@ The above example is limited to updating swarm web content. But Mutable Resource
 
 The above two HTTP GET requests with curl will return "foo" and "bar" repectively.
 
-.. important:: 
+.. important::
   Updates made using the *raw* subpath are served with the ``applcation/octet-stream`` mime type. This means that the receiving application needs to know itself how to interpret the underlying data.
 
 Mutable resource versioning
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------
 
-As explained above, we need to specify a frequency parameter when we create a resource, which indicates the number of blocks that are expected to pass between each update. In Mutable Resourceswe call this the *period*. When you make an update, it will always belong to the *upcoming period*. 
+As explained above, we need to specify a frequency parameter when we create a resource, which indicates the number of blocks that are expected to pass between each update. In Mutable Resourceswe call this the *period*. When you make an update, it will always belong to the *upcoming period*.
 
 Let's make this less obscure with some concrete examples:
 
 * Mutable Resource is created at block height ``4200000`` with frequency ``13``.
-* Update made at block height ``4200010``. Update will belong to block height ``4200013``. 
+* Update made at block height ``4200010``. Update will belong to block height ``4200013``.
 * Update made at block height ``4200014``. Update will belong to block height ``4200026``.
 * Update made at block height ``4200021``. Update will *also* belong to block height ``4200026``.
 * Update made at block height ``4200026``. Update will belong to block height ``4200039``.
@@ -88,7 +89,7 @@ If more updates are made within one period, they will be sequentially numbered a
 * Block height ``4200026`` = version ``4.1``
 
 Retrieving a specific mutable resource version
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------------------------
 
 We can retrieve specific Mutable Resource Update versions by adding the version numbers to the url.
 
@@ -98,7 +99,7 @@ Either we can choose to only name the period, in which case we will get the late
 
   curl -X GET http://localhost:8500/bzz-resource:/yourdomainname.eth/1
 
-Will return the content of version ``1.1`` 
+Will return the content of version ``1.1``
 
 .. code-block:: none
 

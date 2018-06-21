@@ -1,11 +1,10 @@
-
 Encryption
 ===========
 
 Introduced in POC 0.3, symmetric encryption is now readily available to be used with the ``swarm up`` upload command.
 The encryption mechanism is meant to protect your information and make the chunked data unreadable to any handling Swarm node.
 
-Swarm uses `Counter mode encryption <https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_(CTR)>`_ to encrypt and decrypt content. When you upload content to swarm, the uploaded data is split into 4 KB chunks. These chunks will all be encoded with a separate randomly generated encryption key. The encryption happens on your local Swarm node, unencrypted data is not shared with other nodes. The reference of a single chunk (and the whole content) will be the concatenation of the hash of encoded data and the decryption key. This means the reference will be longer than the standard unencrypted Swarm reference (64 bytes instead of 32 bytes).
+Swarm uses `Counter mode encryption <https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Counter_(CTR)>`_ to encrypt and decrypt content. When you upload content to Swarm, the uploaded data is split into 4 KB chunks. These chunks will all be encoded with a separate randomly generated encryption key. The encryption happens on your local Swarm node, unencrypted data is not shared with other nodes. The reference of a single chunk (and the whole content) will be the concatenation of the hash of encoded data and the decryption key. This means the reference will be longer than the standard unencrypted Swarm reference (64 bytes instead of 32 bytes).
 
 When your node syncs the encrypted chunks of your content with other nodes, it does not share the the full references (or the decryption keys in any way) with the other nodes. This means that other nodes will not be able to access your original data, moreover they will not be able to detect whether the synchronized chunks are encrypted or not.
 
@@ -32,6 +31,6 @@ Example usage:
   > c2ebba57da7d97bc4725a542ff3f0bd37163fd564e0298dd87f320368ae4faddd1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
   # note the longer reference of the encrypted upload
   swarm up --encrypt foo.txt
-  > 
+  >
   e76efd76ef1161e4903acc43b5dc634c02fbba7e5f242c32726e78d4e71ffa9cf5a6ca8a19cbada15f38cac79557a930055d5a465a9f868d07122428267045ba
   # note the different reference on the second upload (because of the random encryption key)

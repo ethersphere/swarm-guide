@@ -1,3 +1,5 @@
+.. _Getting Started:
+
 ******************************
 Getting started
 ******************************
@@ -7,7 +9,7 @@ The first thing to do is to start up your Swarm node and connect it to the Swarm
 How do I connect to Swarm?
 ===========================
 
-To start a basic Swarm node you must have both geth and swarm installed on your machine. You can find the relevant instructions in the `Installation and Updates <./installation.html>`_  section.
+To start a basic Swarm node you must have both ``geth`` and ``swarm`` installed on your machine. You can find the relevant instructions in the `Installation and Updates <./installation.html>`_  section.
 
 To start Swarm you need an Ethereum account. You can create a new account by running the following command:
 
@@ -67,7 +69,7 @@ for light client mode.
 
 .. note::
 
-When you use the light mode, you don't have to sync the node before it can be used to answer ENS queries. However, please note that light mode is still an experimental feature.
+  When you use the light mode, you don't have to sync the node before it can be used to answer ENS queries. However, please note that light mode is still an experimental feature.
 
 After the connection is established, open another terminal window and connect to Swarm:
 
@@ -191,4 +193,4 @@ If you would like to join the public Swarm cluster operated by the Ethereum Foun
 
 https://gist.github.com/homotopycolimit/db446fa3269a199762e67b2ca037dbeb
 
-The cluster functions as a free-to-use public access gateway to the Swarm, without the need to run a local node. To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` url.
+The cluster functions as a free-to-use public access gateway to Swarm, without the need to run a local node. To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` URL.

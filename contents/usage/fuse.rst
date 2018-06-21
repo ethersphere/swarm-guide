@@ -42,7 +42,7 @@ Mount
 ^^^^^^^^
 
 One use case to mount a Swarm hash via FUSE is a file sharing feature accessible via your local file system.
-Files uploaded to swarm are then transparently accessible via your local file system, just as if they were stored locally.
+Files uploaded to Swarm are then transparently accessible via your local file system, just as if they were stored locally.
 
 To mount a Swarm resource, first upload some content to Swarm using the `swarm up <resource>` command.
 You can also upload a complete folder using `swarm --recursive up <directory>`.
@@ -57,13 +57,13 @@ For example:
 
 .. code-block:: none
 
-	swarm fs mount --ipcpath /home/user/ethereum/bzzd.ipc <manifest-hash> /home/user/swarmmount 
+	swarm fs mount --ipcpath /home/user/ethereum/bzzd.ipc <manifest-hash> /home/user/swarmmount
 
 Your running Swarm node terminal output should show something similar to the following in case the command returned successfuly:
 
 .. code-block:: none
 
-	Attempting to mount /path/to/mount/point  
+	Attempting to mount /path/to/mount/point
 	Serving 6e4642148d0a1ea60e36931513f3ed6daf3deb5e499dcf256fa629fbc22cf247 at /path/to/mount/point
 	Now serving swarm FUSE FS                manifest=6e4642148d0a1ea60e36931513f3ed6daf3deb5e499dcf256fa629fbc22cf247 mountpoint=/path/to/mount/point
 
@@ -74,7 +74,7 @@ In your OS, via terminal or file browser, you now should be able to access the c
 
 Access
 ^^^^^^^^
-Through your terminal or file browser, you can interact with your new mount as if it was a local directory. Thus you can add, remove, edit, create files and directories just as on a local directory. Every such action will interact with swarm, taking effect on the Swarm distributed storage. Every such action also will result **in a new hash** for your mounted directory. If you would unmount and remount the same directory with the previous hash, your changes would seem to have been lost (effectively you are just mounting the previous version). While you change the current mount, this happens under the hood and your mount remains up-to-date.
+Through your terminal or file browser, you can interact with your new mount as if it was a local directory. Thus you can add, remove, edit, create files and directories just as on a local directory. Every such action will interact with Swarm, taking effect on the Swarm distributed storage. Every such action also will result **in a new hash** for your mounted directory. If you would unmount and remount the same directory with the previous hash, your changes would seem to have been lost (effectively you are just mounting the previous version). While you change the current mount, this happens under the hood and your mount remains up-to-date.
 
 Unmount
 ^^^^^^^^
@@ -85,9 +85,9 @@ To unmount a swarmfs mount, either use the List Mounts command below, or use a k
 	swarm fs unmount --ipcpath <path-to-bzzd.ipc> <mount-point>
 	> 41e422e6daf2f4b32cd59dc6a296cce2f8cce1de9f7c7172e9d0fc4c68a3987a
 
-The returned hash is the latest manifest version that was mounted. 
+The returned hash is the latest manifest version that was mounted.
 You can use this hash to remount the latest version with the most recent changes.
-	 
+
 
 List Mounts
 ^^^^^^^^^^^^^^^^^^

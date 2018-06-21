@@ -1,8 +1,10 @@
 .. _updownload:
 
 ***************************
-Uploading and Downloading
+Uploading and downloading
 ***************************
+
+..  contents::
 
 Introduction
 ==================================

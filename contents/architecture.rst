@@ -22,11 +22,11 @@ Swarm defines 3 crucial notions:
   A reference is a unique identifier of a file that allows clients to retrieve and access the content. For unencrypted content the file reference is the cryptographic hash of the data and serves as its content address. This hash reference is a 32 byte hash, which is serialised with 64 hex bytes. In case of an encrypted file the reference has two equal-length components: the first 32 bytes are the content address of the encrypted asset, while the second 32 bytes are the decryption key, altogether 64 bytes, serialised as 128 hex bytes.
 
 :dfn:`manifest`
-  A manifest is a data structure describing file collections; they specify paths and corresponding content hashes allowing for URL based content retrieval. The :ref:`bzz protocol suite` assumes that the content referenced in the domain is a manifest and renders the content entry whose path matches the one in the request path. Manifests can also be mapped to a filesystem directory tree, which allows for uploading and downloading directories. Finally, manifests can also be considered indexes, so it can be used to implement a simple key-value store, or alternatively, a database index. This offers the functionality of :dfn:`virtual hosting`, storing entire directories, web3.0 websites or primitive data structures; analogous to web2.0, with centralized hosting taken out of the equation. 
+  A manifest is a data structure describing file collections; they specify paths and corresponding content hashes allowing for URL based content retrieval. The :ref:`bzz protocol suite` assumes that the content referenced in the domain is a manifest and renders the content entry whose path matches the one in the request path. Manifests can also be mapped to a filesystem directory tree, which allows for uploading and downloading directories. Finally, manifests can also be considered indexes, so it can be used to implement a simple key-value store, or alternatively, a database index. This offers the functionality of :dfn:`virtual hosting`, storing entire directories, web3 websites or primitive data structures; analogous to web2.0, with centralized hosting taken out of the equation.
 
 .. image:: img/dapp-page.svg
    :alt: Example of how Swarm could serve a web page
-   :width: 400 
+   :width: 400
 
 In this guide, content is understood very broadly in a technical sense denoting any blob of data.
 Swarm defines a specific identifier for a file. This identifier part of the reference serves as the retrieval address for the content.
@@ -46,7 +46,7 @@ Using ENS for domain name resolution, the url scheme provides
 content retrieval based on mnemonic (or branded) names, much like the DNS of the world wide web, but without servers.
 MRU is an off-chain solution for communicating updates to a resource, it offers cheaper and faster updates than ENS, yet the updates can be consolidated on ENS by any third party willing to pay for the transaction.
 
-Just as content in Swarm is addressed with a 32-byte hash, so is every Swarm node in the network associated with a 32-byte hash address. 
+Just as content in Swarm is addressed with a 32-byte hash, so is every Swarm node in the network associated with a 32-byte hash address.
 All Swarm nodes have their own :dfn:`base address` which is derived as the (Keccak 256bit SHA3) hash of the public key of an ethereum account:
 
 .. note::
@@ -54,8 +54,8 @@ All Swarm nodes have their own :dfn:`base address` which is derived as the (Kecc
   `Swarm node address = sha3(ethereum account public key)` - the so called :dfn:`swarm base account` of the node.
   These node addresses define a location in the same address space as the data.
 
-When content is uploaded to Swarm it is chopped up into pieces called chunks. 
-Each chunk is accessed at the address deterministically derived from its content (using the chunk hash). 
+When content is uploaded to Swarm it is chopped up into pieces called chunks.
+Each chunk is accessed at the address deterministically derived from its content (using the chunk hash).
 The references of data chunks are themselves packaged into a chunk which in turn has its own hash. In this way the content gets mapped into a merkle tree. This hierarchical Swarm hash construct allows for merkle proofs for chunks within a piece of content, thus providing Swarm with integrity protected random access into (large) files (allowing for instance skipping safely in a streaming video or looking up a key in a database file).
 
 Swarm implements a :dfn:`distributed preimage archive`, which is essentially a specific type of content addressed distributed hash table, where the node(s) closest to the address of a chunk do not only serve information about the content but actually host the data.
@@ -160,7 +160,7 @@ Distributed preimage archive
 DHTs for decentralised content addressed storage typically associate content fingerprints with a list of nodes (seeders) who can serve that content. However, the same structure can be used directly: it is not information about the location of content that is stored at the node closest to the address (fingerprint), but the content itself. We call this structure :dfn:`distributed preimage archive` (DPA).
 
 .. image:: img/dpa-chunking.svg
-   :alt: The DPA and chunking in Swarm 
+   :alt: The DPA and chunking in Swarm
    :width: 500
 
 A DPA is opinionated about which nodes store what content and this implies a few more restrictions: (1) load balancing of content  among nodes is required and is accomplished by splitting content into equal sized chunks (:dfn:`chunking`); (2) there has to be a process whereby chunks get to where they are supposed to be stored (:dfn:`syncing`); and (3) since nodes do not have a say in what they store, measures of :dfn:`plausible deniability` should be employed.
@@ -224,7 +224,7 @@ In order to reduce network traffic resulting from receiving chunks from multiple
 For each peer connection in both directions, the source peer sends an  :dfn:`offeredHashes` message containing a batch of hashes offered to push to the recipient. Recipient responds with a  :dfn:`wantedHashes`.
 
 .. image:: img/syncing-high-level.svg
-   :alt: Syncing chunks in the Swarm network 
+   :alt: Syncing chunks in the Swarm network
    :width: 500
 
 Data layer
@@ -264,13 +264,11 @@ This recursive process of constructing the Swarm hash tree will result in a sing
 
 When the FileStore is handed a reference for file retrieval, it calls the Chunker which hands back a seekable document reader to the caller. This is a  :dfn:`lazy reader` in the sense that it retrieves parts of the underlying document only as they are being read (with some buffering similar to a video player in a browser). Given the reference, the FileStore takes the Swarm hash and using the NetStore retrieves the root chunk of the document. After decrypting it if needed, references to chunks on the next level are processed. Since data offsets can easily be mapped to a path of intermediate chunks, random access to a document is efficient and supported on the lowest level. The HTTP API offers range queries and can turn them to offset and span for the lower level API to provide integrity protected random access to files.
 
-Swarm exposes the FileStore API via the ``bzz-raw`` url scheme directly on the http local proxy server (see :ref:`BZZ URL Schemes` and :ref:`API Reference`). This API allows file upload via POST request as well as file download with GET request. Since on this level the files have no mime-type associated, in order to properly display or serve to an application, the ``content_type`` query parameter can be added to the url. This will set the proper content type in the HTTP response.
+Swarm exposes the FileStore API via the :ref:`bzz-raw` URL scheme directly on the http local proxy server (see :ref:`BZZ URL Schemes` and :ref:`API Reference`). This API allows file upload via POST request as well as file download with GET request. Since on this level the files have no mime-type associated, in order to properly display or serve to an application, the ``content_type`` query parameter can be added to the url. This will set the proper content type in the HTTP response.
 
 
-.. _manifests_arch::
 Manifests
 --------------
-
 
 The Swarm :dfn:`manifest` is a structure that defines a mapping between arbitrary paths and files to handle collections. It also contains metadata associated with the collection and its objects (files). Most importantly a manifest entry specifies the media mime type of files so that browsers know how to handle them. You can think of a manifest as (1) routing table, (2) an index or (3) a directory tree, which make it possible for Swarm to implement (1) web sites, (2) databases and (3) filesystem directories.
 Manifests provide the main mechanism to allow URL based addressing in Swarm. The domain part of the URL maps onto a manifest in which the path part of the URL is looked up to arrive at a file entry to serve.
@@ -283,7 +281,7 @@ Swarm exposes the manifest API via the `bzz` URL scheme, see :ref:`BZZ URL Schem
 
 These HTTP proxy API is described in detail in the :ref:`API Reference` section.
 
-:Note: In POC4, json manifests will be replaced by serialisation scheme that enables compact path proofs, essentially asserting that a file is part of a collection that can be verified by any third party or can smart contract.
+.. note:: In POC4, json manifests will be replaced by a serialisation scheme that enables compact path proofs, essentially asserting that a file is part of a collection that can be verified by any third party or smart contract.
 
 .. index::
    manifest
@@ -297,8 +295,10 @@ Components
 In what follows we describe the components in more detail.
 
 .. _swarm_hash:
+
 Swarm Hash
 ---------------
+
 .. index::
    hash
    bzzhash
@@ -328,10 +328,10 @@ Chunker
 .. index::
    chunker
 
- :dfn:`Chunker` is the interface to a component that is responsible for disassembling and assembling larger data.
+:dfn:`Chunker` is the interface to a component that is responsible for disassembling and assembling larger data.
 More precisely :dfn:`Splitter`  disassembles, while :dfn:`Joiner` reassembles documents.
 
-Our Splitter implementation is the  :dfn:`pyramid` chunker that does not need the size of the file, thus is able to process live capture streams.When  :dfn:`splitting` a document, the freshly created chunks are pushed to the DPA via the NetStore and calculates the Swarm hash tree to return the  :dfn:`root hash` of the document that can be used as a reference when retrieving the file.
+Our Splitter implementation is the :dfn:`pyramid` chunker that does not need the size of the file, thus is able to process live capture streams. When :dfn:`splitting` a document, the freshly created chunks are pushed to the DPA via the NetStore and calculates the Swarm hash tree to return the :dfn:`root hash` of the document that can be used as a reference when retrieving the file.
 
 When :dfn:`joining` a document, the chunker needs the Swarm root hash and returns a  :dfn:`lazy reader`. While joining, for chunks not found locally, network protocol requests are initiated to retrieve chunks from other nodes. If chunks are retrieved (i.e. retrieved from memory cache, disk-persisted db or via cloud based Swarm delivery from other peers in the DPA), the chunker then puts these together on demand as and where the content is being read.
 
