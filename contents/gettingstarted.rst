@@ -1,5 +1,7 @@
+.. _Getting Started:
+
 ******************************
-Getting started
+Getting Started
 ******************************
 
 The first thing to do is to start up your Swarm node and connect it to the Swarm.
@@ -67,7 +69,7 @@ for light client mode.
 
 .. note::
 
-When you use the light mode, you don't have to sync the node before it can be used to answer ENS queries. However, please note that light mode is still an experimental feature.
+  When you use the light mode, you don't have to sync the node before it can be used to answer ENS queries. However, please note that light mode is still an experimental feature.
 
 After the connection is established, open another terminal window and connect to Swarm:
 

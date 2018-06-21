@@ -1,8 +1,8 @@
 *******************************
-Node-to-node messaging with PSS
+PSS
 *******************************
 
-``pss`` (Postal Service over Swarm) is a messaging protocol over Swarm with strong privacy features.
+:dfn:`pss` (Postal Service over Swarm) is a messaging protocol over Swarm with strong privacy features.
 The pss API is exposed through a JSON RPC interface described in the `API Reference <./apireference.rst#PSS>`_,
 here we explain the basic concepts and features.
 
@@ -94,7 +94,10 @@ Receiving messages
 
 You can subscribe to incoming messages using a topic. Since subscription needs push notifications, the supported RPC transport interfaces are websockets and IPC.
 
-
+.. important::
+  ``pss`` does not guarantee message ordering (`Best-effort delivery <https://en.wikipedia.org/wiki/Best-effort_delivery>`_)	
+  nor message delivery (e.g. messages to offline nodes will not be cached and replayed) at the moment.
+  
 Advanced features
 ==================
 
