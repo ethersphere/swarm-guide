@@ -29,9 +29,9 @@ Privacy features
 
 Thanks to end-to-end encryption, pss caters for private communication.
 
-Due to forwarding kademlia, pss offers sender anonymity.
+Due to forwarding kademlia, ``pss`` offers sender anonymity.
 
-Using partial addressing, pss offers a sliding scale of recipient anonymity: the larger the destination neighbourhood (the smaller prefix you reveal of the intended recipient overlay address), the more difficult it is to identify the real recipient. On the other hand, since dark routing is inefficient, there is a trade off between anonymity on the one hand and message delivery latency and bandwidth (and therefore cost) on the other. This choice is left to the application.
+Using partial addressing, ``pss`` offers a sliding scale of recipient anonymity: the larger the destination neighbourhood (the smaller prefix you reveal of the intended recipient overlay address), the more difficult it is to identify the real recipient. On the other hand, since dark routing is inefficient, there is a trade off between anonymity on the one hand and message delivery latency and bandwidth (and therefore cost) on the other. This choice is left to the application.
 
 Forward secrecy is provided if you use the `Handshakes` module.
 
@@ -73,7 +73,7 @@ There are a few prerequisites for sending a message over ``pss``:
   If *no* address is given (zero-length byte slice), routing is effectively deactivated,
   and the message is passed to all peers by all peers.
 
-Upon sending the message it is encrypted and passed on from peer to peer. Any node along the route that can successfully decrypt the message is regarded as a recipient. If the destination is a neighbourhood, the message is passed around so ultimately it reached the intended recipient which also forwards the message to their peers, recipients will continue to pass on the message to their peers, to make it harder for anyone spying on the traffic to tell where the message "ended up."n
+Upon sending the message it is encrypted and passed on from peer to peer. Any node along the route that can successfully decrypt the message is regarded as a recipient. If the destination is a neighbourhood, the message is passed around so ultimately it reaches the intended recipient which also forwards the message to their peers, recipients will continue to pass on the message to their peers, to make it harder for anyone spying on the traffic to tell where the message "ended up."
 
 After you associate an encryption key with a destination they will be checked against any message that comes through (when sending or receiving) given it matches the topic and the address in the message.
 
@@ -95,7 +95,7 @@ Receiving messages
 You can subscribe to incoming messages using a topic. Since subscription needs push notifications, the supported RPC transport interfaces are websockets and IPC.
 
 .. important::
-  ``pss`` does not guarantee message ordering (`Best-effort delivery <https://en.wikipedia.org/wiki/Best-effort_delivery>`_)	
+  ``pss`` does not guarantee message ordering (`Best-effort delivery <https://en.wikipedia.org/wiki/Best-effort_delivery>`_)
   nor message delivery (e.g. messages to offline nodes will not be cached and replayed) at the moment.
   
 Advanced features
