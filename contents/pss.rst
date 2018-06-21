@@ -14,7 +14,7 @@ here we explain the basic concepts and features.
 Basics
 =============
 
-With ``pss`` you can send messages to any node in the swarm network. The messages are routed in the same manner as retrieve requests for chunks. Instead of chunk hash reference, pss messages specify a destination in the overlay address space independently of the message payload. This destination can describe a *specific node* if it is a complete overlay address or a *neighbourhood* if it is partially specified one. Up to the destination, the message is relayed through devp2p peer connections using :dfn:`forwarding kademlia` (passing messages via semi-permanent peer-to-peer TCP connections between relaying nodes using kademlia routing). Within the destination neighbourhood the message is broadcast using gossip.
+With ``pss`` you can send messages to any node in the Swarm network. The messages are routed in the same manner as retrieve requests for chunks. Instead of chunk hash reference, ``pss`` messages specify a destination in the overlay address space independently of the message payload. This destination can describe a *specific node* if it is a complete overlay address or a *neighbourhood* if it is partially specified one. Up to the destination, the message is relayed through devp2p peer connections using :dfn:`forwarding kademlia` (passing messages via semi-permanent peer-to-peer TCP connections between relaying nodes using kademlia routing). Within the destination neighbourhood the message is broadcasted using a gossip protocol.
 
 Since ``pss`` messages are encrypted, ultimately *the recipient is whoever can decrypt the message*. Encryption can be done using asymmetric or symmetric encryption methods.
 
@@ -31,7 +31,7 @@ Thanks to end-to-end encryption, pss caters for private communication.
 
 Due to forwarding kademlia, ``pss`` offers sender anonymity.
 
-Using partial addressing, ``pss`` offers a sliding scale of recipient anonymity: the larger the destination neighbourhood (the smaller prefix you reveal of the intended recipient overlay address), the more difficult it is to identify the real recipient. On the other hand, since dark routing is inefficient, there is a trade off between anonymity on the one hand and message delivery latency and bandwidth (and therefore cost) on the other. This choice is left to the application.
+Using partial addressing, ``pss`` offers a sliding scale of recipient anonymity: the larger the destination neighbourhood (the smaller prefix you reveal of the intended recipient overlay address), the more difficult it is to identify the real recipient. On the other hand, since dark routing is inefficient, there is a trade-off between anonymity on the one hand and message delivery latency and bandwidth (and therefore cost) on the other. This choice is left to the application.
 
 Forward secrecy is provided if you use the `Handshakes` module.
 

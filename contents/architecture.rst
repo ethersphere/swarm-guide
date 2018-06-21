@@ -264,7 +264,7 @@ This recursive process of constructing the Swarm hash tree will result in a sing
 
 When the FileStore is handed a reference for file retrieval, it calls the Chunker which hands back a seekable document reader to the caller. This is a  :dfn:`lazy reader` in the sense that it retrieves parts of the underlying document only as they are being read (with some buffering similar to a video player in a browser). Given the reference, the FileStore takes the Swarm hash and using the NetStore retrieves the root chunk of the document. After decrypting it if needed, references to chunks on the next level are processed. Since data offsets can easily be mapped to a path of intermediate chunks, random access to a document is efficient and supported on the lowest level. The HTTP API offers range queries and can turn them to offset and span for the lower level API to provide integrity protected random access to files.
 
-Swarm exposes the FileStore API via the :ref:`bzz-raw` url scheme directly on the http local proxy server (see :ref:`BZZ URL Schemes` and :ref:`API Reference`). This API allows file upload via POST request as well as file download with GET request. Since on this level the files have no mime-type associated, in order to properly display or serve to an application, the ``content_type`` query parameter can be added to the url. This will set the proper content type in the HTTP response.
+Swarm exposes the FileStore API via the :ref:`bzz-raw` URL scheme directly on the http local proxy server (see :ref:`BZZ URL Schemes` and :ref:`API Reference`). This API allows file upload via POST request as well as file download with GET request. Since on this level the files have no mime-type associated, in order to properly display or serve to an application, the ``content_type`` query parameter can be added to the url. This will set the proper content type in the HTTP response.
 
 
 Manifests
@@ -281,7 +281,7 @@ Swarm exposes the manifest API via the `bzz` URL scheme, see :ref:`BZZ URL Schem
 
 These HTTP proxy API is described in detail in the :ref:`API Reference` section.
 
-.. note:: In POC4, json manifests will be replaced by serialisation scheme that enables compact path proofs, essentially asserting that a file is part of a collection that can be verified by any third party or can smart contract.
+.. note:: In POC4, json manifests will be replaced by a serialisation scheme that enables compact path proofs, essentially asserting that a file is part of a collection that can be verified by any third party or smart contract.
 
 .. index::
    manifest
@@ -331,7 +331,7 @@ Chunker
 :dfn:`Chunker` is the interface to a component that is responsible for disassembling and assembling larger data.
 More precisely :dfn:`Splitter`  disassembles, while :dfn:`Joiner` reassembles documents.
 
-Our Splitter implementation is the  :dfn:`pyramid` chunker that does not need the size of the file, thus is able to process live capture streams.When  :dfn:`splitting` a document, the freshly created chunks are pushed to the DPA via the NetStore and calculates the Swarm hash tree to return the  :dfn:`root hash` of the document that can be used as a reference when retrieving the file.
+Our Splitter implementation is the :dfn:`pyramid` chunker that does not need the size of the file, thus is able to process live capture streams. When :dfn:`splitting` a document, the freshly created chunks are pushed to the DPA via the NetStore and calculates the Swarm hash tree to return the :dfn:`root hash` of the document that can be used as a reference when retrieving the file.
 
 When :dfn:`joining` a document, the chunker needs the Swarm root hash and returns a  :dfn:`lazy reader`. While joining, for chunks not found locally, network protocol requests are initiated to retrieve chunks from other nodes. If chunks are retrieved (i.e. retrieved from memory cache, disk-persisted db or via cloud based Swarm delivery from other peers in the DPA), the chunker then puts these together on demand as and where the content is being read.
 

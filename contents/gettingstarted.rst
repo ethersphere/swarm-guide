@@ -1,7 +1,7 @@
 .. _Getting Started:
 
 ******************************
-Getting Started
+Getting started
 ******************************
 
 The first thing to do is to start up your Swarm node and connect it to the Swarm.
@@ -193,4 +193,4 @@ If you would like to join the public Swarm cluster operated by the Ethereum Foun
 
 https://gist.github.com/homotopycolimit/db446fa3269a199762e67b2ca037dbeb
 
-The cluster functions as a free-to-use public access gateway to the Swarm, without the need to run a local node. To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` url.
+The cluster functions as a free-to-use public access gateway to Swarm, without the need to run a local node. To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` URL.
