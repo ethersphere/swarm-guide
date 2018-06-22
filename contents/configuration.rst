@@ -79,7 +79,6 @@ General configuration parameters
    "PublicKey","n/a","n/a", "n/a","Public key of swarm base account"
    "n/a","--recursive","n/a", "false","Upload directories recursively (default false)"
    "n/a","--stdin","","n/a","Reads data to be uploaded from stdin"
-   "n/a","--stdin","","n/a","Reads data to be uploaded from stdin"
    "n/a","--store.path value","SWARM_STORE_PATH","<$GETH_ENV_DIR>/swarm/bzz-<$BZZ_KEY>/chunks","Path to leveldb chunk DB"
    "n/a","--store.size value","SWARM_STORE_CAPACITY","5000000","Number of chunks (5M is roughly 20-25GB) (default 5000000)]"
    "n/a","--store.cache.size value","SWARM_STORE_CACHE_CAPACITY","5000","Number of recent chunks cached in memory (default 5000)"            
