@@ -23,10 +23,11 @@ Swarm Orange Summit
 Orange papers
 --------------
 
-* `Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for Swarm. May 2016 <https://open.swarm-gateways.net/bzz:/theswarm.test/ethersphere/orange-papers/1/sw^3.pdf>`_
-* `Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for Swarm secured by masked audit secret hash. May 2016 <https://open.swarm-gateways.net/bzz:/theswarm.test/ethersphere/orange-papers/2/smash.pdf>`_
-* `Viktor Trón, Aron Fischer, Ralph Pilcher, Fabio Barone: swap swear and swindle games: scalable infrastructure for decentralised service economies. Work in progress. June 2018. <https://www.sharelatex.com/1452913241cqmzrpfpjkym>`_
-* `Viktor Trón, Aron Fischer, Daniel A. Nagy. Swarm: a decentralised peer-to-peer network for messaging and storage. Work in progress. June, 2018. <https://www.sharelatex.com/6741568343dhhjfkjpnfwz>`_
+
+* Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for Swarm. May 2016 - https://swarm-gateways.net/bzz:/theswarm.eth/ethersphere/orange-papers/1/sw^3.pdf
+* Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for Swarm secured by masked audit secret hash. May 2016 - https://swarm-gateways.net/bzz:/theswarm.eth/ethersphere/orange-papers/2/smash.pdf
+* Viktor Trón, Aron Fischer, Ralph Pilcher, Fabio Barone: swap swear and swindle games: scalable infrastructure for decentralised service economies. Work in progress. June 2018. - https://www.sharelatex.com/read/yszmsdqyqbvc
+* Viktor Trón, Aron Fischer, Daniel A. Nagy. Swarm: a decentralised peer-to-peer network for messaging and storage. Work in progress. June, 2018. - https://www.sharelatex.com/read/gxhwssqzgfpr
 * P.O.T. data structures and databases on swarm. In preparation.
 * Mutable Resource Updates. An off-chain scheme for versioning content in Swarm. In preparation.
 * Privacy on swarm. Encryption, access control, private browsing in Swarm. Tentative.
