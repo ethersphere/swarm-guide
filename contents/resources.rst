@@ -7,26 +7,28 @@ Homepage
 
 the *Swarm homepage* is accessible via Swarm at `theswarm.eth`. The page can be accessed through the public gateway on http://swarm-gateways.net/bzz:/theswarm.eth/
 
-POC2 blogpost
+Blogposts
 ---------------
 
-https://blog.ethereum.org/2016/12/15/Swarm-alpha-public-pilot-basics-Swarm/
+* [Announcement of POC3](https://blog.ethereum.org/2018/06/21/announcing-swarm-proof-of-concept-release-3/)
+* [POC2 public alpha announcement](https://blog.ethereum.org/2016/12/15/Swarm-alpha-public-pilot-basics-Swarm/)
 
 Swarm Orange Summit
 ----------------------
 
 * `Swarm summit 2018 promo video <https://swarm-gateways.net/bzz:/079b4f4155d7e8b5ee76e8dd4e1a6a69c5b483d499654f03d0b3c588571d6be9/>`_
-* `2018 May 7-11 Ljubljana <https://ethersphere.github.io/swarm-summit-2018/>`_
+* `2018 May 7-11 Ljubljana <https://swarm-gateways.net/bzz:/swarm-orange-summit.eth/>`_
 * 2017 June 4-10 Berlin
 
 
 Orange papers
 --------------
 
-* `Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for Swarm. May 2016 <https://open.swarm-gateways.net/bzz:/theswarm.test/ethersphere/orange-papers/1/sw^3.pdf>`_
-* `Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for Swarm secured by masked audit secret hash. May 2016 <https://open.swarm-gateways.net/bzz:/theswarm.test/ethersphere/orange-papers/2/smash.pdf>`_
-* `Viktor Trón, Aron Fischer, Ralph Pilcher, Fabio Barone: swap swear and swindle games: scalable infrastructure for decentralised service economies. Work in progress. June 2018. <https://www.sharelatex.com/1452913241cqmzrpfpjkym>`_
-* `Viktor Trón, Aron Fischer, Daniel A. Nagy. Swarm: a decentralised peer-to-peer network for messaging and storage. Work in progress. June, 2018. <https://www.sharelatex.com/6741568343dhhjfkjpnfwz>`_
+
+* Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for Swarm. May 2016 - https://swarm-gateways.net/bzz:/theswarm.eth/ethersphere/orange-papers/1/sw^3.pdf
+* Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for Swarm secured by masked audit secret hash. May 2016 - https://swarm-gateways.net/bzz:/theswarm.eth/ethersphere/orange-papers/2/smash.pdf
+* Viktor Trón, Aron Fischer, Ralph Pilcher, Fabio Barone: swap swear and swindle games: scalable infrastructure for decentralised service economies. Work in progress. June 2018. - https://www.sharelatex.com/read/yszmsdqyqbvc, `pfd on swarm  <https://swarm-gateways.net/bzz:/ca5f4684b380644c3042fe81f65b3b9a0668e2e3cff53578fb68af8043f3c0b6/>`_.
+* Viktor Trón, Aron Fischer, Daniel A. Nagy. Swarm: a decentralised peer-to-peer network for messaging and storage. Work in progress. June, 2018. - https://www.sharelatex.com/read/gxhwssqzgfpr; `pdf on swarm <https://swarm-gateways.net/bzz:/4f45ae847fc55afb8bfdc381bae0809a0ce29bafc07b41293838fc7afae95d34/>`_.
 * P.O.T. data structures and databases on swarm. In preparation.
 * Mutable Resource Updates. An off-chain scheme for versioning content in Swarm. In preparation.
 * Privacy on swarm. Encryption, access control, private browsing in Swarm. Tentative.
