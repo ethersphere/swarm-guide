@@ -40,8 +40,8 @@ https://github.com/ethersphere/go-ethereum/tree/swarm-network-rewrite/
 The latest **stable** version can be found on:
 https://github.com/ethereum/go-ethereum/
 
-Prerequisites
--------------
+1. Prerequisites
+----------------
 
 Building the Swarm daemon :command:`swarm` requires the following packages:
 
@@ -90,8 +90,8 @@ macOS
 
     brew install go git
 
-Configuration
--------------
+2. Configuration
+----------------
 
 You should then prepare your go environment, for example:
 
@@ -104,8 +104,8 @@ You should then prepare your go environment, for example:
   echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
   source ~/.bashrc
 
-Compiling and installing
--------------------------
+3. Compiling and installing
+---------------------------
 
 Once all prerequisites are met, download and install packages and dependencies for go-ethereum;
 
@@ -152,8 +152,8 @@ This should return some relevant information. For example:
   GOPATH=/home/user/go
   GOROOT=/usr/local/go
 
-Updating your client
----------------------
+4. Updating your client
+-----------------------
 
 To update your client simply download the newest source code and recompile.
 
