@@ -34,10 +34,10 @@ After that you can install the stable version of Swarm:
 Installing Swarm from source
 =============================
 
-The latest Swarm source code can be found on github:
-https://github.com/ethersphere/go-ethereum/tree/swarm-network-rewrite/
+The latest development Swarm source code can be found on github:
+https://github.com/ethersphere/go-ethereum/tree/develop
 
-The latest **stable** version can be found on:
+The Swarm source code for the latest **stable** version can be found on:
 https://github.com/ethereum/go-ethereum/
 
 Prerequisites
@@ -113,9 +113,8 @@ Once all prerequisites are met, download and install packages and dependencies f
 
   mkdir -p $GOPATH/src/github.com/ethereum
   cd $GOPATH/src/github.com/ethereum
-  git clone https://github.com/ethersphere/go-ethereum
+  git clone https://github.com/ethereum/go-ethereum
   cd go-ethereum
-  git checkout swarm-network-rewrite
   go get github.com/ethereum/go-ethereum
   cd $GOPATH/src/github.com/ethereum/go-ethereum
 
