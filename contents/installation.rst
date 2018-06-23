@@ -123,9 +123,10 @@ This will download the master source code branch.
 
 Finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``geth``.
 
+.. code-block:: none
+
   go install ./cmd/geth
   go install ./cmd/swarm
-
 
 You can now run :command:`swarm` to start your Swarm node.
 Let's check if the installation of `swarm` was successful:
