@@ -9,7 +9,7 @@ Introduction
    :width: 238px
    :scale: 50 %
    :alt: swarm-logo
-   :align: right
+   :align: left
 
 
 Swarm is a distributed storage platform and content distribution service, a native base layer service of the ethereum :dfn:`web3` stack. The primary objective of Swarm is to provide a sufficiently decentralized and redundant store of Ethereum's public record, in particular to store and distribute dapp code and data as well as blockchain data. From an economic point of view, it allows participants to efficiently pool their storage and bandwidth resources in order to provide these services to all participants of the network, all while being incentivised by Ethereum.
@@ -26,10 +26,6 @@ Objective
 Swarm's broader objective is to provide infrastructure services for developers of decentralised web applications (dapps), notably: messaging, data streaming, peer to peer accounting, mutable resource updates, storage insurance, proof of custody scan and repair, payment channels and database services.
 
 From the end user's perspective, Swarm is not that different from the world wide web, with the exception that uploads are not hosted on a specific server. Swarm offers a peer-to-peer storage and serving solution that is DDoS-resistant, has zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer-to-peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution (using ENS), service payments and content availability insurance.
-
-.. raw:: html
-
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/xrw9rvee7rc" style="margin-bottom: 30px;" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 Please refer to our `development roadmap <https://github.com/ethersphere/swarm/wiki/roadmap>`_ and our `roadmap board <https://github.com/orgs/ethersphere/projects/5>`_ to stay informed with our progress.
 
@@ -224,8 +220,8 @@ Special thanks
 * Daniel Kalman, Benjamin Kampmann, Daniel Lengyel, Anand Jaisingh for contributing to the swarm websites
 * Felipe Santana, Paolo Perez and Paratii team for filming at the 2017 swarm summit and making the summit website
 
-Community
--------------------
+Contact
+===========
 
 Daily development and discussions are ongoing in various gitter channels:
 
@@ -243,6 +239,8 @@ Swarm hangouts:
 * standup: Monday to Friday 4pm CEST
 * weekly roundtable: Tuesday 4.30pm CEST
 
+You are also invited to follow us on `twitter <https://twitter.com/ethersphere>`_.
+
 
 
 
@@ -255,6 +253,7 @@ Swarm guide (this document)
 
 * This document's source code is found at https://github.com/ethersphere/Swarm-guide
 * The HTML rendered version is available at https://swarm-guide.readthedocs.io/en/latest/
+
 
 Homepage
 --------
