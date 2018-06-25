@@ -249,6 +249,7 @@ The NetStore is extending local store to a distributed storage of Swarm and impl
 
 .. image:: img/storage-layer.svg
    :alt: High level storage layer in Swarm
+   :width: 500
 
 Files
 ---------
