@@ -35,9 +35,11 @@ Using this account, connect to Swarm with
 
 .. code-block:: none
 
+  swarm --bzzaccount <your-account-here>
+  # in our example
   swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 
-(replacing 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 with your address).
+(You should replace 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 with your address).
 
 Verifying that your local Swarm node is running
 -----------------------------------------------
@@ -181,7 +183,7 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 
 .. code-block:: shell
 
-    geth --exec "admin.nodeInfo.enode" attach /path/to/bzzd.ipc
+    geth --exec "admin.nodeInfo.enode" attach ipc:/path/to/bzzd.ipc
 
 .. note::
   Note how ``geth`` is used for two different purposes here: You use it to run an Ethereum Mainnet node for ENS lookups. But you also use it to "attach" to the Swarm node to send commands to it.
