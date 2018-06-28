@@ -19,6 +19,7 @@ This documentation was created with curious end-users, third web enterpreneurs a
 Table of contents:
 
 .. toctree::
+   :numbered:
    :maxdepth: 3
 
    introduction
