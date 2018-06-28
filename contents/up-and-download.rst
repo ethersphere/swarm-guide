@@ -76,9 +76,9 @@ You can also specify a custom proxy with `--bzzapi`:
   swarm --bzzapi http://localhost:8500 down bzz:/<hash>            #downloads the file at <hash> to the current working directory using the localhost node
 
 
- Downloading a single file from a multi-entry manifest can be done with (``<hash>`` resolves into a multi-entry manifest):
+Downloading a single file from a multi-entry manifest can be done with (``<hash>`` resolves into a multi-entry manifest):
 
- .. code-block:: none
+.. code-block:: none
 
   swarm down bzz:/<hash>/index.html            #downloads index.html to the current working directory
   swarm down bzz:/<hash>/index.html file.tmp   #downloads index.html as file.tmp in the current working directory
@@ -126,7 +126,7 @@ You can now access index.html at
 .. code-block:: none
 
   http://localhost:8500/bzz:/ef6fc0747d1fbaf86d769b3eed1c836733a30ab90f84c912915c2a300a94ec5b/
- 
+
 and also at
 
 .. code-block:: none
