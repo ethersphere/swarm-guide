@@ -40,7 +40,7 @@ Let's create a directory containing the two orange papers and an html index file
 We now use the ``swarm up`` command to upload the directory to swarm to create a mini virtual site.
 
 .. note::
-   In this example we are using the public gateway through the `bzz-api` option in order to upload. The examples below assume a node running on localhost to access content. Make sure to run a local node to reproduce these examples 
+   In this example we are using the public gateway through the `bzz-api` option in order to upload. The examples below assume a node running on localhost to access content. Make sure to run a local node to reproduce these examples
 
 .. code-block:: none
 
@@ -135,11 +135,11 @@ Swarm manifests don't "break" like a file system. In a file system, the director
   ------subdir2file.ext
 
 In swarm, path matching does not happen on a given path separator, but **on common prefixes**. Let's look at an example:
-The current manifest for the ``theswarm.test`` homepage is as follows:
-  
+The current manifest for the ``theswarm.eth`` homepage is as follows:
+
 .. code-block:: none
 
-  wget -O- "http://open.swarm-gateways.net/bzz-raw:/theswarm.test/ > manifest.json
+  wget -O- "http://swarm-gateways.net/bzz-raw:/theswarm.eth/ > manifest.json
 
   > {"entries":[{"hash":"ee55bc6844189299a44e4c06a4b7fbb6d66c90004159c67e6c6d010663233e26","path":"LICENSE","mode":420,"size":1211,"mod_time":"2018-06-12T15:36:29Z"},
               {"hash":"57fc80622275037baf4a620548ba82b284845b8862844c3f56825ae160051446","path":"README.md","mode":420,"size":96,"mod_time":"2018-06-12T15:36:29Z"},
@@ -154,10 +154,10 @@ The current manifest for the ``theswarm.test`` homepage is as follows:
     ]}
 
 
-Note the ``path`` for entry ``b17868...``: It is ``f``. This means, there are more than one entries for this manifest which start with an `f`, and all those entries will be retrieved by requesting the hash ``b17868...`` and through that arrive at the matching manifest entry:  
+Note the ``path`` for entry ``b17868...``: It is ``f``. This means, there are more than one entries for this manifest which start with an `f`, and all those entries will be retrieved by requesting the hash ``b17868...`` and through that arrive at the matching manifest entry:
 
 .. code-block:: none
-  
+
    $ wget -O- http://localhost:8500/bzz-raw:/b17868f9e5a3bf94f955780e161c07b8cd95cfd0203d2d731146746f56256e56/
 
    {"entries":[{"hash":"25e7859eeb7366849f3a57bb100ff9b3582caa2021f0f55fb8fce9533b6aa810","path":"avicon.ico","mode":493,"size":32038,"mod_time":"2018-06-12T15:36:29Z"},
@@ -166,13 +166,12 @@ Note the ``path`` for entry ``b17868...``: It is ``f``. This means, there are mo
 
 So we can see that the ``f`` entry in the root hash resolves to a manifest containing ``avicon.ico`` and ``onts/glyphicons-halflings-regular``. The latter is interesting in itself: its ``content_type`` is ``application/bzz-manifest+json``, so it points to another manifest. Its ``path`` also does contain a path separator, but that does not result in a new manifest after the path separator like a directory (e.g. at ``onts/``). The reason is that on the file system on the hard disk, the ``fonts`` directory only contains *one* directory named ``glyphicons-halflings-regular``, thus creating a new manifest for just ``onts/`` would result in an unnecessary lookup. This general approach has been chosen to limit unnecessary lookups that would only slow down retrieval, and manifest "forks" happen in order to have the logarythmic bandwidth needed to retrieve a file in a directory with thousands of files.
 
-When requesting ``wget -O- "http://open.swarm-gateways.net/bzz-raw:/theswarm.test/favicon.ico``, swarm will first retrieve the manifest at the root hash, match on the first ``f`` in the entry list, resolve the hash for that entry and finally resolve the hash for the ``favicon.ico`` file.
+When requesting ``wget -O- "http://swarm-gateways.net/bzz-raw:/theswarm.eth/favicon.ico``, swarm will first retrieve the manifest at the root hash, match on the first ``f`` in the entry list, resolve the hash for that entry and finally resolve the hash for the ``favicon.ico`` file.
 
-For the ``theswarm.test`` page, the same applies to the ``i`` entry in the root hash manifest. If we look up that hash, we'll find entries for ``mages/`` (a further manifest), and ``ndex.html``, whose hash resolves to the main ``index.html`` for the web page.
+For the ``theswarm.eth`` page, the same applies to the ``i`` entry in the root hash manifest. If we look up that hash, we'll find entries for ``mages/`` (a further manifest), and ``ndex.html``, whose hash resolves to the main ``index.html`` for the web page.
 
 Paths like ``css/`` or ``js/`` get their own manifests, just like common directories, because they contain several files.
 
 .. note::
    If a request is issued which swarm can not resolve unambiguosly, a ``300 "Multiplce Choices"`` HTTP status will be returned.
-   In the example above, this would apply for a request for ``http://open.swarm-gateways.net/bzz:/theswarm.test/i``, as it could match both ``images/`` as well as ``index.html`` 
-
+   In the example above, this would apply for a request for ``http://swarm-gateways.net/bzz:/theswarm.eth/i``, as it could match both ``images/`` as well as ``index.html``
