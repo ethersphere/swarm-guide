@@ -1,9 +1,8 @@
-
 Mutable Resource Updates
 ========================
 
 .. note::
-  Mutable Resource Updates is a highly experimental feature, available from Swarm POC3. It is under active development, so expect things to change.
+Mutable Resource Updates is a highly experimental feature, available from Swarm POC3. It is under active development, so expect things to change.
 
 We have previously learned in this guide that when we make changes in data in Swarm, the hash returned when we upload that data will change in totally unpredictable ways. With *Mutable Resource Updates*, Swarm provides a built-in way of keeping a persistent identifier to changing data.
 
@@ -13,57 +12,117 @@ The usual way of keeping the same pointer to changing data is using the Ethereum
 2. It is not be possible to change the data faster than the rate that new blocks are mined.
 3. Correct ``ENS`` resolution requires that you are always synced to the blockchain.
 
-Using *Mutable Resource Updates* you only need to register the data resource *once* with ``ENS``. After this, your lookup calls to that ``ENS`` name will automatically resolve to the latest update existing in Swarm.
+With *Mutable Resource Updates* we no longer require the ``ENS`` in order to have a non-variable identifier to changing data. The  resource  can be accessed like a regular Swarm object using the key obtained when the resource was created ( ``MRU_MANIFEST_KEY`` ) . When the data changes
+the ``MRU_MANIFEST_KEY`` will  point to the new data.
+
+If using *Mutable Resource Updates* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``MRU_MANIFEST_KEY`` will be necessary. This key will resolve to the latest version of the resource (mutating the resource will not change the key).
+
+There  are 3 different ways of interacting with *Mutable Resource Updates* : HTTP API, Golang API and Swarm console
 
 Creating a mutable resource
 ----------------------------
-.. important::
-  If you run your node with the ``--ens-api`` flag, the node will make an ``ENS`` lookup on create and update operations to ensure that the node account is the owner of the ``ENS`` name before allowing the updates to go through. If you run the node *without* this flag, updates will *not* be checked, but will still be checked by other nodes in the network. Updates from illegitimate owners will be discarded by other nodes, and will not propagate in the network.
+.. important:: Only the private key (address) that created the Resource can update it. 
+ 
+When  creating a mutable resource one of the parameters that you will have to provide is the expected update frequency. This is an indication of how often (in seconds) your resource will change. Although you can update the resource at other rates, doing so will slow down the process of retrieving the resource. 
 
-When you create a mutable resource, you will have to supply an expected update frequency. This is an indication of how often (in number of blocks) your resource will change. Don't worry; as we will see later you can always update the resource inbetween these intervals if you want.
 
-Let's say we will want to update some data every 42 blocks (roughly every 10 minutes). The resulting resource constructor will be as follows:
 
-.. code-block:: none
+HTTP API
+~~~~~~~~
 
-  SWARMHASH=`swarm up foo.html` && curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth/42 --data $SWARMHASH
+To create a resource using the HTTP API:
+``POST /bzz-resource:/`` with the following JSON as payload:
 
-This will result in json output along the lines of:
+.. code-block:: js
 
-.. code-block:: none
+  "name": string,
+  "frequency": number,
+  "startTime": number,
+  "rootAddr" : hex string,
+  "data": hex string,
+  "multihash": boolean,none
+  "period": number,
+  "version": number,
+  "signature": hex string 
+	
+Where:
 
-  {"manifest":"94f373bb8df041687d5cc9a6cbf72ccd8886e816c7b25aa1e7776a21c55a540c","resource":"yourdomainname.eth","update":"fed6fe4ee69a45181535f11f22f2592b6d21a9de0dfd77dda358612d0cb34067"}
++ ``name`` Resource name. This is a user field. You can use any name
++ ``frequency`` Time interval the resource is expected to update at, in **seconds**.
++ ``startTime`` Time the resource is valid from, in Unix time (seconds).
++ ``ownerAddr`` Is the address derived from your public key. Hex encoded.
++ ``multihash`` Is a flag indicating whether the data field should be interpreted as raw data or a multihash
++ ``data`` Contains hex-encoded raw data or a multihash of the content the mutable resource will be initialized with
++ ``period`` Indicates for what period we are signing. Set to 1 for creation.
++ ``version`` Indicates what resource version of the period we are signing. Must be set to 1 for creation.
++ ``signature`` Signature of the digest calculated as follows digest = H(H(period, version, rootAddr), metaHash, data). Hex encoded.
+Returns the ``MRU_MANIFEST_KEY`` as a quoted string.
 
-To use ``ENS`` lookups for this resource, you use the ``setContent`` method of your ``ENS`` resolver to point to the hash in the ``manifest`` entry above. Once this is mined, you will be able to view the contents of ``foo.html`` in a browser by visiting ``http://localhost:8500/bzz:/yourdomainname.eth``
+Go API
+~~~~~~~~
 
-Now for the magic; to change this resource, you issue:
+Swarm client (package swarm/api/client) has the following method
 
-.. code-block:: none
+.. code-block:: go 
 
-  SWARMHASH=`swarm up bar.html` && curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth --data $SWARMHASH
+  CreateResource(name string, frequency, startTime uint64, data []byte, multihash bool, signer mru.Signer)
+    
+CreateResource creates a Mutable Resource with the given name and frequency, initializing it with the provided data. Data is interpreted as multihash or not                
+depending on the value of ``multihash``
 
-After this, when you enter ``http://localhost:8500/bzz:/yourdomainname.eth`` in the browser, you will see the contents of ``bar.html`` instead. Note that no update to ``ENS`` has been made in the meantime. You've saved a bit of money, and the update happens at the speed of storing a Swarm chunk.
++ ``name`` Human-readable name for your resource.
++ ``startTime`` When the resource starts to be valid. 0 means "now". Unix time in seconds.
++ ``data`` Initial data the resource will contain.
++ ``multihash`` Whether to interpret data as multihash
++ ``signer`` Signer object containing the Sign callback function
+Returns the resulting Mutable Resource manifest address that you can use to include in an ``ENS`` resolver (setContent) or reference future updates (Client.UpdateResource)
+
+Swarm console
+~~~~~~~~~~~~~
+
+The swarm CLI allows to create resources directly from the console:
+
+.. code-block:: bash
+
+  swarm --bzzaccount="<account>" resource create <frequency> [--name <name>] [--data <0x hex data> [--multihash=true/false]]
+	
+Where:
+
++ ``account`` Ethereum account needed to sign 
++ ``frequency`` Time interval the resource is expected to update at, in **seconds**.
++ ``multihash`` Is a flag indicating whether the data field should be interpreted as raw data or a multihash
++ ``data`` Contains hex-encoded raw data or a multihash of the content the mutable resource will be initialized with. Must be prefixed with 0x, and if is a swarm keccak256 hash, with 0x1b20
+
 
 Retrieving a mutable resource
 ------------------------------
 
-The above example is limited to updating Swarm web content. But Mutable Resource Updates can just as well be used to store and retrieve "raw" data aswell. This is done using the ``/raw`` subpath in the url upon update. An example:
+HTTP API
+~~~~~~~~
 
-.. code-block:: none
+Go API
+~~~~~~~~
 
-  curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth/raw --data foo
-  curl -X GET http://localhost:8500/bzz-resource:/yourdomainname.eth
+Swarm console
+~~~~~~~~~~~~~
 
-  curl -X POST http://localhost:8500/bzz-resource:/yourdomainname.eth/raw --data bar
-  curl -X GET http://localhost:8500/bzz-resource:/yourdomainname.eth
 
-The above two HTTP GET requests with curl will return "foo" and "bar" repectively.
+Updating a mutable resource
+------------------------------
 
-.. important::
-  Updates made using the *raw* subpath are served with the ``applcation/octet-stream`` mime type. This means that the receiving application needs to know itself how to interpret the underlying data.
+HTTP API
+~~~~~~~~
+
+Go API
+~~~~~~~~
+
+Swarm console
+~~~~~~~~~~~~~
 
 Mutable resource versioning
 ----------------------------
+TODO: Change block height for time in seconds
+
 
 As explained above, we need to specify a frequency parameter when we create a resource, which indicates the number of blocks that are expected to pass between each update. In Mutable Resourceswe call this the *period*. When you make an update, it will always belong to the *upcoming period*.
 
@@ -87,34 +146,3 @@ If more updates are made within one period, they will be sequentially numbered a
 * Block height ``4200014`` = version ``3.1``
 * Block height ``4200021`` = version ``3.2``
 * Block height ``4200026`` = version ``4.1``
-
-Retrieving a specific mutable resource version
------------------------------------------------
-
-We can retrieve specific Mutable Resource Update versions by adding the version numbers to the url.
-
-Either we can choose to only name the period, in which case we will get the latest version of that period. Thus, again referring to the above examples:
-
-.. code-block:: none
-
-  curl -X GET http://localhost:8500/bzz-resource:/yourdomainname.eth/1
-
-Will return the content of version ``1.1``
-
-.. code-block:: none
-
-  curl -X GET http://localhost:8500/bzz-resource:/yourdomainname.eth/3
-
-Will return the content of version ``3.2``
-
-.. code-block:: none
-
-  curl -X GET http://localhost:8500/bzz-resource:/yourdomainname.eth/3/1
-
-Will return the content of version ``3.1``
-
-.. code-block:: none
-
-  curl -X GET http://localhost:8500/bzz-resource:/yourdomainname.eth
-
-Will of course return the version ``4.1``
