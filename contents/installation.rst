@@ -2,7 +2,7 @@
 Installation and Updates
 *************************
 
-Swarm is part of the Ethereum stack, the reference implementation is currently at POC3 (proof of concept 3), or version 0.3.
+Swarm is part of the Ethereum stack, the reference implementation is currently at POC3 (proof of concept 3), or version 0.3.x
 
 
 Swarm runs on all major platforms (Linux, macOS, Windows, Raspberry Pi, Android, iOS).
@@ -34,11 +34,7 @@ After that you can install the stable version of Swarm:
 Installing Swarm from source
 =============================
 
-The latest development Swarm source code can be found on github:
-https://github.com/ethersphere/go-ethereum/tree/develop
-
-The Swarm source code for the latest **stable** version can be found on:
-https://github.com/ethereum/go-ethereum/
+The Swarm source code for can be found on https://github.com/ethereum/go-ethereum
 
 Prerequisites
 -------------
@@ -84,7 +80,7 @@ Unpack it to the /usr/local
   sudo tar -C /usr/local -xzf go1.10.1.linux-amd64.tar.gz
 
 macOS
-^^^^^^^
+^^^^^
 
 .. code-block:: shell
 
@@ -93,7 +89,7 @@ macOS
 Configuration
 -------------
 
-You should then prepare your go environment, for example:
+You should then prepare your Go environment, for example:
 
 .. code-block:: none
 
@@ -107,7 +103,7 @@ You should then prepare your go environment, for example:
 Compiling and installing
 -------------------------
 
-Once all prerequisites are met, download and install packages and dependencies for go-ethereum;
+Once all prerequisites are met, download and install packages and dependencies for go-ethereum.
 
 .. code-block:: shell
 
