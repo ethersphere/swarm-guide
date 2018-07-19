@@ -166,7 +166,7 @@ The Core team
 * Lewis Marshal - @lmars
 * Fabio Barone - @holisticode
 * Anton Evangelatov - @nonsense
-* Janos Gulyas - @janos
+* Janoš Guljaš - @janos
 * Balint Gabor - @gbalint
 * Elad Nachmias - @justelad
 
