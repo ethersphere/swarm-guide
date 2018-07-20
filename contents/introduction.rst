@@ -90,23 +90,24 @@ Swarm offers several APIs:
 Code
 ========
 
-Source code is at https://github.com/ethersphere/go-ethereum/. It is regularly merged upstream to `the Ethereum Foundation go-ethereum repository <https://github.com/ethereum/go-ethereum/>`_.
+Source code is located at https://github.com/ethereum/go-ethereum/.
 
 Status
 ---------------
 
-* The status of Swarm is proof of concept 3 release series (POC3).
-* Roadmap time board https://github.com/orgs/ethersphere/projects/5
-* https://github.com/ethersphere/Swarm/wiki/roadmap
-* https://github.com/ethereum/go-ethereum/wiki/Swarm---POC-series
+The status of Swarm is proof of concept 3 release series (POC3).
+
+Roadmap
+---------------
+
+Roadmap is located at https://github.com/ethersphere/Swarm/wiki/roadmap
 
 .. note:: Swarm is experimental code and untested in the wild. Use with extreme care. We encourage developers to connect to the testnet with their permanent nodes and give us feedback.
 
 Testnets with public gateways
 -------------------------------
 
-* Public alpha testnet running POC3 with gateway https://swarm-gateways.net/
-* Staging network running experimental code with gateway https://open.swarm-gateways.net/
+Public gateway running POC3 https://swarm-gateways.net/
 
 .. note:: The Swarm public gateways are temporary and users should not rely on their existence for production services.
 
@@ -126,17 +127,17 @@ in our repository in the `COPYING <https://github.com/ethereum/go-ethereum/blob/
 Example dapps
 -------------
 
-* http://swarm-gateways.net/bzz://swarmapps.eth
+* https://swarm-gateways.net/bzz://swarmapps.eth
 * source code: https://github.com/ethersphere/Swarm-dapps
 
 
-Swarm dev onboarding
----------------------
+Swarm developers onboarding
+---------------------------
 
 https://github.com/ethersphere/Swarm/wiki/Swarm
 
 Reporting a bug and contributing
--------------------------------------
+--------------------------------
 
 Issues are tracked on github and github only. Swarm related issues and PRs are labeled with Swarm:
 
@@ -155,27 +156,25 @@ Credits
 
 Swarm is funded by the Ethereum Foundation and industry sponsors.
 
-Swarm is code by Ethersphere `https://github.com/ethersphere`
-
 The Core team
 ----------------
 
 * Viktor Trón - @zelig
 * Daniel A. Nagy - @nagydani
-* Aron Fischer- @homotopycolimit
-* Louis Holbrook- @nolash
-* Lewis Marshal- @lmars
-* Fabio Barone- @holisticode
-* Anton Evangelatov- @nonsense
-* Janos Gulyas- @janos
-* Balint Gabor- @gbalint
-* Elad Nachmias- @justelad
+* Aron Fischer - @homotopycolimit
+* Louis Holbrook - @nolash
+* Lewis Marshal - @lmars
+* Fabio Barone - @holisticode
+* Anton Evangelatov - @nonsense
+* Janoš Guljaš - @janos
+* Balint Gabor - @gbalint
+* Elad Nachmias - @justelad
 
 were on the core team:
 
-* Zahoor Mohamed- @jmozah
-* Zsolt Felföldi- @zsfelfoldi
-* Nick Johnson- @Arachnid
+* Zahoor Mohamed - @jmozah
+* Zsolt Felföldi - @zsfelfoldi
+* Nick Johnson - @Arachnid
 
 Sponsors and collaborators
 -----------------------------
@@ -258,7 +257,7 @@ Swarm guide (this document)
 Homepage
 --------
 
-the *Swarm homepage* is accessible via Swarm at `theSwarm.eth`. The page can be accessed through the public gateway on http://swarm-gateways.net/bzz:/theswarm.eth/
+The *Swarm homepage* is accessible via Swarm at `theswarm.eth`. The page can be accessed through the public gateway on https://swarm-gateways.net/bzz:/theswarm.eth/
 
 Blogposts
 ---------------
