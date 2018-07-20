@@ -15,15 +15,14 @@ The usual way of keeping the same pointer to changing data is using the Ethereum
 With *Mutable Resource Updates* we no longer require the ``ENS`` in order to have a non-variable identifier to changing data. The  resource  can be accessed like a regular Swarm object using the key obtained when the resource was created ( ``MRU_MANIFEST_KEY`` ) . When the data changes
 the ``MRU_MANIFEST_KEY`` will  point to the new data.
 
-If using *Mutable Resource Updates* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``MRU_MANIFEST_KEY`` will be necessary. This key will resolve to the latest version of the resource (mutating the resource will not change the key).
+If using *Mutable Resource Updates* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``MRU_MANIFEST_KEY`` will be necessary. This key will resolve to the latest version of the resource (updating the resource will not change the key).
 
-There  are 3 different ways of interacting with *Mutable Resource Updates* : HTTP API, Golang API and Swarm console
+There  are 3 different ways of interacting with *Mutable Resource Updates* : HTTP API, Golang API and Swarm client
 
 Creating a mutable resource
 ----------------------------
-.. important:: Only the private key (address) that created the Resource can update it. 
- 
-When  creating a mutable resource one of the parameters that you will have to provide is the expected update frequency. This is an indication of how often (in seconds) your resource will change. Although you can update the resource at other rates, doing so will slow down the process of retrieving the resource. 
+.. important:: + Only the private key (address) that created the Resource can update it. 
+               + When  creating a mutable resource, one of the parameters that you will have to provide is the expected update frequency. This indicates  how often (in seconds) your resource will be updated. Although you can update the resource at other rates, doing so will slow down the process of retrieving the resource. 
 
 
 
@@ -47,12 +46,12 @@ To create a resource using the HTTP API:
 	
 Where:
 
-+ ``name`` Resource name. This is a user field. You can use any name
++ ``name`` Resource name. This is a user field. You can use any name.
 + ``frequency`` Time interval the resource is expected to update at, in **seconds**.
 + ``startTime`` Time the resource is valid from, in Unix time (seconds).
 + ``ownerAddr`` Is the address derived from your public key. Hex encoded.
-+ ``multihash`` Is a flag indicating whether the data field should be interpreted as raw data or a multihash
-+ ``data`` Contains hex-encoded raw data or a multihash of the content the mutable resource will be initialized with
++ ``multihash`` Is a flag indicating whether the data field should be interpreted as raw data or a multihash.
++ ``data`` Contains hex-encoded raw data or a multihash of the content the mutable resource will be initialized with.
 + ``period`` Indicates for what period we are signing. Set to 1 for creation.
 + ``version`` Indicates what resource version of the period we are signing. Must be set to 1 for creation.
 + ``signature`` Signature of the digest calculated as follows digest = H(H(period, version, rootAddr), metaHash, data). Hex encoded.
@@ -61,23 +60,23 @@ Returns the ``MRU_MANIFEST_KEY`` as a quoted string.
 Go API
 ~~~~~~~~
 
-Swarm client (package swarm/api/client) has the following method
+Swarm client (package swarm/api/client) has the following method:
 
 .. code-block:: go 
 
   CreateResource(name string, frequency, startTime uint64, data []byte, multihash bool, signer mru.Signer)
     
 CreateResource creates a Mutable Resource with the given name and frequency, initializing it with the provided data. Data is interpreted as multihash or not                
-depending on the value of ``multihash``
+depending on the value of ``multihash``.
 
 + ``name`` Human-readable name for your resource.
 + ``startTime`` When the resource starts to be valid. 0 means "now". Unix time in seconds.
 + ``data`` Initial data the resource will contain.
-+ ``multihash`` Whether to interpret data as multihash
-+ ``signer`` Signer object containing the Sign callback function
-Returns the resulting Mutable Resource manifest address that you can use to include in an ``ENS`` resolver (setContent) or reference future updates (Client.UpdateResource)
++ ``multihash`` Whether to interpret data as multihash.
++ ``signer`` Signer object containing the Sign callback function.
+Returns the resulting Mutable Resource manifest address that you can use to include in an ``ENS`` resolver (setContent) or reference future updates (Client.UpdateResource).
 
-Swarm console
+Swarm client
 ~~~~~~~~~~~~~
 
 The swarm CLI allows to create resources directly from the console:
@@ -88,10 +87,10 @@ The swarm CLI allows to create resources directly from the console:
 	
 Where:
 
-+ ``account`` Ethereum account needed to sign 
++ ``account`` Ethereum account needed to sign.
 + ``frequency`` Time interval the resource is expected to update at, in **seconds**.
-+ ``multihash`` Is a flag indicating whether the data field should be interpreted as raw data or a multihash
-+ ``data`` Contains hex-encoded raw data or a multihash of the content the mutable resource will be initialized with. Must be prefixed with 0x, and if is a swarm keccak256 hash, with 0x1b20
++ ``multihash`` Is a flag indicating whether the data field should be interpreted as raw data or a multihash.
++ ``data`` Contains hex-encoded raw data or a multihash of the content the mutable resource will be initialized with. Must be prefixed with 0x, and if is a swarm keccak256 hash, with 0x1b20.
 
 
 Retrieving a mutable resource
@@ -116,33 +115,28 @@ HTTP API
 Go API
 ~~~~~~~~
 
-Swarm console
+Swarm client
 ~~~~~~~~~~~~~
 
 Mutable resource versioning
 ----------------------------
-TODO: Change block height for time in seconds
-
-
-As explained above, we need to specify a frequency parameter when we create a resource, which indicates the number of blocks that are expected to pass between each update. In Mutable Resourceswe call this the *period*. When you make an update, it will always belong to the *upcoming period*.
+As explained above, we need to specify a frequency parameter when we create a resource, which indicates the time in seconds that are expected to pass between each update. In Mutable Resources we call this the *period*. When you make an update, it will belong to the  *current period*.
 
 Let's make this less obscure with some concrete examples:
 
-* Mutable Resource is created at block height ``4200000`` with frequency ``13``.
-* Update made at block height ``4200010``. Update will belong to block height ``4200013``.
-* Update made at block height ``4200014``. Update will belong to block height ``4200026``.
-* Update made at block height ``4200021``. Update will *also* belong to block height ``4200026``.
-* Update made at block height ``4200026``. Update will belong to block height ``4200039``.
+* Mutable Resource is created at timestamp ``4200000`` with frequency ``100``.
+* Update made at timestamp ``4200050``. Update will belong to period ``1``.
+* Update made at timestamp ``4200110``. Update will belong to period ``2``.
+* Update made at timestamp ``4200190``. Update will *also* belong to period ``2``.
+* Update made at timestamp ``4200200``. Update will belong to period ``3``.
 
-.. important::
-  Notice that if you make an update on the block height of an actual period, the update will belong to the *next* period.
+A resource can be updated more than once every period. Every update within the same period is a ``version``.
 
-This behavior is analogous to versioning. And indeed, Mutable Resources allow for retrieval of particular versions aswell. However, instead of using block heights for the versioning scheme, we instead use incremental serial numbers, where the starting block is update ``1``, the starting block plus frequency is update ``2`` and so forth.
+* Resource creation = period ``1`` version ``1`` = ``1.1``
+* Timestamp ``4200050`` = period ``1`` version ``2`` = ``1.2``
+* Timestamp ``4200110`` = period ``2`` version ``1`` = ``2.1``
+* Timestamp ``4200190`` = period ``2`` version ``2`` = ``2.2``
+* Timestamp ``4200200`` = period ``3`` version ``1`` = ``3.1``
 
-If more updates are made within one period, they will be sequentially numbered aswell. So returning to our above example, the updates can be referenced by the following version numbers:
 
-* Update creation = version ``1.1``
-* Block height ``4200010`` = version ``2.1``
-* Block height ``4200014`` = version ``3.1``
-* Block height ``4200021`` = version ``3.2``
-* Block height ``4200026`` = version ``4.1``
+
