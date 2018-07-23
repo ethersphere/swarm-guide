@@ -13,7 +13,7 @@ The usual way of keeping the same pointer to changing data is using the Ethereum
 3. Correct ``ENS`` resolution requires that you are always synced to the blockchain.
 
 With *Mutable Resource Updates* we no longer require the ``ENS`` in order to have a non-variable identifier to changing data. The resource can be accessed like a regular Swarm object using the key obtained when the resource was created ( ``MRU_MANIFEST_KEY`` ) .
-When the data changes the ``MRU_MANIFEST_KEY`` will  point to the new data.
+When the data is updated the ``MRU_MANIFEST_KEY`` will  point to the new data.
 
 If using *Mutable Resource Updates* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``MRU_MANIFEST_KEY`` will be necessary. This key will resolve to the latest version of the resource (updating the resource will not change the key).
 
@@ -105,7 +105,7 @@ Swarm client
 
 The swarm CLI allows to create Mutable Resources directly from the console:
 
-.. code-block:: bash
+.. code-block:: none
 
   swarm --bzzaccount="<account>" resource create <frequency> [--name <name>] [--data <0x hex data> [--multihash=true/false]]
 	
@@ -122,7 +122,7 @@ Retrieving a mutable resource
 ------------------------------
 .. important::
   
-  In order to retrieve a resource, it must have been initialized with data, and ``startTime < currentTime``.
+  In order to retrieve a resource's content, it must have been initialized with data  and ``startTime < currentTime``.
 
 HTTP API
 ~~~~~~~~
@@ -152,12 +152,12 @@ To retrieve a resource we use the following method
 
 Returns the latest data currently contained in the resource as an octect stream. 
 
-Swarm console
+Swarm client
 ~~~~~~~~~~~~~
 
-The swarm console doesn't allow to retrieve a resource per se, however we can retrieve the metainfo:
+The swarm client doesn't allow to retrieve a resource per se, however we can use it to retrieve the metainfo:
 
-.. code-block:: bash
+.. code-block:: none
 
   swarm resource info <MRU_MANIFEST_KEY>
 
@@ -169,10 +169,60 @@ Updating a mutable resource
 HTTP API
 ~~~~~~~~
 
+To update the resource, create a new flat JSON with the following fields:
+
+.. code-block:: js
+
+  "data": hex string,
+  "multihash": bool,
+  "period": number,
+  "version": number,
+  "signature": hex string 
+	
+Where:
+
++ ``data`` New data you want to set
++ ``multihash`` Whether the new data should be considered a multihash
++ ``period`` **See note**.
++ ``version`` **See note**.
++ ``signature`` Calculated in the same way as explained above for simultaneous resource creation and update.
+
+Then, POST the resulting JSON to: ``POST /bzz-resource:/``
+
+.. note::
+
+  The period and version values of the update must be set to the same values obtained when doing ``GET /bzz-resource://<MRU_MANIFEST_KEY>/meta``.
+
+
+Go API
 ~~~~~~~~
+As with the HTTP API, we have to know the version and period that are valid for the update. To get this information we use :
+
+.. code-block:: go
+
+  GetResourceMetadata(manifestAddressOrDomain string) (*mru.Request, error)
+
+Returns a Request object that describes the resource and can be used to construct an update. To finish constructing the update Request we neeed to : 
+
++ Call ``Request.SetData()`` to put the new data in
++ Call ``Request.Sign()`` to sign the update
+
+Once we have our Request properly constructed, we can update our resource by calling: 
+
+.. code-block:: go
+
+  UpdateResource(Request *mru.Request)
+
+Where ``Request`` is the request previously constructed  
 
 Swarm client
 ~~~~~~~~~~~~~
+
+.. code-block:: none
+
+  swarm --bzzaccount="<account>" resource update <Manifest Address or ENS domain> <0x Hexdata> [--multihash]
+
+The ``--multihash`` flag sets multihash to true. By default the data is not considered to be a multihash (multiHash = false). As mentioned earlier, if you want to use the output of swarm up, prefix it with 0x1b20 to indicate a keccak256 hash.
 
 Mutable resource versioning
 ----------------------------
