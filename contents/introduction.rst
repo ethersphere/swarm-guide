@@ -211,24 +211,3 @@ Special thanks
 * Community contributors for feedback and testing
 * Daniel Kalman, Benjamin Kampmann, Daniel Lengyel, Anand Jaisingh for contributing to the swarm websites
 * Felipe Santana, Paolo Perez and Paratii team for filming at the 2017 swarm summit and making the summit website
-
-Contact
-===========
-
-Daily development and discussions are ongoing in various gitter channels:
-
-* https://gitter.im/ethereum/swarm: general public chatroom about Swarm dev support
-* https://gitter.im/ethersphere/orange-lounge: our open engine room
-* https://gitter.im/ethersphere/pss: about postal services on Swarm - messaging with deterministic routing
-* https://gitter.im/ethersphere/hq: our internal engine room
-
-Swarm discussions also on the Ethereum subreddit: http://www.reddit.com/r/ethereum
-
-
-Swarm hangouts:
-
-* https://hangouts.google.com/hangouts/_/ethereum.org/Swarm
-* standup: Monday to Friday 4pm CEST
-* weekly roundtable: Tuesday 4.30pm CEST
-
-You are also invited to follow us on `twitter <https://twitter.com/ethersphere>`_.
