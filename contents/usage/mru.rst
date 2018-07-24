@@ -17,7 +17,7 @@ When the resource's data is updated the ``MRU_MANIFEST_KEY`` will  point to the 
 
 If using *Mutable Resource Updates* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``MRU_MANIFEST_KEY`` will be necessary. This key will resolve to the latest version of the resource (updating the resource will not change the key).
 
-There  are 3 different ways of interacting with *Mutable Resource Updates* : HTTP API, Golang API and Swarm client.
+There  are 3 different ways of interacting with *Mutable Resource Updates* : HTTP API, Golang API and Swarm CLI.
 
 We will now see how to create, retrieve and update a *Mutable Resource* 
 
@@ -30,6 +30,7 @@ HTTP API
 ~~~~~~~~
 
 To create a mutable resource using the HTTP API:
+
 ``POST /bzz-resource:/`` with the following JSON as payload:
 
 .. code-block:: js
@@ -39,10 +40,10 @@ To create a mutable resource using the HTTP API:
   "startTime": number,
   "ownerAddr": address
 	
-Where:
+Where: 
 
 * ``name`` Resource name. This is a user field. You can use any name.
-* ``frequency`` Time interval the resource is expected to update at, in seconds.
+* ``frequency`` Expected time interval between updates, in seconds.
 * ``startTime`` Time the resource is valid from, in Unix time (seconds). Set to the current epoch. 
   
   * You can also put a startTime in the past or in the future. Setting it in the future will prevent nodes from finding content until the clock hits startTime. Setting it in the past allows you to create a history for the resource retroactively.
@@ -50,7 +51,7 @@ Where:
 
 Returns the ``MRU_MANIFEST_KEY`` as a quoted string.
 
-This only creates the resource. The resource will not return any data until a first update is submitted. You will usually create resources and initialize them. To do that, use the following:
+This only creates the resource, which will not return any data until a first update is submitted. You will usualy create and initialize the resource at once. To do so: 
 
 ``POST /bzz-resource:/`` with the following JSON as payload:
 
@@ -70,8 +71,8 @@ Where:
 
 
 * ``rootAddr`` Key of the chunk that contains the Mutable Resource metadata. Calculated as the SHA3 hash of ``ownerAddr`` and ``metaHash``
+* ``data`` Content the mutable resource will be initialized with. Contains hex-encoded raw data or a multihash
 * ``multihash`` Is a flag indicating whether the data field should be interpreted as raw data or a multihash.
-* ``data`` Contains hex-encoded raw data or a multihash of the content the mutable resource will be initialized with.
 * ``period`` Indicates for what period we are signing. Set to 1 for creation.
 * ``version`` Indicates what resource version of the period we are signing. Must be set to 1 for creation.
 * ``signature`` Signature of the digest. Hex encoded. Prefixed with 0x. The signature is calculated as follows: digest = H(period, version, rootAddr, metaHash, multihash, data). Where: 
@@ -103,7 +104,7 @@ To create a mru.Request, use the mru.NewCreateRequest() function.
 
 
 
-Swarm client
+Swarm CLI
 ~~~~~~~~~~~~~
 
 The swarm CLI allows to create Mutable Resources directly from the console:
@@ -116,7 +117,7 @@ Where:
 
 * ``account`` Ethereum account needed to sign.
 * ``frequency`` Time interval the resource is expected to update at, in **seconds**.
-* ``multihash`` Is a flag indicating that the data field should be interpreted as a multihash. By default data isn't interpreted as a multihash.
+* ``multihash`` Is a flag indicating that the data should be interpreted as a multihash. By default data isn't interpreted as a multihash.
 * ``data`` Contains hex-encoded raw data or a multihash of the content the mutable resource will be initialized with. Must be prefixed with 0x, and if is a swarm keccak256 hash, with 0x1b20.
 
 Returns the ``MRU_MANIFEST_KEY`` of the Mutable Resource
@@ -125,7 +126,7 @@ Retrieving a mutable resource
 ------------------------------
 .. important::
   
-  In order to retrieve a resource's content, it must have been initialized with data  and ``startTime < currentTime``.
+  In order to retrieve a resource's content, it must have been initialized with data (either at resource creation or through a later update) and ``startTime < currentTime``.
 
 HTTP API
 ~~~~~~~~
@@ -140,8 +141,9 @@ By using ``bzz-resource://`` you get the raw data that was put in the resource. 
 whereas ``bzz-resource://``  returns the actual multihash.
 
 .. note::
-+ ``MRU_MANIFEST_KEY`` can be substituted by an ``ENS`` domain``that has it content set to a ``MRU_MANIFEST_KEY``
-+	The ``bzz-resource`` and ``bzz`` behaviours are expected to change 
+
+  + ``MRU_MANIFEST_KEY`` can be substituted by an ``ENS`` domain that has it content set to a ``MRU_MANIFEST_KEY``
+  +	The ``bzz-resource`` and ``bzz`` scheme behaviour is expected to change 
 
 Go API
 ~~~~~~~~
@@ -155,7 +157,7 @@ To retrieve a resource we use the following method
 
 Returns the latest data currently contained in the resource as an octect stream. 
 
-Swarm client
+Swarm CLI
 ~~~~~~~~~~~~~
 
 The swarm client doesn't allow to retrieve a resource per se, however we can use it to retrieve the metainfo:
@@ -194,7 +196,7 @@ Then, POST the resulting JSON to: ``POST /bzz-resource:/``
 
 .. note::
 
-  To avoid any malfunction the period and version values of the update should be set to the same values obtained when doing ``GET /bzz-resource://<MRU_MANIFEST_KEY>/meta``.
+  To avoid any malfunction the ``period`` and ``version`` values of the update must be set to the recommended values obtained when doing ``GET /bzz-resource://<MRU_MANIFEST_KEY>/meta``.
 
 Go API
 ~~~~~~~~
@@ -204,7 +206,7 @@ As with the HTTP API, we have to know the version and period that are valid for 
 
   GetResourceMetadata(manifestAddressOrDomain string) (*mru.Request, error)
 
-Returns a ``mru.Request`` object that describes the resource and can be used to construct an update. To finish constructing the Request for the update we need to : 
+Returns a ``mru.Request`` object that describes the resource and can be used to construct an update. To finish constructing the request for the update we need to : 
 
 * Call ``Request.SetData()`` to put the new data in
 * Call ``Request.Sign()`` to sign the update
@@ -213,11 +215,11 @@ Once we have our request fully constructed, we can update our resource by callin
 
 .. code-block:: go
 
-  UpdateResource(Request *mru.Request)
+  UpdateResource(request *mru.Request)
 
-Where ``Request`` is the previously constructed request
+Where ``request`` is the previously constructed request
 
-Swarm client
+Swarm CLI
 ~~~~~~~~~~~~~
 .. code-block:: none
 
@@ -233,7 +235,7 @@ In Mutable Resources we call this the *period*. When you make an update, it will
 
 Let's make this less obscure with some concrete examples:
 
-* Mutable Resource is created at timestamp ``4200000`` with frequency ``100``.
+* Mutable Resource is created and initialized with data at timestamp ``4200000`` with frequency ``100``.
 * Update made at timestamp ``4200050``. Update will belong to period ``1``.
 * Update made at timestamp ``4200110``. Update will belong to period ``2``.
 * Update made at timestamp ``4200190``. Update will *also* belong to period ``2``.
