@@ -27,7 +27,7 @@ Swarm's broader objective is to provide infrastructure services for developers o
 
 From the end user's perspective, Swarm is not that different from the world wide web, with the exception that uploads are not hosted on a specific server. Swarm offers a peer-to-peer storage and serving solution that is DDoS-resistant, has zero-downtime, fault-tolerant and censorship-resistant as well as self-sustaining due to a built-in incentive system which uses peer-to-peer accounting and allows trading resources for payment. Swarm is designed to deeply integrate with the devp2p multiprotocol network layer of Ethereum as well as with the Ethereum blockchain for domain name resolution (using ENS), service payments and content availability insurance.
 
-Please refer to our `development roadmap <https://github.com/ethersphere/swarm/wiki/roadmap>`_ and our `roadmap board <https://github.com/orgs/ethersphere/projects/5>`_ to stay informed with our progress.
+Please refer to our `development roadmap <https://github.com/ethersphere/swarm/wiki/roadmap>`_ to stay informed with our progress.
 
 Overview
 ========================
@@ -92,11 +92,6 @@ Code
 
 Source code is located at https://github.com/ethereum/go-ethereum/.
 
-Status
----------------
-
-The status of Swarm is proof of concept 3 release series (POC3).
-
 Roadmap
 ---------------
 
@@ -123,13 +118,11 @@ The go-ethereum binaries (i.e. all code inside of the `cmd` directory) is licens
 `GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.en.html>`_, also included
 in our repository in the `COPYING <https://github.com/ethereum/go-ethereum/blob/master/COPYING.LESSER>`_ file.
 
-
 Example dapps
 -------------
 
 * https://swarm-gateways.net/bzz://swarmapps.eth
 * source code: https://github.com/ethersphere/Swarm-dapps
-
 
 Swarm developers onboarding
 ---------------------------
@@ -146,7 +139,7 @@ Issues are tracked on github and github only. Swarm related issues and PRs are l
 
 Please include the commit and branch when reporting an issue.
 
-Pull requests should by default commit on the `develop` branch (edge).
+Pull requests should by default commit on the `master` branch.
 
 Prospective contributors please read `the Developer's Guide <https://github.com/ethereum/go-ethereum/wiki/Developers'-Guides>`
 
@@ -218,68 +211,3 @@ Special thanks
 * Community contributors for feedback and testing
 * Daniel Kalman, Benjamin Kampmann, Daniel Lengyel, Anand Jaisingh for contributing to the swarm websites
 * Felipe Santana, Paolo Perez and Paratii team for filming at the 2017 swarm summit and making the summit website
-
-Contact
-===========
-
-Daily development and discussions are ongoing in various gitter channels:
-
-* https://gitter.im/ethereum/swarm: general public chatroom about Swarm dev support
-* https://gitter.im/ethersphere/orange-lounge: our open engine room
-* https://gitter.im/ethersphere/pss: about postal services on Swarm - messaging with deterministic routing
-* https://gitter.im/ethersphere/hq: our internal engine room
-
-Swarm discussions also on the Ethereum subreddit: http://www.reddit.com/r/ethereum
-
-
-Swarm hangouts:
-
-* https://hangouts.google.com/hangouts/_/ethereum.org/Swarm
-* standup: Monday to Friday 4pm CEST
-* weekly roundtable: Tuesday 4.30pm CEST
-
-You are also invited to follow us on `twitter <https://twitter.com/ethersphere>`_.
-
-
-
-
-
-Documentation and resources
-==================================
-
-Swarm guide (this document)
--------------------------------
-
-* This document's source code is found at https://github.com/ethersphere/Swarm-guide
-* The HTML rendered version is available at https://swarm-guide.readthedocs.io/en/latest/
-
-
-Homepage
---------
-
-The *Swarm homepage* is accessible via Swarm at `theswarm.eth`. The page can be accessed through the public gateway on https://swarm-gateways.net/bzz:/theswarm.eth/
-
-Blogposts
----------------
-
-* `Announcement of POC3 <https://blog.ethereum.org/2018/06/21/announcing-swarm-proof-of-concept-release-3/>`_
-* `POC2 public alpha announcement <https://blog.ethereum.org/2016/12/15/Swarm-alpha-public-pilot-basics-Swarm/>`_
-
-Swarm Orange Summit
-----------------------
-
-* `Swarm summit 2018 promo video <https://swarm-gateways.net/bzz:/079b4f4155d7e8b5ee76e8dd4e1a6a69c5b483d499654f03d0b3c588571d6be9/>`_
-* `2018 May 7-11 Ljubljana <https://swarm-gateways.net/bzz:/swarm-orange-summit.eth/>`_
-* 2017 June 4-10 Berlin
-
-Orange papers
---------------
-
-* Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for Swarm. May 2016 - https://swarm-gateways.net/bzz:/theswarm.eth/ethersphere/orange-papers/1/sw^3.pdf
-* Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for Swarm secured by masked audit secret hash. May 2016 - https://swarm-gateways.net/bzz:/theswarm.eth/ethersphere/orange-papers/2/smash.pdf
-* Viktor Trón, Aron Fischer, Ralph Pilcher, Fabio Barone: swap swear and swindle games: scalable infrastructure for decentralised service economies. Work in progress. June 2018. - https://www.sharelatex.com/read/yszmsdqyqbvc, `pfd on swarm  <https://swarm-gateways.net/bzz:/ca5f4684b380644c3042fe81f65b3b9a0668e2e3cff53578fb68af8043f3c0b6/>`_.
-* Viktor Trón, Aron Fischer, Daniel A. Nagy. Swarm: a decentralised peer-to-peer network for messaging and storage. Work in progress. June, 2018. - https://www.sharelatex.com/read/gxhwssqzgfpr; `pdf on swarm <https://swarm-gateways.net/bzz:/4f45ae847fc55afb8bfdc381bae0809a0ce29bafc07b41293838fc7afae95d34/`_.
-* P.O.T. data structures and databases on swarm. In preparation.
-* Mutable Resource Updates. An off-chain scheme for versioning content in Swarm. In preparation.
-* Privacy on swarm. Encryption, access control, private browsing in Swarm. Tentative.
-* Analysis of attack resilience of swarm storage. Tentative.
