@@ -10,8 +10,8 @@ the *Swarm homepage* is accessible via Swarm at `theswarm.eth`. The page can be 
 Blogposts
 ---------------
 
-* [Announcement of POC3](https://blog.ethereum.org/2018/06/21/announcing-swarm-proof-of-concept-release-3/)
-* [POC2 public alpha announcement](https://blog.ethereum.org/2016/12/15/Swarm-alpha-public-pilot-basics-Swarm/)
+* `Announcement of POC3 <https://blog.ethereum.org/2018/06/21/announcing-swarm-proof-of-concept-release-3/>`_
+* `POC2 public alpha announcement <https://blog.ethereum.org/2016/12/15/Swarm-alpha-public-pilot-basics-Swarm/>`_
 
 Swarm Orange Summit
 ----------------------
