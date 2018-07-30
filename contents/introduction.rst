@@ -45,13 +45,7 @@ The Swarm client is part of the Ethereum stack, the reference implementation is 
 
 Swarm offers a **local HTTP proxy** API that dapps or command line tools can use to interact with Swarm. Some modules like `messaging  <PSS>`_ are   only available through RPC-JSON API. The foundation servers on the testnet are offering public gateways, which serve to easily demonstrate functionality and allow free access so that people can try Swarm without even running their own node.
 
-.. note::
-  The Swarm public gateways are temporary and users should not rely on their existence for production services.
-
-
-
-
-The swarm of Swarm is the collection of nodes of the devp2p network each of which run the bzz protocol suite on the same network id.
+Swarm is a collection of nodes of the devp2p network each of which run the bzz protocol suite on the same network id.
 
 Swarm nodes can also connect with one (or several) ethereum blockchains for domain name resolution and one ethereum blockchain for bandwidth and storage compensation.
 Nodes running the same network id are supposed to connect to the same blockchain for payments. A Swarm network is identified by its network id which is an arbitrary integer.
@@ -61,17 +55,10 @@ then is allowed to go offline. As long as nodes do not drop out or become unavai
 be accessible due to the 'synchronization' procedure in which nodes continuously pass along available data between each other.
 
 .. note::
-  Uploaded content is not guaranteed to persist on the testnet until storage insurance is implemented (expected in POC4 2019). All participating nodes should consider participation a  voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard Swarm as safe storage until the incentive system is functional.
+  Uploaded content is not guaranteed to persist on the testnet until storage insurance is implemented (see Roadmap for more details). All participating nodes should consider participation a  voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard Swarm as safe storage until the incentive system is functional.
 
 .. note::
-  The Swarm public gateways are temporary and users should not rely on their existence for production services.
-
-.. note::
-  Uploaded content is not guaranteed to persist on the testnet until storage insurance is implemented (expected in POC4 2019). All participating nodes should consider participation a voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should under no circumstances regard Swarm as safe storage until the incentive system is functional.
-
-.. note::
-  Swarm POC3 allows for encryption. Upload of unencrypted sensitive and private data is highly discouraged as there is no way to undo an upload. Users should refrain from uploading illegal, controversial or unethical content.
-
+  Swarm supports encryption. Upload of unencrypted sensitive and private data is highly discouraged as there is no way to undo an upload. Users should refrain from uploading illegal, controversial or unethical content.
 
 .. note:: The Swarm is a `Persistent Data Structure <https://en.wikipedia.org/wiki/Persistent_data_structure>`_, therefore there is no notion of delete/remove action in Swarm. This is because content is disseminated to swarm nodes who are incentivised to serve it.
 
@@ -99,35 +86,20 @@ Roadmap is located at https://github.com/ethersphere/Swarm/wiki/roadmap
 
 .. note:: Swarm is experimental code and untested in the wild. Use with extreme care. We encourage developers to connect to the testnet with their permanent nodes and give us feedback.
 
-Testnets with public gateways
+Public gateways
 -------------------------------
 
-Public gateway running POC3 https://swarm-gateways.net/
+Swarm offers a local HTTP proxy API that Dapps can use to interact with Swarm. The Ethereum Foundation is hosting a public gateway, which allows free access so that people can try Swarm without running their own node.
 
-.. note:: The Swarm public gateways are temporary and users should not rely on their existence for production services.
+The Swarm public gateway can be found at https://swarm-gateways.net and is always running the latest `stable` Swarm release.
 
-License
--------------
-
-Swarm is part of the go-ethereum library and (i.e. all code outside of the `cmd` directory) is licensed under the
-`GNU Lesser General Public License v3.0 <https://www.gnu.org/licenses/lgpl-3.0.en.html>`_, also
-included in our repository in the `COPYING.LESSER <https://github.com/ethereum/go-ethereum/blob/master/COPYING.LESSER>`_ file.
-
-
-The go-ethereum binaries (i.e. all code inside of the `cmd` directory) is licensed under the
-`GNU General Public License v3.0 <https://www.gnu.org/licenses/gpl-3.0.en.html>`_, also included
-in our repository in the `COPYING <https://github.com/ethereum/go-ethereum/blob/master/COPYING.LESSER>`_ file.
+.. note:: Swarm public gateways are temporary and users should not rely on their existence for production services.
 
 Example dapps
 -------------
 
 * https://swarm-gateways.net/bzz://swarmapps.eth
 * source code: https://github.com/ethersphere/Swarm-dapps
-
-Swarm developers onboarding
----------------------------
-
-https://github.com/ethersphere/Swarm/wiki/Swarm
 
 Reporting a bug and contributing
 --------------------------------
@@ -141,7 +113,7 @@ Please include the commit and branch when reporting an issue.
 
 Pull requests should by default commit on the `master` branch.
 
-Prospective contributors please read `the Developer's Guide <https://github.com/ethereum/go-ethereum/wiki/Developers'-Guides>`
+Prospective contributors please read the `Developers' Guide <https://github.com/ethereum/go-ethereum/wiki/Developers'-Guide>`
 
 
 Credits
