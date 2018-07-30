@@ -10,18 +10,16 @@ Swarm runs on all major platforms (Linux, macOS, Windows, Raspberry Pi, Android,
 ..  note::
   The swarm package has not been extensively tested on platforms other than Linux and macOS.
 
-Installing Swarm from a package manager
-=======================================
+Installing Swarm on Ubuntu via PPA
+==================================
 
-Install on Ubuntu via PPAs
---------------------------
-
-The simplest way to install Swarm on Ubuntu distributions is via the built in launchpad PPAs (Personal Package Archives). We provide a single PPA repository that contains our stable releases for Ubuntu versions trusty, xenial, artful, bionic and cosmic.
+The simplest way to install Swarm on Ubuntu distributions is via the built in launchpad PPAs (Personal Package Archives). We provide a single PPA repository that contains our stable releases for Ubuntu versions trusty, xenial, bionic and cosmic.
 
 To enable our launchpad repository please run:
 
 .. code-block:: shell
 
+  sudo apt-get install software-properties-common
   sudo add-apt-repository -y ppa:ethereum/ethereum
 
 After that you can install the stable version of Swarm:
