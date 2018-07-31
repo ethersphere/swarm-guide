@@ -80,14 +80,14 @@ Code
 Source code is located at https://github.com/ethereum/go-ethereum/.
 
 Roadmap
----------------
+=======
 
 Roadmap is located at https://github.com/ethersphere/Swarm/wiki/roadmap
 
 .. note:: Swarm is experimental code and untested in the wild. Use with extreme care. We encourage developers to connect to the testnet with their permanent nodes and give us feedback.
 
 Public gateways
--------------------------------
+===============
 
 Swarm offers a local HTTP proxy API that Dapps can use to interact with Swarm. The Ethereum Foundation is hosting a public gateway, which allows free access so that people can try Swarm without running their own node.
 
@@ -95,14 +95,14 @@ The Swarm public gateway can be found at https://swarm-gateways.net and is alway
 
 .. note:: Swarm public gateways are temporary and users should not rely on their existence for production services.
 
-Example dapps
--------------
+Example Dapps
+=============
 
 * https://swarm-gateways.net/bzz://swarmapps.eth
 * source code: https://github.com/ethersphere/Swarm-dapps
 
 Reporting a bug and contributing
---------------------------------
+================================
 
 Issues are tracked on github and github only. Swarm related issues and PRs are labeled with Swarm:
 
