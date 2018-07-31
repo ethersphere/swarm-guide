@@ -43,7 +43,7 @@ The Ethereum Foundation operates a Swarm testnet that can be used to test out fu
 Everyone can join the network by running the Swarm client node on their server, desktop, laptop or mobile device. See :ref:`Getting Started` for how to do this.
 The Swarm client is part of the Ethereum stack, the reference implementation is written in golang and found under the go-ethereum repository. Currently at POC (proof of concept) version 0.3 is running on all nodes.
 
-Swarm offers a **local HTTP interface** API that dapps or command line tools can use to interact with Swarm. Some modules like `messaging  <PSS>`_ are   only available through RPC-JSON API. The foundation servers on the testnet are offering public gateways, which serve to easily demonstrate functionality and allow free access so that people can try Swarm without even running their own node.
+Swarm offers a **local HTTP proxy** API that dapps or command line tools can use to interact with Swarm. Some modules like `messaging  <PSS>`_ are   only available through RPC-JSON API. The foundation servers on the testnet are offering public gateways, which serve to easily demonstrate functionality and allow free access so that people can try Swarm without even running their own node.
 
 Swarm is a collection of nodes of the devp2p network each of which run the bzz protocol suite on the same network id.
 
@@ -70,7 +70,7 @@ Available APIs
 Swarm offers several APIs:
  * CLI
  * JSON-RPC - using web3 bindings over Geth's IPC
- * HTTP interface - every Swarm node exposes a local HTTP interface that implements the :ref:`bzz protocol suite`
+ * HTTP interface - every Swarm node exposes a local HTTP proxy that implements the :ref:`bzz protocol suite`
  * Javascript - available through the `swarm-js <https://github.com/MaiaVictor/swarm-js>`_ or `swarmgw <https://www.npmjs.com/package/swarmgw>`_ packages
 
 
@@ -89,7 +89,7 @@ Roadmap is located at https://github.com/ethersphere/Swarm/wiki/roadmap
 Public gateways
 ===============
 
-Swarm offers a local HTTP API that Dapps can use to interact with Swarm. The Ethereum Foundation is hosting a public gateway, which allows free access so that people can try Swarm without running their own node.
+Swarm offers a local HTTP proxy API that Dapps can use to interact with Swarm. The Ethereum Foundation is hosting a public gateway, which allows free access so that people can try Swarm without running their own node.
 
 The Swarm public gateway can be found at https://swarm-gateways.net and is always running the latest `stable` Swarm release.
 
