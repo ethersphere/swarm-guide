@@ -65,6 +65,53 @@ using `HTTP Basic access authentication <https://en.wikipedia.org/wiki/Basic_acc
 CLI usage
 ---------
 
+.. important:: Restricting access to content on Swarm is a 2-step process - you first upload your content, then wrap the reference with an access control manifest. *We recommend that you always upload your content with encryption enabled*
+
+**Creating a password protected manifest:**
+"--bzzapi",
+		cluster.Nodes[0].URL,
+		"access",
+		"new",
+		"pass",
+		"--dry-run",
+		"--password",
+		passwordFilename,
+		ref,
+**Creating an EC key protected manifest (single recipient):**
+"--bzzaccount",
+		publisherAccount.Address.String(),
+		"--password",
+		passFile.Name(),
+		"--datadir",
+		publisherDir,
+		"--bzzapi",
+		cluster.Nodes[0].URL,
+		"access",
+		"new",
+		"pk",
+		"--dry-run",
+		"--grant-pk",
+		hex.EncodeToString(granteePubKey),
+		ref,
+**Creating a password protected manifest (multiple recipients):**
+
+	"--bzzaccount",
+		publisherAccount.Address.String(),
+		"--password",
+		passFile.Name(),
+		"--datadir",
+		publisherDir,
+		"--bzzapi",
+		cluster.Nodes[0].URL,
+		"access",
+		"new",
+		"act",
+		"--dry-run",
+		"--grant-keys",
+		granteesPubkeyListFile.Name(),
+		ref,
+
+
 HTTP usage
 ----------
 
