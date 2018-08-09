@@ -46,11 +46,22 @@ by definition an agreement between two parties and only two parties (the publish
 
 .. important::
   Accessing content which is access controlled is enabled only when using a `local` Swarm node (e.g. running on `localhost`) in order to keep
-  your data, passwords and encryption keys _safe_. This is enforced through an in-code guard.
+  your data, passwords and encryption keys safe. This is enforced through an in-code guard.
 
 .. danger:: 
   NEVER (EVER!) use an external gateway to upload or download access controlled content as you will be putting your privacy at risk!
   You have been fairly warned!
 
+Usage
+-----
 
+*Creating* access control for content is currently supported only through CLI usage.
+
+*Accessing* restricted content is available through CLI. Accessing content which is restricted 
+by a passphrase is also available through the HTTP API 
+using `HTTP Basic access authentication <https://en.wikipedia.org/wiki/Basic_access_authentication>`_.
+
+
+CLI usage
+---------
 
