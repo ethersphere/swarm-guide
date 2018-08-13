@@ -65,12 +65,12 @@ using `HTTP Basic access authentication <https://en.wikipedia.org/wiki/Basic_acc
 CLI usage
 ---------
 
-.. important:: Restricting access to content on Swarm is a 2-step process - you first upload your content, then wrap the reference with an access control manifest. *We recommend that you always upload your content with encryption enabled*
+.. important:: Restricting access to content on Swarm is a 2-step process - you first upload your content, then wrap the reference with an access control manifest. **We recommend that you always upload your content with encryption enabled**. For the sake of the following examples we will refer to this hash as ``REF``
 
 
 **Creating a password protected manifest:**
 
-.. note:: The ``--password`` flag when using ``pass`` strategy refers to the password that protects the access-controlled content. This file should contain the password in plaintext. The command expects you to input the uploaded swarm content hash you'd like to limit access to. For the sake of the example we will refer to this hash as ``REF`` 
+.. note:: The ``--password`` flag when using the ``pass`` strategy refers to the password that protects the access-controlled content. This file should contain the password in plaintext. The command expects you to input the uploaded swarm content hash you'd like to limit access to (``REF``)
 
 
 .. code-block:: bash
@@ -79,33 +79,41 @@ CLI usage
 	$ swarm access new pass --password /path/to/password/file <REF>
 	4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
 
-The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. When requesting this hash through the HTTP gateway you should receive an ``HTTP Unauthorized 401`` error.
+The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. When requesting this hash through the HTTP gateway you should receive an ``HTTP Unauthorized 401`` error:
 
-"--bzzapi",
-		cluster.Nodes[0].URL,
-		"access",
-		"new",
-		"pass",
-		"--dry-run",
-		"--password",
-		passwordFilename,
-		ref,
-**Creating an EC key protected manifest (single recipient):**
-"--bzzaccount",
-		publisherAccount.Address.String(),
-		"--password",
-		passFile.Name(),
-		"--datadir",
-		publisherDir,
-		"--bzzapi",
-		cluster.Nodes[0].URL,
-		"access",
-		"new",
-		"pk",
-		"--dry-run",
-		"--grant-pk",
-		hex.EncodeToString(granteePubKey),
-		ref,
+.. code-block:: bash
+
+	$ curl http://localhost:8500/bzz:/4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
+	<TODO ADD ERRR>
+
+The same request should make an authentication dialog pop-up in the browser. You could then input the password needed and the content should correctly appear.
+
+Requesting the same hash with HTTP basic authentication (password only) would return the content too:
+
+.. code-block:: bash
+
+	$ curl http://:mysupersecretpassword@localhost:8500/bzz:/4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
+	
+
+
+
+**Creating an EC key-pair protected manifest (single grantee):**
+
+.. // note:: The ``--password`` flag when using the ``pk`` strategy refers to the password that protects the bzz account private key, just as with the ``geth`` flag. This file should contain the password in plaintext. The command expects you to input the uploaded swarm content hash you'd like to limit access to. For the sake of the example we will refer to this hash as ``REF`` 
+
+.. note:: The ``pk`` strategy requires a ``bzz-account`` to encrypt with. The most comfortable option in this case would be the same ``bzz-account`` you normally start your Swarm node with - this will allow you to access your content seamlessly through that node at any given point in time.
+
+.. note:: Grantee public keys are expected to be in an *secp256* compressed form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``).
+
+.. code-block:: bash
+
+	$ swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 access new pk --grant-pk 02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db <REF>
+	4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
+
+The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. 
+
+The only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key - either the local node that was used to upload the content or the node which was granted access through its public key.
+
 **Creating a password protected manifest (multiple recipients):**
 
 	"--bzzaccount",
