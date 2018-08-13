@@ -93,13 +93,9 @@ Requesting the same hash with HTTP basic authentication (password only) would re
 .. code-block:: bash
 
 	$ curl http://:mysupersecretpassword@localhost:8500/bzz:/4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
-	
-
 
 
 **Creating an EC key-pair protected manifest (single grantee):**
-
-.. // note:: The ``--password`` flag when using the ``pk`` strategy refers to the password that protects the bzz account private key, just as with the ``geth`` flag. This file should contain the password in plaintext. The command expects you to input the uploaded swarm content hash you'd like to limit access to. For the sake of the example we will refer to this hash as ``REF`` 
 
 .. note:: The ``pk`` strategy requires a ``bzz-account`` to encrypt with. The most comfortable option in this case would be the same ``bzz-account`` you normally start your Swarm node with - this will allow you to access your content seamlessly through that node at any given point in time.
 
@@ -107,30 +103,27 @@ Requesting the same hash with HTTP basic authentication (password only) would re
 
 .. code-block:: bash
 
-	$ swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 access new pk --grant-pk 02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db <REF>
+	$ swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 access new pk --grant-key 02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db <REF>
 	4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
 
 The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. 
 
-The only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key - either the local node that was used to upload the content or the node which was granted access through its public key.
+The only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key - either the local node that was used to upload the content or the node which was granted access through its public key
 
 **Creating a password protected manifest (multiple recipients):**
 
-	"--bzzaccount",
-		publisherAccount.Address.String(),
-		"--password",
-		passFile.Name(),
-		"--datadir",
-		publisherDir,
-		"--bzzapi",
-		cluster.Nodes[0].URL,
-		"access",
-		"new",
-		"act",
-		"--dry-run",
-		"--grant-keys",
-		granteesPubkeyListFile.Name(),
-		ref,
+.. note:: The ``act`` strategy requires a ``bzz-account`` to encrypt with. The most comfortable option in this case would be the same ``bzz-account`` you normally start your Swarm node with - this will allow you to access your content seamlessly through that node at any given point in time
+
+.. note:: Grantee public keys are expected to be in an *secp256 compressed* form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``). Each grantee should appear in a separate line
+
+.. code-block:: bash
+
+	$ swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 access new act --grant-keys /path/to/public-keys/file <REF>
+	4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
+
+The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. 
+
+As with the ``pk`` strategy - the only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key - either the local node that was used to upload the content or one of the nodes which were granted access through their public keys.
 
 
 HTTP usage
