@@ -67,7 +67,20 @@ CLI usage
 
 .. important:: Restricting access to content on Swarm is a 2-step process - you first upload your content, then wrap the reference with an access control manifest. *We recommend that you always upload your content with encryption enabled*
 
+
 **Creating a password protected manifest:**
+
+.. note:: The ``--password`` flag when using ``pass`` strategy refers to the password that protects the access-controlled content. This file should contain the password in plaintext. The command expects you to input the uploaded swarm content hash you'd like to limit access to. For the sake of the example we will refer to this hash as ``REF`` 
+
+
+.. code-block:: bash
+
+	$ echo 'mysupersecretpassword' > /path/to/password/file
+	$ swarm access new pass --password /path/to/password/file <REF>
+	4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
+
+The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. When requesting this hash through the HTTP gateway you should receive an ``HTTP Unauthorized 401`` error.
+
 "--bzzapi",
 		cluster.Nodes[0].URL,
 		"access",
