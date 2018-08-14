@@ -37,7 +37,7 @@ and the authorized key, after which the undisclosed authorized party can decrypt
 access controlled content.
 
 Whether using access control to disclose content to a single party (by using the ``pk`` strategy) or to 
-multiple parties (using the ``act`` strategy), a third unauthorized party cannot assert the identity 
+multiple parties (using the ``act`` strategy), a third unauthorized party cannot find out the identity 
 of the authorized parties.
 The third party can, however, know the number of undisclosed grantees to the content. 
 This, however, can be mitigated by adding bogus grantee keys while using the ``act`` strategy 
@@ -57,18 +57,18 @@ Usage
 
 **Creating** access control for content is currently supported only through CLI usage.
 
-**Accessing** restricted content is available through CLI. Accessing content which is restricted 
-by a passphrase is also available through the HTTP API 
-using `HTTP Basic access authentication <https://en.wikipedia.org/wiki/Basic_access_authentication>`_.
+**Accessing** restricted content is available through CLI and HTTP. When accessing content which is restricted by a password `HTTP Basic access authentication <https://en.wikipedia.org/wiki/Basic_access_authentication>`_ can be used out-of-the-box.
+
+.. important:: When accessing content which is restricted to certain EC keys - the node which exposes the HTTP proxy that is queried must be started with the granted private key as its ``bzzaccount`` CLI parameter.
 
 
 CLI usage
 ---------
 
-.. important:: Restricting access to content on Swarm is a 2-step process - you first upload your content, then wrap the reference with an access control manifest. **We recommend that you always upload your content with encryption enabled**. For the sake of the following examples we will refer to this hash as ``REF``
+.. important:: Restricting access to content on Swarm is a 2-step process - you first upload your content, then wrap the reference with an access control manifest. **We recommend that you always upload your content with encryption enabled**. In the following examples we will refer the uploaded content hash as ``REF``
 
 
-**Creating a password protected manifest:**
+**Protecting content with a password:**
 
 .. note:: The ``--password`` flag when using the ``pass`` strategy refers to the password that protects the access-controlled content. This file should contain the password in plaintext. The command expects you to input the uploaded swarm content hash you'd like to limit access to (``REF``)
 
@@ -95,11 +95,11 @@ Requesting the same hash with HTTP basic authentication (password only) would re
 	$ curl http://:mysupersecretpassword@localhost:8500/bzz:/4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
 
 
-**Creating an EC key-pair protected manifest (single grantee):**
+**Protecting content with Elliptic curve keys (single grantee):**
 
-.. note:: The ``pk`` strategy requires a ``bzz-account`` to encrypt with. The most comfortable option in this case would be the same ``bzz-account`` you normally start your Swarm node with - this will allow you to access your content seamlessly through that node at any given point in time.
+.. note:: The ``pk`` strategy requires a ``bzzaccount`` to encrypt with. The most comfortable option in this case would be the same ``bzzaccount`` you normally start your Swarm node with - this will allow you to access your content seamlessly through that node at any given point in time.
 
-.. note:: Grantee public keys are expected to be in an *secp256* compressed form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``).
+.. note:: Grantee public keys are expected to be in an *secp256 compressed* form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``). Comments and other characters are not allowed.
 
 .. code-block:: bash
 
@@ -108,13 +108,13 @@ Requesting the same hash with HTTP basic authentication (password only) would re
 
 The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. 
 
-The only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key - either the local node that was used to upload the content or the node which was granted access through its public key
+The only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key (and that the requesting node has been started with the appropriate ``bzzaccount`` that is associated with the relevant key) - either the local node that was used to upload the content or the node which was granted access through its public key.
 
-**Creating a password protected manifest (multiple recipients):**
+**Protecting content with Elliptic curve keys (multiple grantees):**
 
-.. note:: The ``act`` strategy requires a ``bzz-account`` to encrypt with. The most comfortable option in this case would be the same ``bzz-account`` you normally start your Swarm node with - this will allow you to access your content seamlessly through that node at any given point in time
+.. note:: The ``act`` strategy requires a ``bzzaccount`` to encrypt with. The most comfortable option in this case would be the same ``bzzaccount`` you normally start your Swarm node with - this will allow you to access your content seamlessly through that node at any given point in time
 
-.. note:: Grantee public keys are expected to be in an *secp256 compressed* form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``). Each grantee should appear in a separate line
+.. note:: the ``act`` strategy expects a grantee public-key list to be communicated to the CLI. This is done using the ``--grant-keys`` flag. Grantee public keys are expected to be in an *secp256 compressed* form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``). Each grantee should appear in a separate line. Comments and other characters are not allowed.
 
 .. code-block:: bash
 
@@ -123,7 +123,7 @@ The only way to fetch the access controlled content in this case would be to req
 
 The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. 
 
-As with the ``pk`` strategy - the only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key - either the local node that was used to upload the content or one of the nodes which were granted access through their public keys.
+As with the ``pk`` strategy - the only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key (and that the requesting node has been started with the appropriate ``bzzaccount`` that is associated with the relevant key) - either the local node that was used to upload the content or one of the nodes which were granted access through their public keys.
 
 
 HTTP usage
