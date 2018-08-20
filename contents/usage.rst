@@ -11,5 +11,6 @@ We conclude by summarizing the various URL schemes that provide simple http endp
 .. include:: usage/mru.rst
 .. include:: usage/manifests.rst
 .. include:: usage/encryption.rst
+.. include:: usage/act.rst
 .. include:: usage/fuse.rst
 .. include:: usage/bzz.rst
