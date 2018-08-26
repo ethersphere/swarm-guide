@@ -104,10 +104,10 @@ Example Dapps
 Reporting a bug and contributing
 ================================
 
-Issues are tracked on github and github only. Swarm related issues and PRs are labeled with Swarm:
+Issues are tracked on github and github only. Swarm related issues and PRs have labels prefixed with *swarm*:
 
 * https://github.com/ethersphere/go-ethereum/issues
-* Good first issues <https://github.com/ethersphere/go-ethereum/issues?utf8=✓&q=is%3Aopen+is%3Aissue+label%3A"good+first+issue">`_
+* `Good first issues <https://github.com/ethersphere/go-ethereum/issues?utf8=✓&q=is%3Aopen+is%3Aissue+label%3A"good+first+issue">`_
 
 Please include the commit and branch when reporting an issue.
 
