@@ -76,7 +76,8 @@ This only creates the resource, which will not return any data until a first upd
   "multihash": bool,
   "period": number,
   "version": number,
-  "signature": hex string 
+  "signature": hex string,
+  "ownerAddr": address
 	
 Where:
 
@@ -112,7 +113,8 @@ An example of the posted JSON could be:
     "multiHash": false
     "version": 1,
     "period": 1,
-    "signature": "0x71c54e53095466d019f9f46e34ae0b393d04a5dac7990ce65934a3944c1f39badfc8c4f3c78baaae8b2e86cd21940914c57a4dff5de45d47e35811f983991b7809"
+    "signature": "0x71c54e53095466d019f9f46e34ae0b393d04a5dac7990ce65934a3944c1f39badfc8c4f3c78baaae8b2e86cd21940914c57a4dff5de45d47e35811f983991b7809",
+    "ownerAddr": "0x7a2e393025c567ec4089d34f393ae6b5c234536a"
   }
 
 Go API
