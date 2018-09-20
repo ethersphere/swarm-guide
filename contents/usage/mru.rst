@@ -206,7 +206,8 @@ HTTP API
 To update the resource, create a new flat JSON with the following fields:
 
 .. code-block:: js
-
+  "rootHash": hex string,
+  "metaHash": hex string,
   "data": hex string,
   "multihash": bool,
   "period": number,
@@ -215,6 +216,8 @@ To update the resource, create a new flat JSON with the following fields:
 	
 Where:
 
+* ``rootHash`` The rootHash of the resource you want to update
+* ``metaHash`` The metaHash of the resource you want to update
 * ``data`` New data you want to set
 * ``multihash`` Whether the new data should be considered a multihash
 * ``period`` **See note below**
