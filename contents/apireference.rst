@@ -136,7 +136,22 @@ HTTP
 
 JavaScript
 ========================
-Swarm currently supports a Javascript API through a couple of packages:
+Swarm currently supports a Javascript API through a few packages:
+
+erebos
+^^^^^^^^^^^^^^^
+
+`erebos <https://erebos.js.org>`_ is available through `NPM <https://www.npmjs.com/package/@erebos/swarm>`_ by issuing
+the following command:
+
+.. code-block:: none
+
+  npm install @erebos/swarm-browser # browser only
+  npm install @erebos/swarm-node # node only
+  npm install @erebos/swarm # universal
+
+
+.. note:: Full documentation is available on the `documentation website <https://erebos.js.org>`_.
 
 swarm-js
 ^^^^^^^^^^^^^^^

@@ -71,7 +71,7 @@ Swarm offers several APIs:
  * CLI
  * JSON-RPC - using web3 bindings over Geth's IPC
  * HTTP interface - every Swarm node exposes a local HTTP proxy that implements the :ref:`bzz protocol suite`
- * Javascript - available through the `swarm-js <https://github.com/MaiaVictor/swarm-js>`_ or `swarmgw <https://www.npmjs.com/package/swarmgw>`_ packages
+ * Javascript - available through the `erebos <https://erebos.js.org>`_, `swarm-js <https://github.com/MaiaVictor/swarm-js>`_ or `swarmgw <https://www.npmjs.com/package/swarmgw>`_ packages
 
 
 Code
@@ -172,7 +172,7 @@ Special thanks
 * Nick Savers for his unrelenting support and meticulous reviews of our papers
 * Gregor Zavcer, Alexei Akhunov, Alex Beregszaszi, Daniel Varga, Julien Boutloup for inspiring discussions and ideas
 * Juan Benet and the IPFS team for continued inspiration
-* Carl Youngblood, Shane Howley, Paul De Cam, Doug Leonard and the mainframe team for their contribution to PSS and MRU
+* Carl Youngblood, Shane Howley, Paul Le Cam, Doug Leonard and the mainframe team for their contribution to PSS and MRU
 * Sourabh Niyogi and the entire Wolk team for the inspiring collaboration on databases
 * Ralph Pilcher for implementing the swap swear and swindle contract suite in solidity/truffle and Oren Sokolowsky for the initial version
 * Javier Peletier from Epiclabs (ethergit) for his contribution to MRUs
