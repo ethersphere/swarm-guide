@@ -1,10 +1,10 @@
-Mutable Resource Updates
+Feeds 
 ========================
 
 .. note::
-Mutable Resource Updates is a highly experimental feature, available from Swarm POC3. It is under active development, so expect things to change.
+Feeds, previously known as *Mutable resource Updates*,is a experimental feature, available from Swarm POC3. It is under active development, so expect things to change.
 
-We have previously learned in this guide that when we make changes in data in Swarm, the hash returned when we upload that data will change in totally unpredictable ways. With *Mutable Resource Updates*, Swarm provides a built-in way of keeping a persistent identifier to changing data.
+We have previously learned in this guide that when we make changes in data in Swarm, the hash returned when we upload that data will change in totally unpredictable ways. With *Feeds*, Swarm provides a built-in way of keeping a persistent identifier to changing data.
 
 The usual way of keeping the same pointer to changing data is using the Ethereum Name Service ``ENS``. However, ``ENS`` is an on-chain feature, which limits functionality in some areas:
 
@@ -12,110 +12,38 @@ The usual way of keeping the same pointer to changing data is using the Ethereum
 2. It is not be possible to change the data faster than the rate that new blocks are mined.
 3. Correct ``ENS`` resolution requires that you are always synced to the blockchain.
 
-*Mutable Resource Updates* allows us to have a non-variable identifier to changing data without having to use the ``ENS``. The Mutable Resource can be referenced like a regular Swarm object, using the key obtained when the resource was created ( ``MRU_MANIFEST_KEY`` ) .
-When the resource's data is updated the ``MRU_MANIFEST_KEY`` will  point to the new data.
+*Feeds* allows us to have a non-variable identifier to changing data without having to use the ``ENS``. 
 
-If using *Mutable Resource Updates* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``MRU_MANIFEST_KEY`` will be necessary. This key will resolve to the latest version of the resource (updating the resource will not change the key).
+If using *Feeds* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``MRU_MANIFEST_KEY`` will be necessary. This key will resolve to the latest version of the resource (updating the resource will not change the key).
 
-There  are 3 different ways of interacting with *Mutable Resource Updates* : HTTP API, Golang API and Swarm CLI.
 
-We will now see how to create, retrieve and update a Mutable Resource.
+You can think of a Feed as a user's Twitter account, where he/she posts updates about a particular Topic. In fact, the Feed object is simply defined, in go, as:
 
-Creating a Mutable Resource
+.. code-block:: go
+
+  type Feed struct {
+    Topic Topic
+    User  common.Address
+  }
+
+Users can post Feeds with any topic. If you know the user's address and agree on a particular topic, you can then effectively "follow" that user's feed.
+
+There  are 3 different ways of interacting with *Feeds* : HTTP API, Golang API and Swarm CLI. We will now see how to create, retrieve and update Feeds.
+
+Creating a Feed
 ----------------------------
-.. important:: * Only the private key (address) that created the Resource can update it. 
-               * When  creating a Mutable Resource, one of the parameters that you will have to provide is the expected update ``frequency``. This indicates  how often (in seconds) your resource will be updated. Although you can update the resource at other rates, doing so will slow down the process of retrieving the resource. 
+.. important:: * Only the private key (address) that created the Feed can update it. 
+              
 
 HTTP API
 ~~~~~~~~
 
-To create a mutable resource using the HTTP API:
+To create a Feed using the HTTP API:
 
-``POST /bzz-resource:/``  attaching as payload a JSON with the following fields:
+``POST /bzz-feed:/?topic=<TOPIC>&user=<USER>&manifest=1.`` With an empty body. 
 
-.. code-block:: js
+This will create an empty Feed ready to be updated
 
-  "name": string,
-  "frequency": number,
-  "startTime": number,
-  "ownerAddr": address
-	
-Where: 
-
-* ``name`` Resource name. This is a user field. You can use any name
-* ``frequency`` Expected time interval between updates, in seconds
-* ``startTime`` Time the resource is valid from, in Unix time (seconds). Set to the current epoch
-  
-  * You can also put a ``startTime`` in the past or in the future. Setting it in the future will prevent nodes from finding content until the clock hits ``startTime``. Setting it in the past allows you to create a history for the resource retroactively.
-
-
-Returns the ``MRU_MANIFEST_KEY`` as a quoted string.
-
-An example of the posted JSON could be:
-
-.. code-block:: js
-  
-  {
-    "name": "My 1st resource",
-    "frequency": 120,
-    "startTime": 1532435549,
-    "ownerAddr": "0x7a2e393025c567ec4089d34f393ae6b5c234536a"
-  }
-
-This only creates the resource, which will not return any data until a first update is submitted. Usually you will simultaneously create and initialize the resource. To do so: 
-
-``POST /bzz-resource:/`` attaching as payload a JSON with the following fields:
-
-.. code-block:: js
-
-  "name": string,
-  "frequency": number,
-  "startTime": number,
-  "rootAddr" : hex string,
-  "data": hex string,
-  "multihash": bool,
-  "period": number,
-  "version": number,
-  "signature": hex string,
-  "ownerAddr": address
-	
-Where:
-
-
-* ``rootAddr`` Key of the chunk that contains the Mutable Resource metadata. Calculated as the SHA3 hash of ``ownerAddr`` and ``metaHash``
-* ``data`` Content the Mutable Resource will be initialized with. Contains hex-encoded raw data or a multihash
-* ``multihash`` Is a flag indicating whether the data field should be interpreted as raw data or a multihash
-* ``period`` Indicates for what period we are signing. Set to 1 for creation
-* ``version`` Indicates what resource version of the period we are signing. Must be set to 1 for creation
-* ``signature`` Signature of the digest. Hex encoded. Prefixed with 0x. The signature is calculated as follows: digest = H(period, version, rootAddr, metaHash, multihash, data). Where: 
-
-  * ``H()`` is the SHA3 algorithm
-  * ``period`` version are encoded as little-endian uint64
-  * ``rootAddr`` is encoded as a 32 byte array
-  * ``metaHash`` is encoded as a 32 byte array
-  * ``multihash`` is encoded as the least significant bit of a flags byte
-  * ``data`` is the plain data byte array
-
-
-
-Returns the ``MRU_MANIFEST_KEY`` as a quoted string. 
-
-An example of the posted JSON could be:
-
-.. code-block:: js
-  
-  {
-    "name": "My 1st resource",
-    "frequency": 120,
-    "startTime": 1528722352,
-    "rootAddr": "0x0c5acf8e3176900bc5b7b732261b5ebafc05a56da3b01c044214408e841f4ded",
-    "data": 0x12a3
-    "multiHash": false
-    "version": 1,
-    "period": 1,
-    "signature": "0x71c54e53095466d019f9f46e34ae0b393d04a5dac7990ce65934a3944c1f39badfc8c4f3c78baaae8b2e86cd21940914c57a4dff5de45d47e35811f983991b7809",
-    "ownerAddr": "0x7a2e393025c567ec4089d34f393ae6b5c234536a"
-  }
 
 Go API
 ~~~~~~~~
@@ -123,35 +51,49 @@ Go API
 Swarm client (package swarm/api/client) has the following method:
 
 .. code-block:: go 
-	
-	CreateResource(request *mru.Request) (string, error)
+  
+  func (c *Client) CreateFeedWithManifest(request *feed.Request) (string, error) 
 
-Returns the resulting ``MRU_MANIFEST_KEY`` 
+``CreateFeedWithManifest`` uses the ``request`` parameter to set and create a ``feed manifest``.
 
-``CreateResource()`` creates a Mutable Resource according to the data included in the Request parameter. 
-To create a ``mru.Request``, use the ``mru.NewCreateRequest()`` function.
+Returns the resulting feed manifest address that you can set in an ENS Resolver (setContent) or reference future updates using ``Client.UpdateFeed``
 
+The ``feed.Request`` type is defined as:
 
+.. code-block:: go 
+  
+  type Request struct {
+	Update     // actual content that will be put on the chunk, less signature
+	Signature  *Signature
+	idAddr     storage.Address // cached chunk address for the update (not serialized, for internal use)
+	binaryData []byte          // cached serialized data (does not get serialized again!, for efficiency/internal use)
+  }
 
 Swarm CLI
 ~~~~~~~~~~~~~
 
-The swarm CLI allows to create Mutable Resources directly from the console:
+The swarm CLI allows to create Feeds directly from the console:
 
-.. code-block:: none
+``swarm feed create`` is redefined as a command line to create and publish a Feed manifest only, an "empty Feed".
 
-  swarm --bzzaccount="<account>" resource create <frequency> [--name <name>] [--data <0x hex data> [--multihash]]
-	
-Where:
+``swarm feed create [command options]``
 
-* ``account`` Ethereum account needed to sign
-* ``frequency`` Time interval the resource is expected to update at, in **seconds**
-* ``multihash`` Is a flag indicating that the data should be interpreted as a multihash. By default data isn't interpreted as a multihash
-* ``data`` Contains hex-encoded raw data or a multihash of the content the Mutable Resource will be initialized with. Must be prefixed with 0x, and if is a swarm keccak256 hash, with 0x1b20
+.. code-block:: bash
 
-Returns the ``MRU_MANIFEST_KEY`` of the Mutable Resource
+  creates and publishes a new Feed manifest pointing to a specified user's updates about a particular topic.
+          The topic can be specified directly with the --topic flag as an hex string
+          If no topic is specified, the default topic (zero) will be used
+          The --name flag can be used to specify subtopics with a specific name
+          The --user flag allows to have this manifest refer to a user other than yourself. If not specified,
+          it will then default to your local account (--bzzaccount)
 
-Retrieving a Mutable Resource
+  OPTIONS:
+    --name value   User-defined name for the new resource, limited to 32 characters. If combined with topic, the resource will be a subtopic with this name
+    --topic value  User-defined topic this resource is tracking, hex encoded. Limited to 64 hexadecimal characters
+    --user value   Indicates the user who updates the resource	
+
+
+Retrieving a Feed
 ------------------------------
 .. important::
   
@@ -182,7 +124,7 @@ To retrieve a resource we use the following method:
 
 	GetResource(manifestAddressOrDomain string) (io.ReadCloser, error)
 
-* ``manifestAddressOrDomain`` Either the ``ENS`` domain or ``MRU_MANIFEST_KEY`` associated to the *Mutable Resource* 
+* ``manifestAddressOrDomain`` Either the ``ENS`` domain or ``MRU_MANIFEST_KEY`` associated to the *Feed* 
 
 Returns the latest data currently contained in the resource as an octect stream. 
 
@@ -197,7 +139,7 @@ The swarm client doesn't allow to retrieve a resource per se, however we can use
 
 This will output the resource's metainfo.
 
-Updating a Mutable Resource
+Updating a Feed
 ----------------------------
 
 HTTP API
@@ -259,23 +201,3 @@ As mentioned earlier, if you want to use the output of ``swarm up``, prefix it w
 
 Mutable Resource versioning
 ----------------------------
-As explained above, we need to specify a ``frequency`` parameter when we create a resource. This indicates the time in seconds that are expected to pass between each update.
-In Mutable Resources we call this the ``period``. When you make an update, it will belong to the  *current period*.
-
-Let's make this less obscure with some concrete examples:
-
-* Mutable Resource is created and initialized with data at timestamp ``4200000`` with frequency ``100``
-* Update made at timestamp ``4200050``. Update will belong to period ``1``
-* Update made at timestamp ``4200110``. Update will belong to period ``2``
-* Update made at timestamp ``4200190``. Update will *also* belong to period ``2``
-* Update made at timestamp ``4200200``. Update will belong to period ``3``
-
-A resource can be updated more than once every period. Every update within the same period is a ``version``.
-
-* Mutable Resource creation and initialization = period ``1`` version ``1`` = ``1.1``
-* Timestamp ``4200050`` = period ``1`` version ``2`` = ``1.2``
-* Timestamp ``4200110`` = period ``2`` version ``1`` = ``2.1``
-* Timestamp ``4200190`` = period ``2`` version ``2`` = ``2.2``
-* Timestamp ``4200200`` = period ``3`` version ``1`` = ``3.1``
-
-Remember that updating your resource, at a rate diferent from the specified in the ``frequency`` field, will slow down the resource retrieval.
