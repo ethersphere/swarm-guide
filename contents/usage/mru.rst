@@ -2,7 +2,7 @@ Feeds
 ========================
 
 .. note::
-Feeds, previously known as *Mutable resource Updates*,is a experimental feature, available from Swarm POC3. It is under active development, so expect things to change.
+Feeds, previously known as *Mutable resource Updates*, is a experimental feature, available from Swarm POC3. It is under active development, so expect things to change.
 
 We have previously learned in this guide that when we make changes in data in Swarm, the hash returned when we upload that data will change in totally unpredictable ways. With *Feeds*, Swarm provides a built-in way of keeping a persistent identifier to changing data.
 
@@ -14,10 +14,10 @@ The usual way of keeping the same pointer to changing data is using the Ethereum
 
 *Feeds* allows us to have a non-variable identifier to changing data without having to use the ``ENS``. 
 
-If using *Feeds* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``MRU_MANIFEST_KEY`` will be necessary. This key will resolve to the latest version of the resource (updating the resource will not change the key).
+If using *Feeds* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``Feed manifest address`` will be necessary. This key will resolve to the latest version of the feed (updating the feed will not change the key).
 
 
-You can think of a Feed as a user's Twitter account, where he/she posts updates about a particular Topic. In fact, the Feed object is simply defined, in go, as:
+You can think of a Feed as a user's Twitter account, where he/she posts updates about a particular Topic. In fact, the Feed object is simply defined as:
 
 .. code-block:: go
 
@@ -95,49 +95,66 @@ The swarm CLI allows to create Feeds directly from the console:
 
 Retrieving a Feed
 ------------------------------
-.. important::
-  
-  In order to retrieve a resource's content, it must have been initialized with data (either at resource creation or through a later update) and ``startTime < currentTime``.
-
 HTTP API
 ~~~~~~~~
-To retrieve a resource:
+To retrieve a Feed's last update:
 
-* ``GET /bzz-resource://<MRU_MANIFEST_KEY>`` Get latest update
-* ``GET /bzz-resource://<MRU_MANIFEST_KEY>/<n>`` Get latest update on period n
-* ``GET /bzz-resource://<MRU_MANIFEST_KEY>/<n>/<m>`` Get update version m of period n 
-* ``GET /bzz-resource://<MRU_MANIFEST_KEY>/meta`` Returns the resource metadata
+``GET /bzz-feed:/?topic=<TOPIC>&user=<USER>``
 
-By using ``bzz-resource://`` you get the raw data that was put in the resource. If the resource data is a multihash, using ``bzz://`` will return the content pointed by the multihash,
-whereas ``bzz-resource://``  returns the actual multihash.
+``GET /bzz-feed:/<MANIFEST OR ENS NAME>``
 
 .. note::
 
-  + ``MRU_MANIFEST_KEY`` can be substituted by an ``ENS`` domain that has it content set to a ``MRU_MANIFEST_KEY``
-  +	The ``bzz-resource`` and ``bzz`` scheme behaviour is expected to change 
+  + Again, if ``topic`` is omitted, it is assumed to be zero, 0x000...
+  + If ``name=<name>`` is provided, a subtopic is composed with that name
+  + A common use is to omit ``topic`` and just use ``name``, allowing for human-readable topics, for example:      
+    ``GET /bzz-feed:/?name=profile-picture&user=<USER>``
+
+
+To get a previous update:
+
+Add an addtional ``time`` parameter. The last update before that ``time`` will be looked up.
+
+``GET /bzz-feed:/?topic=<TOPIC>&user=<USER>&time=<T>``
+
+``GET /bzz-feed:/<MANIFEST OR ENS NAME>?time=<T>``
+
 
 Go API
 ~~~~~~~~
-To retrieve a resource we use the following method: 
 
-.. code-block:: go 
 
-	GetResource(manifestAddressOrDomain string) (io.ReadCloser, error)
+The ``Query`` object allows you to build a query to browse a particular ``Feed``.
 
-* ``manifestAddressOrDomain`` Either the ``ENS`` domain or ``MRU_MANIFEST_KEY`` associated to the *Feed* 
+.. code-block:: go
 
-Returns the latest data currently contained in the resource as an octect stream. 
+  // Query is used to specify constraints when performing an update lookup
+  type Query struct {
+    Feed
+    Hint      lookup.Epoch
+    TimeLimit uint64    // TimeLimit indicates an upper bound for the search. Set to 0 for "now"
 
-Swarm CLI
-~~~~~~~~~~~~~
+  }
+  
 
-The swarm client doesn't allow to retrieve a resource per se, however we can use it to retrieve the metainfo:
 
-.. code-block:: none
+The default ``Query``, obtained with ``feed.NewQueryLatest()`` will build a ``Query`` that retrieves the latest update of the given ``Feed``.
 
-  swarm resource info <MRU_MANIFEST_KEY>
+You can also use ``feed.NewQuery()`` instead, if you want to build a ``Query`` to look up an update before a certain date.
 
-This will output the resource's metainfo.
+Advanced usage of ``Query`` includes hinting the lookup algorithm for faster lookups. The default hint ``lookup.NoClue`` will have your node track feeds you query frequently and handle hints automatically.
+
+We can then use the ``Query`` with: 
+
+.. code-block:: go
+
+  func (c *Client) QueryFeed(query *feed.Query, manifestAddressOrDomain string) (io.ReadCloser, error)
+
+``QueryFeed`` returns a byte stream with the raw content of the feed update.  
+
+``manifestAddressOrDomain`` is the address you obtained in ``CreateFeedWithManifest`` or an ``ENS`` domain whose Resolver
+points to that address.
+
 
 Updating a Feed
 ----------------------------
