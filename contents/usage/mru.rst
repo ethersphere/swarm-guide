@@ -2,7 +2,7 @@ Feeds
 ========================
 
 .. note::
-Feeds, previously known as *Mutable resource Updates*, is a experimental feature, available from Swarm POC3. It is under active development, so expect things to change.
+  Feeds, previously known as *Mutable resource Updates*, is a experimental feature, available from Swarm POC3. It is under active development, so expect things to change.
 
 We have previously learned in this guide that when we make changes in data in Swarm, the hash returned when we upload that data will change in totally unpredictable ways. With *Feeds*, Swarm provides a built-in way of keeping a persistent identifier to changing data.
 
@@ -12,9 +12,9 @@ The usual way of keeping the same pointer to changing data is using the Ethereum
 2. It is not be possible to change the data faster than the rate that new blocks are mined.
 3. Correct ``ENS`` resolution requires that you are always synced to the blockchain.
 
-*Feeds* allows us to have a non-variable identifier to changing data without having to use the ``ENS``. 
+Feeds allows us to have a non-variable identifier to changing data without having to use the ``ENS``. 
 
-If using *Feeds* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``Feed manifest address`` will be necessary. This key will resolve to the latest version of the feed (updating the feed will not change the key).
+If using *Feeds* in conjunction with an ``ENS`` resolver contract, only one initial transaction to register the ``Feed manifest address`` will be necessary. This key will resolve to the latest version of the Feed (updating the Feed will not change the key).
 
 
 You can think of a Feed as a user's Twitter account, where he/she posts updates about a particular Topic. In fact, the Feed object is simply defined as:
@@ -26,24 +26,27 @@ You can think of a Feed as a user's Twitter account, where he/she posts updates 
     User  common.Address
   }
 
-Users can post Feeds with any topic. If you know the user's address and agree on a particular topic, you can then effectively "follow" that user's feed.
+Users can post to any topic. If you know the user's address and agree on a particular topic, you can then effectively "follow" that user's Feed.
 
 There  are 3 different ways of interacting with *Feeds* : HTTP API, Golang API and Swarm CLI. We will now see how to create, retrieve and update Feeds.
 
-Creating a Feed
+Creating a Feed (Manifest)
 ----------------------------
-.. important:: * Only the private key (address) that created the Feed can update it. 
-              
+
+Feeds are not created, only updated. If a particular Feed has never been updated, trying to fetch it will yield nothing.
+
+What we can create is a ``Feed manifest``. A ``Feed manifest`` contains the ``topic`` and ``user`` of a particular Feed.
+One use of this ``manifest``, is to include its ``address`` in a ``ENS`` Resolver, which allows to have a ENS domain
+that "follows" the Feed described in the manifest.
 
 HTTP API
 ~~~~~~~~
 
-To create a Feed using the HTTP API:
+To create a ``Feed manifest`` using the HTTP API:
 
-``POST /bzz-feed:/?topic=<TOPIC>&user=<USER>&manifest=1.`` With an empty body. 
+``POST /bzz-Feed:/?topic=<TOPIC>&user=<USER>&manifest=1.`` With an empty body. 
 
-This will create an empty Feed ready to be updated
-
+This will create a manifest referencing the provided Feed
 
 Go API
 ~~~~~~~~
@@ -54,31 +57,24 @@ Swarm client (package swarm/api/client) has the following method:
   
   func (c *Client) CreateFeedWithManifest(request *feed.Request) (string, error) 
 
-``CreateFeedWithManifest`` uses the ``request`` parameter to set and create a ``feed manifest``.
+``CreateFeedWithManifest`` uses the ``request`` parameter to set and create a  ``Feed manifest``.
 
-Returns the resulting feed manifest address that you can set in an ENS Resolver (setContent) or reference future updates using ``Client.UpdateFeed``
+Returns the resulting ``Feed manifest address`` that you can set in an ENS Resolver (setContent) or reference future updates using ``Client.UpdateFeed``
 
 The ``feed.Request`` type is defined as:
 
-.. code-block:: go 
-  
-  type Request struct {
-	Update     // actual content that will be put on the chunk, less signature
-	Signature  *Signature
-	idAddr     storage.Address // cached chunk address for the update (not serialized, for internal use)
-	binaryData []byte          // cached serialized data (does not get serialized again!, for efficiency/internal use)
-  }
+
 
 Swarm CLI
 ~~~~~~~~~~~~~
 
-The swarm CLI allows to create Feeds directly from the console:
+The swarm CLI allows to create Feed Manifests directly from the console:
 
-``swarm feed create`` is redefined as a command line to create and publish a Feed manifest only, an "empty Feed".
-
-``swarm feed create [command options]``
+``swarm feed create`` is redefined as a command line to create and publish a ``Feed manifest``.
 
 .. code-block:: bash
+
+  swarm feed create [command options]
 
   creates and publishes a new Feed manifest pointing to a specified user's updates about a particular topic.
           The topic can be specified directly with the --topic flag as an hex string
@@ -113,7 +109,7 @@ To retrieve a Feed's last update:
 
 To get a previous update:
 
-Add an addtional ``time`` parameter. The last update before that ``time`` will be looked up.
+Add an addtional ``time`` parameter. The last update before that ``time`` (unix time) will be looked up.
 
 ``GET /bzz-feed:/?topic=<TOPIC>&user=<USER>&time=<T>``
 
@@ -125,18 +121,6 @@ Go API
 
 
 The ``Query`` object allows you to build a query to browse a particular ``Feed``.
-
-.. code-block:: go
-
-  // Query is used to specify constraints when performing an update lookup
-  type Query struct {
-    Feed
-    Hint      lookup.Epoch
-    TimeLimit uint64    // TimeLimit indicates an upper bound for the search. Set to 0 for "now"
-
-  }
-  
-
 
 The default ``Query``, obtained with ``feed.NewQueryLatest()`` will build a ``Query`` that retrieves the latest update of the given ``Feed``.
 
@@ -161,60 +145,90 @@ Updating a Feed
 
 HTTP API
 ~~~~~~~~
+To publish an update we first need to get some metainfromation about the Feed:
 
-To update the resource, create a new flat JSON with the following fields:
+1.- Get resource metainformation
 
-.. code-block:: js
+``GET /bzz-feed:/?topic=<TOPIC>&user=<USER>&meta=1``
 
-  "data": hex string,
-  "multihash": bool,
-  "period": number,
-  "version": number,
-  "signature": hex string 
-	
+``GET /bzz-feed:/<MANIFEST OR ENS NAME>/?meta=1``
+
+
 Where:
-
-* ``data`` New data you want to set
-* ``multihash`` Whether the new data should be considered a multihash
-* ``period`` **See note below**
-* ``version`` **See note below**
-* ``signature`` Calculated in the same way as explained above for simultaneous resource creation and update
-
-Then, POST the resulting JSON to: ``POST /bzz-resource:/``
+ + ``user``: Ethereum address of the user who publishes the resource
+ + ``topic``: Resource topic, encoded as a hex string.
 
 .. note::
+  + If topic is omitted, it is assumed to be zero, 0x000...
+  + if name=<name> is provided, a subtopic is composed with that name
+  + A common use is to omit topic and just use name, allowing for human-readable topics.
 
-  To avoid any unexpected behaviour the ``period`` and ``version`` values of the update must be set to the recommended values obtained when doing ``GET /bzz-resource://<MRU_MANIFEST_KEY>/meta``.
+You will receive a JSON like the below:
+
+.. code-block:: js
+ 
+  {
+    "view": {
+      "topic": "0x6a61766900000000000000000000000000000000000000000000000000000000",
+      "user": "0xdfa2db618eacbfe84e94a71dda2492240993c45b"
+    },
+    "epoch": {
+      "level": 16,
+      "time": 1534237239
+    }
+  }
+
+2.- Post the update
+
+Extract the fields out of the JSON and build a query string as below:
+
+``POST /bzz-resource:/?topic=<TOPIC>&user=<USER>&level=<LEVEL>&time=<TIME>&signature=<SIGNATURE>``
+
+Where:
+ + ``body``: binary stream with the update data.
+
+
 
 Go API
 ~~~~~~~~
-As with the HTTP API, we have to know the version and period that are valid for the update. To get this information we use :
+
+With the go library we can update a Feed using:
 
 .. code-block:: go
+  
+  func (c *Client) updateFeed(request *feed.Request, createManifest bool) (io.ReadCloser, error) 
 
-  GetResourceMetadata(manifestAddressOrDomain string) (*mru.Request, error)
-
-Returns a ``mru.Request`` object that describes the resource and can be used to construct an update. To finish constructing the request for the update we need to: 
-
-* Call ``Request.SetData()`` to put the new data in
-* Call ``Request.Sign()`` to sign the update
-
-Once we have our request fully constructed, we can update our resource by calling: 
+We can  manually build the request parameter, or fetch a valid "template" to use for the update:
 
 .. code-block:: go
+  
+  func (c *Client) GetFeedRequest(query *feed.Query, manifestAddressOrDomain string) (*feed.Request, error)
 
-  UpdateResource(request *mru.Request)
 
-Where ``request`` is the previously constructed request.
 
 Swarm CLI
 ~~~~~~~~~~~~~
+
+To update a Feed with the cli:
+
 .. code-block:: none
 
-  swarm --bzzaccount="<account>" resource update <Manifest Address or ENS domain> <0x Hexdata> [--multihash]
+  swarm resource update [command options] <0x Hex data>
 
-The ``--multihash`` flag sets multihash to true. By default the data is not considered to be a multihash.
-As mentioned earlier, if you want to use the output of ``swarm up``, prefix it with ``0x1b20`` to indicate a keccak256 hash.
+  creates a new update on the specified topic
+            The topic can be specified directly with the --topic flag as an hex string
+            If no topic is specified, the default topic (zero) will be used
+            The --name flag can be used to specify subtopics with a specific name.
+            If you have a manifest, you can specify it with --manifest instead of --topic / --name
+            to refer to the resource
 
-Mutable Resource versioning
-----------------------------
+  OPTIONS:
+  --manifest value  Refers to the resource through a manifest
+  --name value      User-defined name for the new resource, limited to 32 characters. If combined with topic, the resource will be a subtopic with this name
+  --topic value     User-defined topic this resource is tracking, hex encoded. Limited to 64 hexadecimal characters
+
+
+
+
+You can find more information about Feeds in  : https://github.com/ethereum/go-ethereum/pull/17559
+
