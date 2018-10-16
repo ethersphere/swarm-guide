@@ -150,7 +150,8 @@ Advanced usage of ``Query`` includes hinting the lookup algorithm for faster loo
 Request object
 .................
 
-The ``Request`` object makes it easy to construct and sign a request to Swarm to update a particular Feed. It contains methods to sign and add data.
+The ``Request`` object makes it easy to construct and sign a request to Swarm to update a particular Feed. It contains methods to sign and add data. We can  manually build the ``Request`` object, or fetch a valid "template" to use for the update.
+
 A ``Request`` can also be serialized to JSON in case you need your application to delegate signatures, such as having a browser sign a feed update request.
 
 Posting to a Feed
@@ -170,7 +171,7 @@ Posting to a Feed
   
   func (c *Client) updateFeed(request *feed.Request, createManifest bool) (io.ReadCloser, error) 
 
-We can  manually build the request parameter, or fetch a valid "template" to use for the update:
+
 
 
 Reading a Feed
@@ -202,8 +203,6 @@ Swarm client (package swarm/api/client) has the following method:
 ``CreateFeedWithManifest`` uses the ``request`` parameter to set and create a  ``Feed manifest``.
 
 Returns the resulting ``Feed manifest address`` that you can set in an ENS Resolver (setContent) or reference future updates using ``Client.UpdateFeed``
-
-The ``feed.Request`` type is defined as:
 
 Example Go code
 ...............
