@@ -249,23 +249,18 @@ To update a Feed with the cli:
 
 .. code-block:: none
 
-  swarm feed create [command options] [arguments...]
+ swarm feed update [command options] <0x Hex data>
 
-  creates and publishes a new feed manifest pointing to a specified user's updates about a particular topic.
-            The feed topic can be built in the following ways:
-            * use --topic to set the topic to an arbitrary binary hex string.
-            * use --name to set the topic to a human-readable name.
-                For example --name could be set to "profile-picture", meaning this feed allows to get this user's current profile picture.
-            * use both --topic and --name to create named subtopics. 
-              For example, --topic could be set to an Ethereum contract address and --name could be set to "comments", meaning
-              this feed tracks a discussion about that contract.
-            The --user flag allows to have this manifest refer to a user other than yourself. If not specified,
-            it will then default to your local account (--bzzaccount)
-
-  OPTIONS:
-  --name value   User-defined name for the new feed, limited to 32 characters. If combined with topic, it will refer to a subtopic with this name
-  --topic value  User-defined topic this feed is tracking, hex encoded. Limited to 64 hexadecimal characters
-  --user value   Indicates the user who updates the feed
+ creates a new update on the specified topic
+            The topic can be specified directly with the --topic flag as an hex string
+            If no topic is specified, the default topic (zero) will be used
+            The --name flag can be used to specify subtopics with a specific name.
+            If you have a manifest, you can specify it with --manifest instead of --topic / --name
+            to refer to the feed
+   OPTIONS:
+  --manifest value  Refers to the feed through a manifest
+  --name value      User-defined name for the new feed, limited to 32 characters. If combined with topic, the feed will be a       subtopic with this name
+  --topic value     User-defined topic this feed is tracking, hex encoded. Limited to 64 hexadecimal characters
 
 
 Reading feed status
