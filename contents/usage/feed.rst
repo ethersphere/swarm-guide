@@ -2,17 +2,18 @@ Feeds
 ========================
 
 .. note::
-  Feeds, previously known as *Mutable Resource Updates*, is a experimental feature, available since Swarm POC3. It is under active development, so expect things to change.
+  Feeds, previously known as *Mutable Resource Updates*, is an experimental feature, available since Swarm POC3. It is under active development, so expect things to change.
 
-We have previously learned in this guide that when we make changes in data in Swarm, the hash returned when we upload that data will change in totally unpredictable ways. With *Feeds*, Swarm provides a built-in way of keeping a persistent identifier to changing data.
+Since Swarm hashes are content addressed, changes to data will constantly result in changing hashes. Swarm Feeds provide a way to easily overcome this problem and provide a single, persistent, identifier to follow sequential data.
 
-The usual way of keeping the same pointer to changing data is using the Ethereum Name Service (ENS). However, ENS is an on-chain feature, which limits functionality in some areas:
+The usual way of keeping the same pointer to changing data is using the Ethereum Name Service (ENS). However, since ENS is an on-chain feature, it might not be suitable for each use case since:
 
-1. Every update to an ENS resolver will cost gas to execute.
-2. It is not be possible to change the data faster than the rate that new blocks are mined.
-3. Correct ENS resolution requires that your node is always synced to the blockchain.
+1. Every update to an ENS resolver will cost gas to execute
+2. It is not be possible to change the data faster than the rate that new blocks are mined
+3. ENS resolution requires your node to be synced to the blockchain
 
-Swarm Feeds provides a way to have a non-variable identifier for changing data without having to use ENS. It is named Feeds for its similarity with a news feed.
+
+Swarm Feeds provide a way to have a persistent identifier for changing data without having to use ENS. It is named Feeds for its similarity with a news feed.
 
 If you are using *Feeds* in conjunction with an ENS resolver contract, only one initial transaction to register the "Feed manifest address" will be necessary. This key will resolve to the latest version of the Feed (updating the Feed will not change the key).
 
@@ -25,16 +26,26 @@ You can think of a Feed as a user's Twitter account, where he/she posts updates 
     User  common.Address
   }
 
-That is, a specific user posting updates about a specific topic.
+That is, a specific user posting updates about a specific Topic.
 
-Users can post to any topic. If you know the user's address and agree on a particular topic, you can then effectively "follow" that user's Feed.
+Users can post to any topic. If you know the user's address and agree on a particular Topic, you can then effectively "follow" that user's Feed.
+
+.. important::
+  How you build the Topic is entirely up to your application. You could calculate a hash of something and use that, the recommendation
+  is that it should be easy to derive out of information that is accesible to other users.
+  
+  For convenience, ``feed.NewTopic()`` provides a way to "merge" a byte array with a string in order to build a Feed Topic out of both.
+  This is used at the API level to create the illusion of subtopics. This way of building topics allows to use a random byte array (for example the hash of a photo)
+  and merge it with a human-readable string such as "comments" in order to create a Topic that could represent the comments about that particular photo.
+  This way, when you see a picture in a website you could immediately build a Topic out of it and see if some user posted comments about that photo.
 
 Feeds are not created, only updated. If a particular Feed (user, topic combination) has never posted to, trying to fetch updates will yield nothing.
 
 Feed Manifests
 --------------
 
-A Feed Manifest is simply a JSON object that contains the ``Topic`` and ``User`` of a particular feed (i.e., a serialized ``Feed`` object). Uploading this JSON object to Swarm in the regular way will return the immutable hash of this object. We can then store this immutable hash in an ENS Resolver so that we can have a ENS domain that "follows" the Feed described in the manifest.
+
+A Feed Manifest is simply a JSON object that contains the ``Topic`` and ``User`` of a particular Feed (i.e., a serialized ``Feed`` object). Uploading this JSON object to Swarm in the regular way will return the immutable hash of this object. We can then store this immutable hash in an ENS Resolver so that we can have a ENS domain that "follows" the Feed described in the manifest.
 
 Feeds API
 ---------
@@ -47,9 +58,9 @@ HTTP API
 Posting to a Feed
 .................
 
-Since feed updates need to be signed, and an update has some correlation with a previous update, it is necessary to retrieve first the feed's current status. Thus, the first step to post an update will be to retrieve this current status in a ready-to-sign template:
+Since Feed updates need to be signed, and an update has some correlation with a previous update, it is necessary to retrieve first the Feed's current status. Thus, the first step to post an update will be to retrieve this current status in a ready-to-sign template:
 
-1.- Get feed template
+1. Get Feed template
 
 ``GET /bzz-feed:/?topic=<TOPIC>&user=<USER>&meta=1``
 
@@ -57,13 +68,13 @@ Since feed updates need to be signed, and an update has some correlation with a 
 
 
 Where:
- + ``user``: Ethereum address of the user who publishes the resource
- + ``topic``: Resource topic, encoded as a hex string. Topic is an arbitrary 32-byte string (64 hex chars)
+ + ``user``: Ethereum address of the user who publishes the Feed
+ + ``topic``: Feed topic, encoded as a hex string. Topic is an arbitrary 32-byte string (64 hex chars)
 
 .. note::
   + If ``topic`` is omitted, it is assumed to be zero, 0x000...
   + if ``name=<name>`` (optional) is provided, a subtopic is composed with that name
-  + A common use is to omit topic and just use ``name``, allowing for human-readable topics.
+  + A common use is to omit topic and just use ``name``, allowing for human-readable topics
 
 You will receive a JSON like the below:
 
@@ -81,20 +92,20 @@ You will receive a JSON like the below:
     "protocolVersion" : 0,
   }
 
-2.- Post the update
+2. Post the update
 
 Extract the fields out of the JSON and build a query string as below:
 
-``POST /bzz-resource:/?topic=<TOPIC>&user=<USER>&level=<LEVEL>&time=<TIME>&signature=<SIGNATURE>``
+``POST /bzz-feed:/?topic=<TOPIC>&user=<USER>&level=<LEVEL>&time=<TIME>&signature=<SIGNATURE>``
 
 Where:
- + ``topic``: feed topic, as specified above
- + ``user``: your Ethereum address.
+ + ``topic``: Feed topic, as specified above
+ + ``user``: your Ethereum address
  + ``level``: Suggested frequency level retrieved in the JSON above
- + ``time``: Suggested timestamp retrieved in the JSON above.
- + ``protocolVersion``: Feeds protocol version. Currently ``0``.
- + ``signature``: Signature, hex encoded. See below on how to calclulate the signature.
- + Request posted data: binary stream with the update data.
+ + ``time``: Suggested timestamp retrieved in the JSON above
+ + ``protocolVersion``: Feeds protocol version. Currently ``0``
+ + ``signature``: Signature, hex encoded. See below on how to calclulate the signature
+ + Request posted data: binary stream with the update data
 
 
 Reading a Feed
@@ -131,7 +142,8 @@ To create a ``Feed manifest`` using the HTTP API:
 
 This will create a manifest referencing the provided Feed.
 
-Note: This API call will be deprecated in the near future.
+.. note::
+  This API call will be deprecated in the near future.
 
 Go API
 ~~~~~~~~
@@ -145,31 +157,31 @@ The default ``Query``, obtained with ``feed.NewQueryLatest()`` will build a ``Qu
 
 You can also use ``feed.NewQuery()`` instead, if you want to build a ``Query`` to look up an update before a certain date.
 
-Advanced usage of ``Query`` includes hinting the lookup algorithm for faster lookups. The default hint ``lookup.NoClue`` will have your node track feeds you query frequently and handle hints automatically.
+Advanced usage of ``Query`` includes hinting the lookup algorithm for faster lookups. The default hint ``lookup.NoClue`` will have your node track Feeds you query frequently and handle hints automatically.
 
 Request object
 .................
 
 The ``Request`` object makes it easy to construct and sign a request to Swarm to update a particular Feed. It contains methods to sign and add data. We can  manually build the ``Request`` object, or fetch a valid "template" to use for the update.
 
-A ``Request`` can also be serialized to JSON in case you need your application to delegate signatures, such as having a browser sign a feed update request.
+A ``Request`` can also be serialized to JSON in case you need your application to delegate signatures, such as having a browser sign a Feed update request.
 
 Posting to a Feed
 .................
 
-1.- Retrieve a ``Request`` object or build one from scratch. To retrieve a ready-to-sign one: 
+1. Retrieve a ``Request`` object or build one from scratch. To retrieve a ready-to-sign one: 
 
 .. code-block:: go
   
   func (c *Client) GetFeedRequest(query *feed.Query, manifestAddressOrDomain string) (*feed.Request, error)
 
-2.- Use ``Request.SetData()`` and ``Request.Sign()`` to load the payload data into the request and sign it.
+2. Use ``Request.SetData()`` and ``Request.Sign()`` to load the payload data into the request and sign it
 
-3.- call ``updateFeed()`` with the filled ``Request``
+3. Call ``UpdateFeed()`` with the filled ``Request``:
 
 .. code-block:: go
   
-  func (c *Client) updateFeed(request *feed.Request, createManifest bool) (io.ReadCloser, error) 
+  func (c *Client) UpdateFeed(request *feed.Request, createManifest bool) (io.ReadCloser, error) 
 
 
 
@@ -177,7 +189,7 @@ Posting to a Feed
 Reading a Feed
 ..............
 
-To retrieve a feed update, use `client.QueryFeed()`. ``QueryFeed`` returns a byte stream with the raw content of the feed update.  
+To retrieve a Feed update, use `client.QueryFeed()`. ``QueryFeed`` returns a byte stream with the raw content of the Feed update.  
 
 .. code-block:: go
 
@@ -202,7 +214,7 @@ Swarm client (package swarm/api/client) has the following method:
 
 ``CreateFeedWithManifest`` uses the ``request`` parameter to set and create a  ``Feed manifest``.
 
-Returns the resulting ``Feed manifest address`` that you can set in an ENS Resolver (setContent) or reference future updates using ``Client.UpdateFeed``
+Returns the resulting ``Feed manifest address`` that you can set in an ENS Resolver (setContent) or reference future updates using ``Client.UpdateFeed()``
 
 Example Go code
 ...............
@@ -236,7 +248,6 @@ Example Go code
   err = client.UpdateFeed(request)
   if err != nil {
       utils.Fatalf("Error updating feed: %s", err.Error())
-      return
   }
 
 Command-Line
@@ -263,7 +274,7 @@ To update a Feed with the cli:
   --topic value     User-defined topic this feed is tracking, hex encoded. Limited to 64 hexadecimal characters
 
 
-Reading feed status
+Reading Feed status
 ...................
 
 .. code-block:: none
@@ -290,9 +301,9 @@ Reading feed status
 Creating a Feed Manifest
 ........................
 
-The swarm CLI allows to create Feed Manifests directly from the console:
+The Swarm CLI allows to create Feed Manifests directly from the console:
 
-``swarm feed create`` is redefined as a command line to create and publish a ``Feed manifest``.
+``swarm feed create`` is defined as a command to create and publish a ``Feed manifest``.
 
 .. code-block:: none
 
@@ -318,22 +329,22 @@ The swarm CLI allows to create Feed Manifests directly from the console:
 Computing Feed Signatures
 -------------------------
 
-1.- computing the digest:
+1. computing the digest:
 
 The digest is computed concatenating the following:
  +  1-byte protocol version (currently 0)
- +  7-bytes padding, set to 0.
+ +  7-bytes padding, set to 0
  +  32-bytes topic
  +  20-bytes user address
- +  7-bytes time, little endian.
+ +  7-bytes time, little endian
  +  1-byte level
  +  payload data (variable length)
 
-2.- Take the SHA3 hash of the above digest
+2. Take the SHA3 hash of the above digest
 
-3.- Compute the ECDSA signature of the hash
+3. Compute the ECDSA signature of the hash
 
-4.- Convert to hex string and put in the ``signature`` field above.
+4. Convert to hex string and put in the ``signature`` field above
 
 JavaScript example
 ~~~~~~~~~~~~~~~~~~
