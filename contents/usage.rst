@@ -8,7 +8,7 @@ We also discuss in detail how files can be organised into collections using mani
 We conclude by summarizing the various URL schemes that provide simple http endpoints for clients to interact with Swarm.
 
 .. include:: usage/ens.rst
-.. include:: usage/mru.rst
+.. include:: usage/feed.rst
 .. include:: usage/manifests.rst
 .. include:: usage/encryption.rst
 .. include:: usage/act.rst
