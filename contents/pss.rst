@@ -3,7 +3,7 @@ PSS
 *******************************
 
 :dfn:`pss` (Postal Service over Swarm) is a messaging protocol over Swarm with strong privacy features.
-The pss API is exposed through a JSON RPC interface described in the `API Reference <./apireference.rst#PSS>`_,
+The pss API is exposed through a JSON RPC interface described in the `API Reference <./apireference.html#pss>`_,
 here we explain the basic concepts and features.
 
 
@@ -38,7 +38,7 @@ Forward secrecy is provided if you use the `Handshakes` module.
 Usage
 ===========================
 
-See the `API Reference <./apireference.rst#PSS>`_ for details.
+See the `API Reference <./apireference.html#pss>`_ for details.
 
 Registering a recipient
 --------------------------
