@@ -139,6 +139,9 @@ This is especially useful when the hash (in this case ``ef6fc0747d1fbaf86d769b3e
 
   http://localhost:8500/bzz:/mysite.eth/
 
+.. note:: You can toggle automatic default entry detection with the ``SWARM_AUTO_DEFAULTPATH`` environment variable. You can do so by a simple ``$ export SWARM_AUTO_DEFAULTPATH=true``. This will tell Swarm to automatically look for ``<uploaded directory>/index.html`` file and set it as the default manifest entry (in the case it exists).
+
+
 Downloading a directory
 --------------------------
 
