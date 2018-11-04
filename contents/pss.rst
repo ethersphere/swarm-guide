@@ -3,7 +3,7 @@ PSS
 *******************************
 
 :dfn:`pss` (Postal Service over Swarm) is a messaging protocol over Swarm with strong privacy features.
-The pss API is exposed through a JSON RPC interface described in the `API Reference <./apireference.rst#PSS>`_,
+The pss API is exposed through a JSON RPC interface described in the `API Reference <./apireference.html#pss>`_,
 here we explain the basic concepts and features.
 
 
@@ -38,7 +38,7 @@ Forward secrecy is provided if you use the `Handshakes` module.
 Usage
 ===========================
 
-See the `API Reference <./apireference.rst#PSS>`_ for details.
+See the `API Reference <./apireference.html#pss>`_ for details.
 
 Registering a recipient
 --------------------------
@@ -47,7 +47,7 @@ Intended recipients first need to be registered with the node. This registration
 
 1. ``Encryption key`` - can be a ECDSA public key for asymmetric encryption or a 32 byte symmetric key.
 
-2. ``Topic`` - an arbitrary 4 byte word (``0x0000`` is reserved for ``raw`` messages).
+2. ``Topic`` - an arbitrary 4 byte word 
 
 3. ``Address``- destination (fully or partially specified Swarm overlay address) to use for deterministic routing.
 
@@ -62,7 +62,7 @@ There are a few prerequisites for sending a message over ``pss``:
 
 1. ``Encryption key id`` - id of the stored recipient's encryption key.
 
-2. ``Topic`` - an arbitrary 4 byte word (with the exception of ``0x0000`` to be reserved for ``raw`` messages).
+2. ``Topic`` - an arbitrary 4 byte word
 
 3. ``Message payload`` - the message data as an arbitrary byte sequence.
 
