@@ -3,7 +3,7 @@ Access Control
 
 Swarm supports restricting access to content through several access control strategies:
 
-- Password protection - where a number of undisclosed parties can access content using a shared secret ``(pass)``
+- Password protection - where a number of undisclosed parties can access content using a shared secret ``(pass, act)``
 
 - Selective access using `Elliptic Curve <https://en.wikipedia.org/wiki/Elliptic-curve_cryptography>`_ key-pairs:
 
@@ -23,6 +23,10 @@ a Mutable Resource address) is encrypted using `scrypt <https://en.wikipedia.org
 with a given passphrase and a random salt. 
 The encrypted reference and the salt are then embedded into an unencrypted manifest which can be freely
 distributed but only accessed by undisclosed parties that posses knowledge of the passphrase.
+
+Password protection can also be used for selective access when using the ``act`` strategy - similarly to granting access to a certain EC key
+access can be also given to a party identified by a password. In fact, one could also create an ``act`` manifest that solely grants access
+to grantees through passwords, without the need to know their public keys.
 
 Selective access using EC keys
 -------------------------------
@@ -84,7 +88,6 @@ The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b
 .. code-block:: bash
 
 	$ curl http://localhost:8500/bzz:/4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
-	<TODO ADD ERRR>
 
 The same request should make an authentication dialog pop-up in the browser. You could then input the password needed and the content should correctly appear.
 
@@ -110,21 +113,23 @@ The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b
 
 The only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key (and that the requesting node has been started with the appropriate ``bzzaccount`` that is associated with the relevant key) - either the local node that was used to upload the content or the node which was granted access through its public key.
 
-**Protecting content with Elliptic curve keys (multiple grantees):**
+ **Protecting content with Elliptic curve keys and passwords (multiple grantees):**
 
 .. note:: The ``act`` strategy requires a ``bzzaccount`` to encrypt with. The most comfortable option in this case would be the same ``bzzaccount`` you normally start your Swarm node with - this will allow you to access your content seamlessly through that node at any given point in time
 
-.. note:: the ``act`` strategy expects a grantee public-key list to be communicated to the CLI. This is done using the ``--grant-keys`` flag. Grantee public keys are expected to be in an *secp256 compressed* form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``). Each grantee should appear in a separate line. Comments and other characters are not allowed.
+.. note:: the ``act`` strategy expects a grantee public-key list and/or a list of permitted passwords to be communicated to the CLI. This is done using the ``--grant-keys`` flag and/or the ``--password`` flag. Grantee public keys are expected to be in an *secp256 compressed* form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``). Each grantee should appear in a separate line. Passwords are also expected to be line-separated. Comments and other characters are not allowed.
 
 .. code-block:: bash
 
-	$ swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 access new act --grant-keys /path/to/public-keys/file <REF>
+	$ swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 access new act --grant-keys /path/to/public-keys/file --password /path/to/passwords/file <REF>
 	4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
 
 The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. 
 
-As with the ``pk`` strategy - the only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key (and that the requesting node has been started with the appropriate ``bzzaccount`` that is associated with the relevant key) - either the local node that was used to upload the content or one of the nodes which were granted access through their public keys.
+The access controlled content could be accessed in one of the following ways:
 
+1. Request the hash through one of the nodes that were granted access and/or posses the granted private key (and that the requesting node has been started with the appropriate ``bzzaccount`` that is associated with the relevant key) - either the local node that was used to upload the content or one of the nodes which were granted access through their public keys
+2. Request the hash with HTTP authentication using one of the granted passwords
 
 HTTP usage
 ----------
