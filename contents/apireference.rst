@@ -210,7 +210,7 @@ FUSE
 PSS
 ^^^^^
 
-``pss`` methods are by default exposed via IPC. If websockets are activated on the node, they will also be available there.
+``pss`` methods are by default exposed via IPC. If websockets are activated on the node, they will also be available there *if* the ``pss`` module is explicitly specified.
 
 All parameters are hex-encoded bytes or strings unless otherwise noted.
 
