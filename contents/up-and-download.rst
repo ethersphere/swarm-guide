@@ -139,9 +139,6 @@ This is especially useful when the hash (in this case ``ef6fc0747d1fbaf86d769b3e
 
   http://localhost:8500/bzz:/mysite.eth/
 
-.. note:: You can toggle automatic default entry detection with the ``SWARM_AUTO_DEFAULTPATH`` environment variable. You can do so by a simple ``$ export SWARM_AUTO_DEFAULTPATH=true``. This will tell Swarm to automatically look for ``<uploaded directory>/index.html`` file and set it as the default manifest entry (in the case it exists).
-
-
 Downloading a directory
 --------------------------
 
@@ -158,6 +155,8 @@ Similarly as with a single file, you can also specify a custom proxy with ``--bz
 .. code-block:: none
 
   swarm --bzzapi http://localhost:8500 down --recursive bzz:/<hash> #note the flag ordering
+
+.. important :: Watch out for the order of arguments in directory upload/download: it's `swarm --recursive up` and `swarm down --recursive`.
 
 Adding entries to a manifest
 -------------------------------
@@ -181,12 +180,44 @@ To modify the hash of an entry in a manifest, use the command:
 
   swarm manifest update <manifest-hash> <path> <new-hash>
 
+Reference table
+-----------------
+
++------------------------------------------+--------------------------------------------------------------------+
+| **upload**                               | swarm up <file>                                                    |
++------------------------------------------+--------------------------------------------------------------------+
+| ~ dir                                    | swarm --recursive up <dir>                                         |
++------------------------------------------+--------------------------------------------------------------------+
+| ~ dir w/ default entry (here: index.html)| swarm --defaultpath <dir>/index.html --recursive up <dir>          |
++------------------------------------------+--------------------------------------------------------------------+ 
+| ~ w/o manifest                           | swarm --manifest=false up                                          |
++------------------------------------------+--------------------------------------------------------------------+
+| ~ to remote node                         | swarm --bzzapi https://swarm-gateways.net up                       |
++------------------------------------------+--------------------------------------------------------------------+
+| **download**                             | swarm down bzz:/<hash>                                             |
++------------------------------------------+--------------------------------------------------------------------+
+| ~ dir                                    | swarm down --recursibe bzz:/<hash>                                 |
++------------------------------------------+--------------------------------------------------------------------+
+| ~ as file                                | swarm down bzz:/<hash> file.tmp                                    |
++------------------------------------------+--------------------------------------------------------------------+
+| ~ into dir                               | swarm down bzz:/<hash> dir/                                        |
++------------------------------------------+--------------------------------------------------------------------+
+| ~ w/ custom proxy                        | swarm down --bzzapi http://localhost:8500 down bzz:/<hash>         |
++------------------------------------------+--------------------------------------------------------------------+
+| **manifest**                             |                                                                    |
++------------------------------------------+--------------------------------------------------------------------+
+| add ~                                    | swarm manifest add <manifest-hash> <path> <hash> [content-type]    |
++------------------------------------------+--------------------------------------------------------------------+
+| remove ~                                 | swarm manifest remove <manifest-hash> <path>                       |
++------------------------------------------+--------------------------------------------------------------------+
+| update ~                                 | swarm manifest update <manifest-hash> <path> <new-hash>            |
++------------------------------------------+--------------------------------------------------------------------+
 
 Using HTTP
 ======================
 
 Swarm offers an HTTP API. Thus, a simple way to upload and download files to/from Swarm is through this API.
-We can use the ``curl`` tool to exemplify how to interact with this API.
+We can use the ``curl`` `tool <https://curl.haxx.se/docs/httpscripting.html>`_ to exemplify how to interact with this API.
 
 .. note:: Files can be uploaded in a single HTTP request, where the body is either a single file to store, a tar stream (application/x-tar) or a multipart form (multipart/form-data).
 
@@ -232,7 +263,7 @@ Tar is a traditional unix/linux file format for packing a directory structure in
   echo "some-data" > dir1/file.txt
   echo "some-data" > dir2/file.txt
 
-  # create a tar archive containing the two directories
+  # create a tar archive containing the two directories (this will tar everything in the working directory)
   tar cf files.tar .
 
   # upload the tar archive to Swarm to create a manifest
@@ -333,4 +364,4 @@ A `GET` request with ``bzz-list`` URL scheme returns a list of files contained u
       ]
     }
 
-Setting Accept: text/html returns the list as a browsable HTML document
+Setting Accept: text/html returns the list as a browsable HTML document.
