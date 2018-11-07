@@ -84,6 +84,7 @@ Downloading a single file from a multi-entry manifest can be done with (``<hash>
   swarm down bzz:/<hash>/index.html file.tmp   #downloads index.html as file.tmp in the current working directory
   swarm down bzz:/<hash>/index.html dir1/      #downloads index.html to dir1/
 
+If you try to download from a multi-entry manifest without specifying the file, you will get a `got too many matches for this path` error. You will need to specify a `--recursive` flag (see below).
 
 Uploading to a remote Swarm node
 -----------------------------------
@@ -96,7 +97,6 @@ For example, you can use one of the public gateways as a proxy, in which case yo
     swarm --bzzapi https://swarm-gateways.net up /path/to/file/or/directory
 
 .. note:: This gateway currently only accepts uploads of limited size. In future, the ability to upload to this gateways is likely to disappear entirely.
-
 
 
 Uploading a directory
@@ -193,6 +193,8 @@ Reference table
 | ~ w/o manifest                           | swarm --manifest=false up                                          |
 +------------------------------------------+--------------------------------------------------------------------+
 | ~ to remote node                         | swarm --bzzapi https://swarm-gateways.net up                       |
++------------------------------------------+--------------------------------------------------------------------+
+| ~ with encryption                        | swarm up --encrypt                                                 |
 +------------------------------------------+--------------------------------------------------------------------+
 | **download**                             | swarm down bzz:/<hash>                                             |
 +------------------------------------------+--------------------------------------------------------------------+

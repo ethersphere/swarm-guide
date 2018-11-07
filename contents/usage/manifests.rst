@@ -37,7 +37,7 @@ Let's create a directory containing the two orange papers and an html index file
 We now use the ``swarm up`` command to upload the directory to swarm to create a mini virtual site.
 
 .. note::
-   In this example we are using the public gateway through the `bzz-api` option in order to upload. The examples below assume a node running on localhost to access content. Make sure to run a local node to reproduce these examples
+   In this example we are using the public gateway through the `bzz-api` option in order to upload. The examples below assume a node running on localhost to access content. Make sure to run a local node to reproduce these examples.
 
 .. code-block:: none
 
@@ -75,6 +75,9 @@ We now can get the manifest itself directly (instead of the files they refer to)
       }
     ]
   }
+
+.. note::
+  macOs users can install wget via homebrew (or use curl).
 
 
 Manifests contain content_type information for the hashes they reference. In other contexts, where content_type is not supplied or, when you suspect the information is wrong, it is possible to specify the content_type manually in the search query. For example, the manifest itself should be `text/plain`:
