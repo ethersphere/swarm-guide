@@ -25,11 +25,12 @@ Uploading a file to your local Swarm node
 
 .. note:: Once a file is uploaded to your local Swarm node, your node will `sync` the chunks of data with other nodes on the network. Thus, the file will eventually be available on the network even when your original node goes offline.
 
-The basic command for uploading to your local node is ``swarm up FILE``. For example, issue the following command to upload the file example.md file to your local Swarm node
+The basic command for uploading to your local node is ``swarm up FILE``. For example, let's create a file called example.md and issue the following command to upload the file example.md file to your local Swarm node
 
 .. code-block:: none
-
-  swarm up /path/to/example.md
+  
+  echo "this is an example" > example.md
+  swarm up example.md
   > d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a
 
 The hash returned is the hash of a :ref:`swarm manifest <swarm-manifest>`. This manifest is a JSON file that contains the ``example.md`` file as its only entry. Both the primary content and the manifest are uploaded by default.
@@ -41,6 +42,8 @@ After uploading, you can access this example.md file from swarm by pointing your
   http://localhost:8500/bzz:/d1f25a870a7bb7e5d526a7623338e4e9b8399e76df8b634020d11d969594f24a/
 
 The manifest makes sure you could retrieve the file with the correct MIME type.
+
+You can encrypt your file using the `--encrypt` flag. See the :ref:`Encryption` section for details.
 
 
 Suppressing automatic manifest creation
@@ -94,7 +97,7 @@ For example, you can use one of the public gateways as a proxy, in which case yo
 
 .. code-block:: none
 
-    swarm --bzzapi https://swarm-gateways.net up /path/to/file/or/directory
+    swarm --bzzapi https://swarm-gateways.net up example.md
 
 .. note:: This gateway currently only accepts uploads of limited size. In future, the ability to upload to this gateways is likely to disappear entirely.
 
@@ -183,37 +186,37 @@ To modify the hash of an entry in a manifest, use the command:
 Reference table
 -----------------
 
-+------------------------------------------+--------------------------------------------------------------------+
-| **upload**                               | swarm up <file>                                                    |
-+------------------------------------------+--------------------------------------------------------------------+
-| ~ dir                                    | swarm --recursive up <dir>                                         |
-+------------------------------------------+--------------------------------------------------------------------+
-| ~ dir w/ default entry (here: index.html)| swarm --defaultpath <dir>/index.html --recursive up <dir>          |
-+------------------------------------------+--------------------------------------------------------------------+ 
-| ~ w/o manifest                           | swarm --manifest=false up                                          |
-+------------------------------------------+--------------------------------------------------------------------+
-| ~ to remote node                         | swarm --bzzapi https://swarm-gateways.net up                       |
-+------------------------------------------+--------------------------------------------------------------------+
-| ~ with encryption                        | swarm up --encrypt                                                 |
-+------------------------------------------+--------------------------------------------------------------------+
-| **download**                             | swarm down bzz:/<hash>                                             |
-+------------------------------------------+--------------------------------------------------------------------+
-| ~ dir                                    | swarm down --recursibe bzz:/<hash>                                 |
-+------------------------------------------+--------------------------------------------------------------------+
-| ~ as file                                | swarm down bzz:/<hash> file.tmp                                    |
-+------------------------------------------+--------------------------------------------------------------------+
-| ~ into dir                               | swarm down bzz:/<hash> dir/                                        |
-+------------------------------------------+--------------------------------------------------------------------+
-| ~ w/ custom proxy                        | swarm down --bzzapi http://localhost:8500 down bzz:/<hash>         |
-+------------------------------------------+--------------------------------------------------------------------+
-| **manifest**                             |                                                                    |
-+------------------------------------------+--------------------------------------------------------------------+
-| add ~                                    | swarm manifest add <manifest-hash> <path> <hash> [content-type]    |
-+------------------------------------------+--------------------------------------------------------------------+
-| remove ~                                 | swarm manifest remove <manifest-hash> <path>                       |
-+------------------------------------------+--------------------------------------------------------------------+
-| update ~                                 | swarm manifest update <manifest-hash> <path> <new-hash>            |
-+------------------------------------------+--------------------------------------------------------------------+
++------------------------------------------+------------------------------------------------------------------------+
+| **upload**                               | ``swarm up`` <file>                                                    |
++------------------------------------------+------------------------------------------------------------------------+
+| ~ dir                                    | ``swarm --recursive up`` <dir>                                         |
++------------------------------------------+------------------------------------------------------------------------+
+| ~ dir w/ default entry (here: index.html)| ``swarm --defaultpath <dir>/index.html --recursive up`` <dir>          |
++------------------------------------------+------------------------------------------------------------------------+ 
+| ~ w/o manifest                           | ``swarm --manifest=false up``                                          |
++------------------------------------------+------------------------------------------------------------------------+
+| ~ to remote node                         | ``swarm --bzzapi https://swarm-gateways.net up``                       |
++------------------------------------------+------------------------------------------------------------------------+
+| ~ with encryption                        | ``swarm up --encrypt``                                                 |
++------------------------------------------+------------------------------------------------------------------------+
+| **download**                             | ``swarm down`` bzz:/<hash>                                             |
++------------------------------------------+------------------------------------------------------------------------+
+| ~ dir                                    | ``swarm down --recursive bzz:/<hash>``                                 |
++------------------------------------------+------------------------------------------------------------------------+
+| ~ as file                                | ``swarm down bzz:/<hash> file.tmp``                                    |
++------------------------------------------+------------------------------------------------------------------------+
+| ~ into dir                               | ``swarm down bzz:/<hash> dir/``                                        |
++------------------------------------------+------------------------------------------------------------------------+
+| ~ w/ custom proxy                        | ``swarm down --bzzapi http://<proxy address> down bzz:/<hash>``        |
++------------------------------------------+------------------------------------------------------------------------+
+| **manifest**                             |                                                                        |
++------------------------------------------+------------------------------------------------------------------------+
+| add ~                                    | ``swarm manifest add <manifest-hash> <path> <hash> [content-type]``    |
++------------------------------------------+------------------------------------------------------------------------+
+| remove ~                                 | ``swarm manifest remove <manifest-hash> <path>``                       |
++------------------------------------------+------------------------------------------------------------------------+
+| update ~                                 | ``swarm manifest update <manifest-hash> <path> <new-hash>``            |
++------------------------------------------+------------------------------------------------------------------------+
 
 Using HTTP
 ======================
@@ -229,7 +232,7 @@ To upload a single file, run this:
 
   curl -H "Content-Type: text/plain" --data "some-data" http://localhost:8500/bzz:/
 
-Once the file is uploaded, you will receive a hex string which will look similar to.
+Once the file is uploaded, you will receive a hex string which will look similar to this:
 
 .. code-block:: none
 
@@ -367,3 +370,121 @@ A `GET` request with ``bzz-list`` URL scheme returns a list of files contained u
     }
 
 Setting Accept: text/html returns the list as a browsable HTML document.
+
+Up- and downloading in the CLI: example usage
+----------------------------------
+
+.. tabs::
+
+  .. group-tab:: Up/downloading
+
+    Let's create a dummy file and upload it to swarm:
+
+    .. code-block:: none
+
+      echo "this is a test" > myfile.md
+      swarm up myfile.md
+      > <reference hash>
+
+    We can download it using the ``bzz:/`` scheme and give it a name.
+
+    .. code-block:: none
+
+      swarm down bzz:/<reference hash> iwantmyfileback.md
+      cat iwantmyfileback.md
+      > this is a test
+
+    We can also ``curl`` it.
+
+    .. code-block:: none
+
+      curl http://localhost:8500/bzz:/<reference hash>/
+      > this is a test
+
+    We can use the ``bzz-raw`` scheme to see the manifest of the upload.
+
+    .. code-block:: none
+
+      curl http://localhost:8500/bzz-raw:/<reference hash>/
+
+    This returns the manifest:
+
+    .. code-block:: html
+      <title></title>
+      </head>
+      <body>
+      {"entries":[{"hash":"<reference hash>","contentType":"text/markdown;
+      charset=utf-8","mode":420,"size":15,"mod_time":"YYY-MM-DDTThh:mm:ss"}]}
+      </body>
+      </html>
+
+  .. group-tab:: Up/down as is
+
+    We can upload the file as-is:
+
+    .. code-block:: none
+
+      echo "this is a test" > myfile.md
+      swarm --manifest=false up myfile.md
+      > <as-is reference hash>
+
+      We can retrieve it using the ``bzz-raw`` scheme.
+
+      .. code-block:: none
+
+      curl http://localhost:8500/bzz-raw:/<as-is reference hash>/
+      > this is a test
+
+  .. group-tab:: Manipulate manifests
+
+    Let's create a directory with a dummy file, and upload it to swarm.
+
+    .. code-block:: none 
+
+      mkdir dir
+      echo "this is a test" > dir/dummyfile.md
+      swarm --recursive up dir
+      > <dir hash>
+
+    We can look at the manifest using ``bzz-raw``.
+
+    .. code-block:: none 
+    
+      curl http://localhost:8500/bzz-raw:/<dir hash>/
+
+    It will look something like this:
+
+    .. code-block:: none
+
+      {
+        "entries": [
+          {
+            "hash": "<file hash>",
+            "path": "dummyfile.md",
+            "contentType": "text/markdown; charset=utf-8",
+            "mode": 420,
+            "size": 15,
+            "mod_time": "2018-11-11T16:52:07+01:00"
+          }
+        ]
+      }
+
+    We can remove the file from the manifest using ``manifest remove``.
+
+    .. code-block:: none
+
+      swarm manifest remove <dir hash> "dummyfile.md"
+      > <new dir hash>
+
+    When we check the new dir hash, we notice that it's empty -- as it should be.
+
+    Let's put the file back in there.
+
+    .. code-block:: none
+
+      swarm up dir/dummyfile.md
+      > <individual file hash>
+      swarm manifest add <new dir hash> "dummyfileagain.md" <individual file hash>
+      > <new dir hash 2>
+
+    We can check the manifest under <new dir hash 2> to see that the file is back there.

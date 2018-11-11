@@ -35,7 +35,7 @@ Users can post to any topic. If you know the user's address and agree on a parti
   is that it should be easy to derive out of information that is accesible to other users.
   
   For convenience, ``feed.NewTopic()`` provides a way to "merge" a byte array with a string in order to build a Feed Topic out of both.
-  This is used at the API level to create the illusion of subtopics. This way of building topics allows to use a random byte array (for example the hash of a photo)
+  This is used at the API level to create the illusion of subtopics. This way of building topics allows using a random byte array (for example the hash of a photo)
   and merge it with a human-readable string such as "comments" in order to create a Topic that could represent the comments about that particular photo.
   This way, when you see a picture in a website you could immediately build a Topic out of it and see if some user posted comments about that photo.
 
@@ -55,26 +55,27 @@ There  are 3 different ways of interacting with *Feeds* : Swarm CLI, HTTP API, a
 Command-Line
 ~~~~~~~~~~~~~~~~
 
-The CL API allows us to go through how Feeds work using practical examples. You can look up CL usage by typing `swarm feed` into your CL.
+The CLI API allows us to go through how Feeds work using practical examples. You can look up CL usage by typing `swarm feed` into your CLI.
 
-In the CL examples, we will create and update feeds using the bzzapi on a running local swarm node that listens by default on port 8500. 
+In the CLI examples, we will create and update feeds using the bzzapi on a running local swarm node that listens by default on port 8500. 
 
 Creating a Feed Manifest
 ........................
 
-The Swarm CLI allows to create Feed Manifests directly from the console:
+The Swarm CLI allows creating Feed Manifests directly from the console.
 
 ``swarm feed create`` is defined as a command to create and publish a ``Feed manifest``.
 
 The feed topic can be built in the following ways:
-  * use --topic to set the topic to an arbitrary binary hex string.
-  * use --name to set the topic to a human-readable name.
-      For example --name could be set to "profile-picture", meaning this feed allows to get this user's current profile picture.
-  * use both --topic and --name to create named subtopics. 
-   For example, --topic could be set to an Ethereum contract address and --name could be set to "comments", meaning this feed tracks a discussion about that contract.
-The --user flag allows to have this manifest refer to a user other than yourself. If not specified, it will then default to your local account (--bzzaccount).
+  * use ``--topic`` to set the topic to an arbitrary binary hex string.
+  * use ``--name`` to set the topic to a human-readable name.
+      For example, ``--name`` could be set to "profile-picture", meaning this feed allows to get this user's current profile picture.
+  * use both ``--topic`` and ``--name`` to create named subtopics. 
+   For example, `--topic` could be set to an Ethereum contract address and ``--name`` could be set to "comments", meaning this feed tracks a discussion about that contract.
 
-If you don't specify a name or a topic, the topic will be set to `0 hex` and name will be set to your username. 
+The ``--user`` flag allows to have this manifest refer to a user other than yourself. If not specified, it will then default to your local account (``--bzzaccount``).
+
+If you don't specify a name or a topic, the topic will be set to ``0 hex`` and name will be set to your username. 
 
 .. code-block:: none
 
@@ -86,11 +87,11 @@ creates a feed named "test". This is equivalent to
 
   swarm --bzzapi http://localhost:8500 feed create --topic 0x74657374    
 
-since `test string == 0x74657374 hex`. Name and topic are interchangeable, as long as you don't specify both. 
+since ``test string == 0x74657374 hex``. Name and topic are interchangeable, as long as you don't specify both. 
 
-`feed create` will return the **feed manifest**.
+``feed create`` will return the **feed manifest**.
 
-You can also use curl, but, here, you have to explicitly define the user (which is your account) and the manifest.
+You can also use ``curl``, but, here, you have to explicitly define the user (which, in this case, is your account) and the manifest.
 
 .. code-block:: none
 
@@ -106,7 +107,7 @@ is equivalent to
 Posting to a Feed
 .................
 
-To update a Feed with the cli, use `feed update`. The **update** argument has to be in `hex`. If you want to update your *test* feed with the update *hello*, you can refer to it by name:
+To update a Feed with the CLI, use ``feed update``. The **update** argument has to be in ``hex``. If you want to update your *test* feed with the update *hello*, you can refer to it by name:
 
 .. code-block:: none
 
@@ -127,16 +128,16 @@ or manifest.
 Reading Feed status
 ...................
 
-You can read the feed object using `feed info`. Again, you can use the feed name, the topic, or the manifest hash. Below, we use the name.
+You can read the feed object using ``feed info``. Again, you can use the feed name, the topic, or the manifest hash. Below, we use the name.
 
 .. code-block:: none
 
   swarm --bzzapi http://localhost:8500 feed info --name test
 
 Reading Feed Updates
-.................  
+.....................  
 
-In the CL you can use `curl` to read feed updates. Again, you can use the feed name, topic, or manifest hash. To return the update `hello` for your `test` feed, do this:
+In the CLI you can use ``curl`` to read feed updates. Again, you can use the feed name, topic, or manifest hash. To return the update ``hello`` for your ``test`` feed, do this:
 
 .. code-block:: none
 

@@ -5,7 +5,7 @@ Introduction
 This guide walks you through understanding, installing, and using Swarm. It also explains how to contribute or ask for help. Swarm is in active development and it is untested in the wild, so use it at your own risk. To interact with Swarm, you will need to use the command line. If you are not comfortable using it, it might be worth to familiarise yourself `here <http://linuxcommand.org/lc3_lts0010.php>`_ first.
 
 What is Swarm?
-==========
+==============
 
 ..  * extension allows for per-format preference for image format
 

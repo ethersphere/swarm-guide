@@ -39,11 +39,11 @@ Using this account, connect to Swarm with
   # in our example
   swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 
-(You should replace 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 with your address).
+(You should replace 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 with your address / account key).
 
 .. important::
 
-  **Remember your password.** There is no *forgot my password* option for swarm and geth.  
+  **Remember your password.** There is no *forgot my password* option for ``swarm`` and ``geth``.  
 
 Verifying that your local Swarm node is running
 -----------------------------------------------
@@ -53,7 +53,7 @@ When running, ``swarm`` is accessible through an HTTP API on port 8500. Confirm 
 Interacting with Swarm
 ======================
 
-As a user, it is easiest to access Swarm through the command line, or through the `Geth JavaScript Console <http://ethdocs.org/en/latest/account-management.html>`_ by attaching the console to a running swarm node:
+As a user, it is easiest to access Swarm through the command line, or through the `Geth JavaScript Console <http://ethdocs.org/en/latest/account-management.html>`_ by attaching the console to a running swarm node. ``$BZZKEY$`` refers to your account key.
 
 .. tabs::
 
@@ -94,9 +94,9 @@ As a user, it is easiest to access Swarm through the command line, or through th
         geth attach %HOMEPATH%\AppData\Roaming\Ethereum\bzzd.ipc
 
 
-Swarm is fully compatible with Geth Console commands. For example, you can list your peers using `admin.peers`, add a peer using `admin.addPeer`, and so on.
+Swarm is fully compatible with Geth Console commands. For example, you can list your peers using ``admin.peers``, add a peer using ``admin.addPeer``, and so on.
 
-You can use Swarm with CLI flags and environment variables. See a full list in the configuration_.
+You can use Swarm with CLI flags and environment variables. See a full list in the `configuration`_ .
 
 .. _connect-ens:
 
@@ -234,7 +234,7 @@ Below are examples on ways to run swarm beyond just the default network. You can
 Swarm in singleton mode (no peers)
 ------------------------------------
 
-To launch in singleton mode, use the ``--maxpeers 0`` flag.
+To launch in singleton mode, use the ``--maxpeers 0``  [see # `864 <https://github.com/ethersphere/go-ethereum/issues/864>`_ ].
 
 .. tabs::
 
@@ -360,6 +360,8 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 
 .. note::
   Note how ``geth`` is used for two different purposes here: You use it to run an Ethereum Mainnet node for ENS lookups. But you also use it to "attach" to the Swarm node to send commands to it.
+
+If you **don't** want your swarm node to connect to any existing networks, you can provide it with a custom network identifier using `--bzznetworkid`.
 
 Connecting to the public Swarm cluster
 --------------------------------------

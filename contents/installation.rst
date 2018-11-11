@@ -23,7 +23,7 @@ Installing Swarm from source
 The Swarm source code for can be found on https://github.com/ethereum/go-ethereum
 
 Prerequisites: Go and Git
--------------
+--------------------------
 
 Building the Swarm daemon :command:`swarm` requires the following packages:
 
@@ -75,7 +75,7 @@ Grab the relevant prerequisites and build from source.
       Take a look `here <https://medium.freecodecamp.org/setting-up-go-programming-language-on-windows-f02c8c14e2f>`_ at installing go and git and preparing your go environment under Windows.
 
 Configuring the Go environment
--------------
+-------------------------------
 
 You should then prepare your Go environment.
 
@@ -108,9 +108,9 @@ You should then prepare your Go environment.
         source $HOME/.bash_profile        
                 
 Compiling and installing Swarm and Geth
--------------------------
+----------------------------------------
 
-Once all prerequisites are met, download and install packages and dependencies for go-ethereum.
+Once all prerequisites are met, download and install packages and dependencies for go-ethereum (the examples below assume each relevant ``$variable`` as given).
 
 .. code-block:: shell
 
@@ -130,15 +130,15 @@ Finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``get
   go install ./cmd/geth
   go install ./cmd/swarm
 
-You can now run :command:`swarm` to start your Swarm node.
-Let's check if the installation of `swarm` was successful:
+You can now run :command:``swarm`` to start your Swarm node.
+Let's check if the installation of ``swarm`` was successful:
 
 .. code-block:: none
 
   swarm version
 
 ..  note::
-  if your `PATH` is not set and the `swarm` command cannot be found, try:
+  if your ``PATH`` is not set and the ``swarm`` command cannot be found, try:
 
     .. code-block:: shell
 
