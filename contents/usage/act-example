@@ -1,0 +1,17 @@
+act-example (keygen code from nolash)
+
+uniq=`uuidgen`
+
+# create appropriate ec key
+openssl ecparam -name secp256k1 -genkey -outform pem -out ecpriv_${uniq}.pem
+
+
+# get the hexadecimal compressed public key output
+# this key can be used for swarm pk encrypt
+openssl ec -in ecpriv_${uniq}.pem -conv_form compressed -pubout -text 2>/dev/null | grep -e "^pub:" -A3 | tail -n3 | tr "\n" " " | sed -e "s/[ :]//g" > ecpub_${uniq}_compressed.txt
+# xxd -r -p ecpub_${uniq}_compressed.txt ecpub_${uniq}_compressed.bin # don't need the bin
+
+# get compressed private key output
+# this key can be imported into geth accounts
+openssl ec -in ecpriv_${uniq}.pem -text 2>/dev/null | grep -e "^priv:" -A3 | tail -n3 | tr "\n" " " | sed -e "s/[ :]//g" > ecpriv_${uniq}.txt
+xxd -r -p ecpriv_${uniq}.txt ecpriv_${uniq}.bin

@@ -12,11 +12,6 @@ Swarm was written in golang and requires the go-ethereum client **geth** to run.
 ..  note::
   The swarm package has not been extensively tested on platforms other than Linux and macOS.
 
-Running Swarm in Docker
-=============================
-
-You can run Swarm in a Docker container. The official Swarm Docker image including documentation on how to run it can be found on `Github <https://github.com/ethersphere/swarm-docker/>`_ or pulled from `Docker <https://hub.docker.com/r/ethdevops/swarm/>`_.
-
 Installing Swarm from source
 =============================
 
@@ -187,3 +182,42 @@ After that you can install the stable version of Swarm:
 
   sudo apt-get update
   sudo apt-get install ethereum-swarm
+
+Setting up Swarm in Docker
+=============================
+
+You can run Swarm in a Docker container. The official Swarm Docker image including documentation on how to run it can be found on `Github <https://github.com/ethersphere/swarm-docker/>`_ or pulled from `Docker <https://hub.docker.com/r/ethdevops/swarm/>`_.
+
+You can run it with optional arguments, e.g.: 
+
+.. code-block:: shell
+
+  docker run -e PASSWORD=<password> -t ethdevops/swarm:latest -- --debug --verbosity 4
+
+In order to up/download, you need to expose the http api port (here: to localhost:8501) and set the http address:
+
+.. code-block:: shell
+
+  docker run -p 8501:8500/tcp -e PASSWORD=<password> -t ethdevops/swarm:latest --  --httpaddr=0.0.0.0 --debug --verbosity 4
+
+In this example, you can use ``swarm --bzzapi http://localhost:8501 up testfile.md`` to upload ``testfile.md`` to swarm using the Docker node, and you can get it back e.g. with ``curl http://localhost:8501/bzz:/<hash>``.
+
+Note that if you want to use a pprof HTTP server, you need to expose the ports and set the address (with ``--pprofaddr=0.0.0.0``) too.
+
+In order to attach a Geth Javascript console, you need to mount a data directory from a volume:
+
+.. code-block:: shell
+
+  docker run -p 8501:8500/tcp -e PASSWORD=<password> -e DATADIR=/data -v /tmp/hostdata:/data -t-t ethdevops/swarm:latest --  --httpaddr=0.0.0.0 --debug --verbosity 4
+
+Then, you can attach the console with:
+
+.. code-block:: shell
+
+  docker exec -it swarm1 /geth attach /data/bzzd.ipc
+
+You can also open a terminal session inside the container:
+
+.. code-block:: shell
+
+  docker exec -it swarm1 /bin/sh

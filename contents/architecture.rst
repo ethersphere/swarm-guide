@@ -265,7 +265,7 @@ This recursive process of constructing the Swarm hash tree will result in a sing
 
 When the FileStore is handed a reference for file retrieval, it calls the Chunker which hands back a seekable document reader to the caller. This is a  :dfn:`lazy reader` in the sense that it retrieves parts of the underlying document only as they are being read (with some buffering similar to a video player in a browser). Given the reference, the FileStore takes the Swarm hash and using the NetStore retrieves the root chunk of the document. After decrypting it if needed, references to chunks on the next level are processed. Since data offsets can easily be mapped to a path of intermediate chunks, random access to a document is efficient and supported on the lowest level. The HTTP API offers range queries and can turn them to offset and span for the lower level API to provide integrity protected random access to files.
 
-Swarm exposes the FileStore API via the :ref:`bzz-raw` URL scheme directly on the http local proxy server (see :ref:`bzz protocol suite` and :ref:`API Reference`). This API allows file upload via POST request as well as file download with GET request. Since on this level the files have no mime-type associated, in order to properly display or serve to an application, the ``content_type`` query parameter can be added to the url. This will set the proper content type in the HTTP response.
+Swarm exposes the FileStore API via the :ref:`bzz-raw` URL scheme directly on the http local proxy server (see :ref:`BZZ URL schemes` and :ref:`API Reference`). This API allows file upload via POST request as well as file download with GET request. Since on this level the files have no mime-type associated, in order to properly display or serve to an application, the ``content_type`` query parameter can be added to the url. This will set the proper content type in the HTTP response.
 
 Manifests
 --------------
@@ -274,10 +274,10 @@ The Swarm :dfn:`manifest` is a structure that defines a mapping between arbitrar
 Manifests provide the main mechanism to allow URL based addressing in Swarm. The domain part of the URL maps onto a manifest in which the path part of the URL is looked up to arrive at a file entry to serve.
 
 Manifests are currently respresented as a compacted trie (http://en.wikipedia.org/wiki/Trie) , with individual trie nodes serialised as json. The json structure has an array of :dfn:`manifest entries` minimally with a path and a reference (Swarm hash address). The path part is used for matching the URL path, the reference may point to an embedded manifest if the path is a common prefix of more than one path in the collection.
-When you retrieve a file by url, Swarm resolves the domain to a reference to a root manifest, which is recursively traversed to find the matchin path.
+When you retrieve a file by url, Swarm resolves the domain to a reference to a root manifest, which is recursively traversed to find the matching path.
 
 The high level API to the manifests provides functionality to upload and download individual documents as files, collections (manifests) as directories. It also provides an interface to add documents to a collection on a path, delete a document from a collection. Note that deletion here only means that a new manifest is created in which the path in question is missing. There is no other notion of deletion in the Swarm.
-Swarm exposes the manifest API via the `bzz` URL scheme, see :ref:`bzz protocol suite`.
+Swarm exposes the manifest API via the `bzz` URL scheme, see :ref:`URL schemes`.
 
 These HTTP proxy API is described in detail in the :ref:`API Reference` section.
 

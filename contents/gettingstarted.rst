@@ -378,3 +378,6 @@ For developers
 --------------
 
 Swarm uses the `go-metrics` library for metrics collection. You can set your node to collect metrics and push them to an influxdb database (called `metrics` by default) with the default settings. Tracing is also supported.
+
+Running Swarm in Docker
+========================
