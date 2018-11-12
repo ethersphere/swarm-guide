@@ -8,7 +8,12 @@ here we explain the basic concepts and features.
 
 
 .. note::
+
   ``pss`` is still an experimental feature and under active development and is available as of POC3 of Swarm. Expect things to change.
+
+.. note::
+
+  There is no CLI support for ``pss``. 
 
 
 Basics

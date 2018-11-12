@@ -71,11 +71,11 @@ When requesting this hash through the HTTP gateway you should receive an `HTTP U
 You can retrieve the content in three ways.
 
 1. The same request should make an authentication dialog pop-up in the browser. You could then input the password needed and the content should correctly appear. (Leave the username empty.)
-2. Requesting the same hash with HTTP basic authentication (password only) would return the content too [see issue `984 <https://github.com/ethersphere/go-ethereum/issues/984>`_ ]:
+2. Requesting the same hash with HTTP basic authentication would return the content too. ``curl`` needs you to input a username as well as a password, but the former can be an arbitrary string (here, it's ``x``).
 
 .. code-block:: bash
 
-  curl http://:mypassword@localhost:8500/bzz:/<reference of access controlled manifest>/
+  curl http://x:mypassword@localhost:8500/bzz:/<reference of access controlled manifest>/
 
 3. You can also use `swarm down` with the `--password` flag.  
 

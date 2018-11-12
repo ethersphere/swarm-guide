@@ -12,7 +12,7 @@ Introduction
 
 Arguably, uploading and downloading content is the raison d'être of Swarm. Uploading content consists of "uploading" content to your local Swarm node, followed by your local Swarm node "syncing" the resulting chunks of data with its peers in the network. Meanwhile, downloading content consists of your local Swarm node querying its peers in the network for the relevant chunks of data and then reassembling the content locally.
 
-Uploading and downloading data can be done through the ``swarm`` command line interface (CLI) on the terminal or via the HTTP interface on ``http://localhost:8500``.
+Uploading and downloading data can be done through the ``swarm`` command line interface (CLI) on the terminal or via the HTTP interface on `http://localhost:8500 <http://localhost:8500>`_.
 
 
 Using CLI
@@ -25,7 +25,7 @@ Uploading a file to your local Swarm node
 
 .. note:: Once a file is uploaded to your local Swarm node, your node will `sync` the chunks of data with other nodes on the network. Thus, the file will eventually be available on the network even when your original node goes offline.
 
-The basic command for uploading to your local node is ``swarm up FILE``. For example, let's create a file called example.md and issue the following command to upload the file example.md file to your local Swarm node
+The basic command for uploading to your local node is ``swarm up FILE``. For example, let's create a file called example.md and issue the following command to upload the file example.md file to your local Swarm node.
 
 .. code-block:: none
   
@@ -43,7 +43,7 @@ After uploading, you can access this example.md file from swarm by pointing your
 
 The manifest makes sure you could retrieve the file with the correct MIME type.
 
-You can encrypt your file using the `--encrypt` flag. See the :ref:`Encryption` section for details.
+You can encrypt your file using the ``--encrypt`` flag. See the :ref:`Encryption` section for details.
 
 
 Suppressing automatic manifest creation
@@ -159,7 +159,7 @@ Similarly as with a single file, you can also specify a custom proxy with ``--bz
 
   swarm --bzzapi http://localhost:8500 down --recursive bzz:/<hash> #note the flag ordering
 
-.. important :: Watch out for the order of arguments in directory upload/download: it's `swarm --recursive up` and `swarm down --recursive`.
+.. important :: Watch out for the order of arguments in directory upload/download: it's ``swarm --recursive up`` and ``swarm down --recursive``.
 
 Adding entries to a manifest
 -------------------------------
@@ -187,11 +187,11 @@ Reference table
 -----------------
 
 +------------------------------------------+------------------------------------------------------------------------+
-| **upload**                               | ``swarm up`` <file>                                                    |
+| **upload**                               | ``swarm up <file>``                                                    |
 +------------------------------------------+------------------------------------------------------------------------+
-| ~ dir                                    | ``swarm --recursive up`` <dir>                                         |
+| ~ dir                                    | ``swarm --recursive up <dir>``                                         |
 +------------------------------------------+------------------------------------------------------------------------+
-| ~ dir w/ default entry (here: index.html)| ``swarm --defaultpath <dir>/index.html --recursive up`` <dir>          |
+| ~ dir w/ default entry (here: index.html)| ``swarm --defaultpath <dir>/index.html --recursive up <dir>``          |
 +------------------------------------------+------------------------------------------------------------------------+ 
 | ~ w/o manifest                           | ``swarm --manifest=false up``                                          |
 +------------------------------------------+------------------------------------------------------------------------+
@@ -199,7 +199,7 @@ Reference table
 +------------------------------------------+------------------------------------------------------------------------+
 | ~ with encryption                        | ``swarm up --encrypt``                                                 |
 +------------------------------------------+------------------------------------------------------------------------+
-| **download**                             | ``swarm down`` bzz:/<hash>                                             |
+| **download**                             | ``swarm down bzz:/<hash>``                                             |
 +------------------------------------------+------------------------------------------------------------------------+
 | ~ dir                                    | ``swarm down --recursive bzz:/<hash>``                                 |
 +------------------------------------------+------------------------------------------------------------------------+
@@ -226,7 +226,7 @@ We can use the ``curl`` `tool <https://curl.haxx.se/docs/httpscripting.html>`_ t
 
 .. note:: Files can be uploaded in a single HTTP request, where the body is either a single file to store, a tar stream (application/x-tar) or a multipart form (multipart/form-data).
 
-To upload a single file, run this:
+To upload a single file to your node, run this:
 
 .. code-block:: none
 
@@ -238,9 +238,9 @@ Once the file is uploaded, you will receive a hex string which will look similar
 
   027e57bcbae76c4b6a1c5ce589be41232498f1af86e1b1a2fc2bdffd740e9b39
 
-This is the address string of your content inside Swarm. It is the same hash that would have been returned by using the :ref:`swarm up <swarmup>` command
+This is the address string of your content inside Swarm. It is the same hash that would have been returned by using the :ref:`swarm up <swarmup>` command.
 
-To download a file from Swarm, you just need the file's address string. Once you have it the process is simple. Run:
+To download a file from Swarm, you just need the file's address string. Once you have it, the process is simple. Run:
 
 .. code-block:: none
 
@@ -409,14 +409,20 @@ Up- and downloading in the CLI: example usage
 
     This returns the manifest:
 
-    .. code-block:: html
-      <title></title>
-      </head>
-      <body>
-      {"entries":[{"hash":"<reference hash>","contentType":"text/markdown;
-      charset=utf-8","mode":420,"size":15,"mod_time":"YYY-MM-DDTThh:mm:ss"}]}
-      </body>
-      </html>
+    .. code-block:: none
+
+      {
+        "entries": [
+          {
+            "hash": "<file hash>",
+            "path": "myfile.md",
+            "contentType": "text/markdown; charset=utf-8",
+            "mode": 420,
+            "size": 15,
+            "mod_time": "<timestamp>"
+          }
+        ]
+      }
 
   .. group-tab:: Up/down as is
 
@@ -428,16 +434,16 @@ Up- and downloading in the CLI: example usage
       swarm --manifest=false up myfile.md
       > <as-is reference hash>
 
-      We can retrieve it using the ``bzz-raw`` scheme.
+    We can retrieve it using the ``bzz-raw`` scheme.
 
-      .. code-block:: none
+    .. code-block:: none
 
       curl http://localhost:8500/bzz-raw:/<as-is reference hash>/
       > this is a test
 
   .. group-tab:: Manipulate manifests
 
-    Let's create a directory with a dummy file, and upload it to swarm.
+    Let's create a directory with a dummy file, and upload the directory to swarm.
 
     .. code-block:: none 
 

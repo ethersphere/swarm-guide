@@ -39,7 +39,7 @@ Using this account, connect to Swarm with
   # in our example
   swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 
-(You should replace 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 with your address / account key).
+(You should replace ``2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1`` with your account address key).
 
 .. important::
 
@@ -53,7 +53,9 @@ When running, ``swarm`` is accessible through an HTTP API on port 8500. Confirm 
 Interacting with Swarm
 ======================
 
-As a user, it is easiest to access Swarm through the command line, or through the `Geth JavaScript Console <http://ethdocs.org/en/latest/account-management.html>`_ by attaching the console to a running swarm node. ``$BZZKEY$`` refers to your account key.
+.. _3.2:
+
+As a user, it is easiest to access Swarm through the command line, or through the `Geth JavaScript Console <http://ethdocs.org/en/latest/account-management.html>`_ by attaching the console to a running swarm node. ``$BZZKEY$`` refers to your account address key.
 
 .. tabs::
 
@@ -96,7 +98,7 @@ As a user, it is easiest to access Swarm through the command line, or through th
 
 Swarm is fully compatible with Geth Console commands. For example, you can list your peers using ``admin.peers``, add a peer using ``admin.addPeer``, and so on.
 
-You can use Swarm with CLI flags and environment variables. See a full list in the `configuration`_ .
+You can use Swarm with CLI flags and environment variables. See a full list in the `Configuration <./configuration.html>`_ .
 
 .. _connect-ens:
 
@@ -323,7 +325,7 @@ Without discovery, it is possible to manually start off the connection process b
 
         geth --exec='admin.addPeer("ENODE")' attach %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc
 
-(You can also do this in the Geth Console, as seen in Section 3.2.)
+(You can also do this in the Geth Console, as seen in Section 3.2_.)
 
 .. note::
 
