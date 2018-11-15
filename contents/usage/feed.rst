@@ -79,9 +79,9 @@ Where:
 You will receive a JSON like the below:
 
 .. code-block:: js
- 
+
   {
-    "view": {
+    "feed": {
       "topic": "0x6a61766900000000000000000000000000000000000000000000000000000000",
       "user": "0xdfa2db618eacbfe84e94a71dda2492240993c45b"
     },
@@ -138,7 +138,7 @@ Creating a Feed Manifest
 
 To create a ``Feed manifest`` using the HTTP API:
 
-``POST /bzz-Feed:/?topic=<TOPIC>&user=<USER>&manifest=1.`` With an empty body. 
+``POST /bzz-feed:/?topic=<TOPIC>&user=<USER>&manifest=1.`` With an empty body.
 
 This will create a manifest referencing the provided Feed.
 
