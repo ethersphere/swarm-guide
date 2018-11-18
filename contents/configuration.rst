@@ -2,6 +2,7 @@
 Configuration
 ******************************
 
+.. _configuration:
 
 Command line options for swarm
 ====================================
@@ -92,4 +93,3 @@ General configuration parameters
    "n/a","--wsport value","n/a","8546","WS-RPC server listening port"
    "n/a","--wsapi value","n/a","n/a","API's offered over the WS-RPC interface"
    "n/a","--wsorigins value","n/a","n/a","Origins from which to accept websockets requests"
-   "n/a","n/a","SWARM_AUTO_DEFAULTPATH","false","Toggle automatic manifest default path on recursive uploads (looks for index.html)"

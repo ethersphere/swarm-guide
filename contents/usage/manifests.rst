@@ -3,10 +3,8 @@ Manifests
 
 .. _swarm-manifest:
 
-In general manifests declare a list of strings associated with swarm hashes. A manifest matches to exactly one hash, and it consists of a list of entries declaring the content which can be retrieved through that hash. Let us begin with an introductory example.
+In general manifests declare a list of strings associated with swarm hashes. A manifest matches to exactly one hash, and it consists of a list of entries declaring the content which can be retrieved through that hash. This is demonstrated by the following example.
 
-
-This is demonstrated by the following example.
 Let's create a directory containing the two orange papers and an html index file listing the two pdf documents.
 
 .. code-block:: none
@@ -37,7 +35,7 @@ Let's create a directory containing the two orange papers and an html index file
 We now use the ``swarm up`` command to upload the directory to swarm to create a mini virtual site.
 
 .. note::
-   In this example we are using the public gateway through the `bzz-api` option in order to upload. The examples below assume a node running on localhost to access content. Make sure to run a local node to reproduce these examples
+   In this example we are using the public gateway through the `bzz-api` option in order to upload. The examples below assume a node running on localhost to access content. Make sure to run a local node to reproduce these examples.
 
 .. code-block:: none
 
@@ -76,6 +74,9 @@ We now can get the manifest itself directly (instead of the files they refer to)
     ]
   }
 
+.. note::
+  macOs users can install wget via homebrew (or use curl).
+
 
 Manifests contain content_type information for the hashes they reference. In other contexts, where content_type is not supplied or, when you suspect the information is wrong, it is possible to specify the content_type manually in the search query. For example, the manifest itself should be `text/plain`:
 
@@ -83,7 +84,7 @@ Manifests contain content_type information for the hashes they reference. In oth
 
    http://localhost:8500/bzz-raw:/2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d?content_type="text/plain"
 
-Now you can also check that the manifest hash matches the content (in fact swarm does it for you):
+Now you can also check that the manifest hash matches the content (in fact, swarm does this for you):
 
 .. code-block:: none
 
