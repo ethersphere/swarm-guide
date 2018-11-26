@@ -15,10 +15,10 @@ Installing FUSE
 
 .. code-block:: none
 
-	sudo apt-get install fuse
-	sudo modprobe fuse
-	sudo chown <username>:<groupname> /etc/fuse.conf
-	sudo chown <username>:<groupname> /dev/fuse
+	$ sudo apt-get install fuse
+	$ sudo modprobe fuse
+	$ sudo chown <username>:<groupname> /etc/fuse.conf
+	$ sudo chown <username>:<groupname> /dev/fuse
 
 2. Mac OS
 
@@ -26,9 +26,9 @@ Installing FUSE
 
 .. code-block:: none
 
-	brew update
-	brew install caskroom/cask/brew-cask
-	brew cask install osxfuse
+	$ brew update
+	$ brew install caskroom/cask/brew-cask
+	$ brew cask install osxfuse
 
 
 CLI Usage
@@ -44,20 +44,20 @@ Mount
 One use case to mount a Swarm hash via FUSE is a file sharing feature accessible via your local file system.
 Files uploaded to Swarm are then transparently accessible via your local file system, just as if they were stored locally.
 
-To mount a Swarm resource, first upload some content to Swarm using the `swarm up <resource>` command.
-You can also upload a complete folder using `swarm --recursive up <directory>`.
+To mount a Swarm resource, first upload some content to Swarm using the ``swarm up <resource>`` command.
+You can also upload a complete folder using ``swarm --recursive up <directory>``.
 Once you get the returned manifest hash, use it to mount the manifest to a mount point
 (the mount point should exist on your hard drive):
 
 .. code-block:: none
 
-	swarm fs mount --ipcpath <path-to-bzzd.ipc> <manifest-hash> <mount-point>
+	$ swarm fs mount --ipcpath <path-to-bzzd.ipc> <manifest-hash> <mount-point>
 
 For example:
 
 .. code-block:: none
 
-	swarm fs mount --ipcpath /home/user/ethereum/bzzd.ipc <manifest-hash> /home/user/swarmmount
+	$ swarm fs mount --ipcpath /home/user/ethereum/bzzd.ipc <manifest-hash> /home/user/swarmmount
 
 Your running Swarm node terminal output should show something similar to the following in case the command returned successfuly:
 
@@ -78,11 +78,11 @@ Through your terminal or file browser, you can interact with your new mount as i
 
 Unmount
 ^^^^^^^^
-To unmount a swarmfs mount, either use the List Mounts command below, or use a known mount point:
+To unmount a ``swarmfs`` mount, either use the List Mounts command below, or use a known mount point:
 
 .. code-block:: none
 
-	swarm fs unmount --ipcpath <path-to-bzzd.ipc> <mount-point>
+	$ swarm fs unmount --ipcpath <path-to-bzzd.ipc> <mount-point>
 	> 41e422e6daf2f4b32cd59dc6a296cce2f8cce1de9f7c7172e9d0fc4c68a3987a
 
 The returned hash is the latest manifest version that was mounted.
@@ -95,7 +95,7 @@ To see all existing swarmfs mount points, use the List Mounts command:
 
 .. code-block:: none
 
-	swarm fs list --ipcpath <path-to-bzzd.ipc>
+  $ swarm fs list --ipcpath <path-to-bzzd.ipc>
 
 Example Output:
 

@@ -22,7 +22,7 @@ Swarm defines 3 crucial notions:
   A reference is a unique identifier of a file that allows clients to retrieve and access the content. For unencrypted content the file reference is the cryptographic hash of the data and serves as its content address. This hash reference is a 32 byte hash, which is serialised with 64 hex bytes. In case of an encrypted file the reference has two equal-length components: the first 32 bytes are the content address of the encrypted asset, while the second 32 bytes are the decryption key, altogether 64 bytes, serialised as 128 hex bytes.
 
 :dfn:`manifest`
-  A manifest is a data structure describing file collections; they specify paths and corresponding content hashes allowing for URL based content retrieval. The :ref:`bzz protocol suite` assumes that the content referenced in the domain is a manifest and renders the content entry whose path matches the one in the request path. Manifests can also be mapped to a filesystem directory tree, which allows for uploading and downloading directories. Finally, manifests can also be considered indexes, so it can be used to implement a simple key-value store, or alternatively, a database index. This offers the functionality of :dfn:`virtual hosting`, storing entire directories, web3 websites or primitive data structures; analogous to web2.0, with centralized hosting taken out of the equation.
+  A manifest is a data structure describing file collections; they specify paths and corresponding content hashes allowing for URL based content retrieval. The :ref:`BZZ URL schemes` assumes that the content referenced in the domain is a manifest and renders the content entry whose path matches the one in the request path. Manifests can also be mapped to a filesystem directory tree, which allows for uploading and downloading directories. Finally, manifests can also be considered indexes, so it can be used to implement a simple key-value store, or alternatively, a database index. This offers the functionality of :dfn:`virtual hosting`, storing entire directories, web3 websites or primitive data structures; analogous to web2.0, with centralized hosting taken out of the equation.
 
 .. image:: img/dapp-page.svg
    :alt: Example of how Swarm could serve a web page
@@ -233,7 +233,7 @@ Data layer
 There are 4 different layers of data units relevant to Swarm:
 
 
-*  :dfn:`message`: p2p RLPx network layer. Messages are relevant for the devp2p wire protocols The :ref:`bzz protocol suite`.
+*  :dfn:`message`: p2p RLPx network layer. Messages are relevant for the devp2p wire protocols The :ref:`BZZ URL schemes`.
 *  :dfn:`chunk`: fixed size data unit of storage in the distributed preimage archive
 *  :dfn:`file`: the smallest unit that is associated with a mime-type and not guaranteed to have integrity unless it is complete. This is the smallest unit semantic to the user, basically a file on a filesystem.
 *  :dfn:`collection`: a mapping of paths to files is represented by the :dfn:`swarm manifest`. This layer has a mapping to file system directory tree. Given trivial routing conventions, a url can be mapped to files in a standardised way, allowing manifests to mimic site maps/routing tables. As a result, Swarm is able to act as a webserver, a virtual cloud hosting service.
@@ -265,7 +265,7 @@ This recursive process of constructing the Swarm hash tree will result in a sing
 
 When the FileStore is handed a reference for file retrieval, it calls the Chunker which hands back a seekable document reader to the caller. This is a  :dfn:`lazy reader` in the sense that it retrieves parts of the underlying document only as they are being read (with some buffering similar to a video player in a browser). Given the reference, the FileStore takes the Swarm hash and using the NetStore retrieves the root chunk of the document. After decrypting it if needed, references to chunks on the next level are processed. Since data offsets can easily be mapped to a path of intermediate chunks, random access to a document is efficient and supported on the lowest level. The HTTP API offers range queries and can turn them to offset and span for the lower level API to provide integrity protected random access to files.
 
-Swarm exposes the FileStore API via the :ref:`bzz-raw` URL scheme directly on the http local proxy server (see :ref:`BZZ URL schemes` and :ref:`API Reference`). This API allows file upload via POST request as well as file download with GET request. Since on this level the files have no mime-type associated, in order to properly display or serve to an application, the ``content_type`` query parameter can be added to the url. This will set the proper content type in the HTTP response.
+Swarm exposes the FileStore API via the :ref:`bzz-raw` URL scheme directly on the HTTP local proxy server (see :ref:`BZZ URL schemes` and :ref:`API Reference`). This API allows file upload via POST request as well as file download with GET request. Since on this level the files have no mime-type associated, in order to properly display or serve to an application, the ``content_type`` query parameter can be added to the url. This will set the proper content type in the HTTP response.
 
 Manifests
 --------------
@@ -277,7 +277,7 @@ Manifests are currently respresented as a compacted trie (http://en.wikipedia.or
 When you retrieve a file by url, Swarm resolves the domain to a reference to a root manifest, which is recursively traversed to find the matching path.
 
 The high level API to the manifests provides functionality to upload and download individual documents as files, collections (manifests) as directories. It also provides an interface to add documents to a collection on a path, delete a document from a collection. Note that deletion here only means that a new manifest is created in which the path in question is missing. There is no other notion of deletion in the Swarm.
-Swarm exposes the manifest API via the `bzz` URL scheme, see :ref:`URL schemes`.
+Swarm exposes the manifest API via the `bzz` URL scheme, see :ref:`BZZ URL schemes`.
 
 These HTTP proxy API is described in detail in the :ref:`API Reference` section.
 
@@ -304,7 +304,7 @@ Swarm Hash
    bzzhash
 
 
-Swarm Hash (a.k.a. `bzzhash`) is a [Merkle tree](http://en.wikipedia.org/wiki/Merkle_tree) hash designed for the purpose of efficient storage and retrieval in content-addressed storage, both local and networked. While it is used in [Swarm], there is nothing Swarm-specific in it and the authors recommend it as a drop-in substitute of sequential-iterative hash functions (like SHA3) whenever one is used for referencing integrity-sensitive content, as it constitutes an improvement in terms of performance and usability without compromising security.
+Swarm Hash (a.k.a. `bzzhash`) is a `Merkle tree <http://en.wikipedia.org/wiki/Merkle_tree>`_ hash designed for the purpose of efficient storage and retrieval in content-addressed storage, both local and networked. While it is used in Swarm, there is nothing Swarm-specific in it and the authors recommend it as a drop-in substitute of sequential-iterative hash functions (like SHA3) whenever one is used for referencing integrity-sensitive content, as it constitutes an improvement in terms of performance and usability without compromising security.
 
 In particular, it can take advantage of parallelisation for faster calculation and verification, can be used to verify the integrity of partial content without having to transmit all of it (and thereby allowing random access to files). Proofs of security to the underlying hash function carry over to Swarm Hash.
 

@@ -15,7 +15,7 @@ To start Swarm you need an Ethereum account. You can create a new account in ``g
 
 .. code-block:: none
 
-  geth account new
+  $ geth account new
 
 You will be prompted for a password:
 
@@ -35,9 +35,9 @@ Using this account, connect to Swarm with
 
 .. code-block:: none
 
-  swarm --bzzaccount <your-account-here>
+  $ swarm --bzzaccount <your-account-here>
   # in our example
-  swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
+  $ swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1
 
 (You should replace ``2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1`` with your account address key).
 
@@ -55,7 +55,7 @@ Interacting with Swarm
 
 .. _3.2:
 
-As a user, it is easiest to access Swarm through the command line, or through the `Geth JavaScript Console <http://ethdocs.org/en/latest/account-management.html>`_ by attaching the console to a running swarm node. ``$BZZKEY$`` refers to your account address key.
+The easiest way to access Swarm through the command line, or through the `Geth JavaScript Console <http://ethdocs.org/en/latest/account-management.html>`_ by attaching the console to a running swarm node. ``$BZZKEY$`` refers to your account address key.
 
 .. tabs::
 
@@ -63,37 +63,37 @@ As a user, it is easiest to access Swarm through the command line, or through th
 
       .. code-block:: none
 
-        swarm --bzzaccount $BZZKEY
+        $ swarm --bzzaccount $BZZKEY
 
       And, in a new terminal window:    
 
       .. code-block:: none
 
-        geth attach $HOME/.ethereum/bzzd.ipc
+        $ geth attach $HOME/.ethereum/bzzd.ipc
 
     .. group-tab:: macOS
 
       .. code-block:: none
 
-        swarm --bzzaccount $BZZKEY
+        $ swarm --bzzaccount $BZZKEY
 
       And, in a new terminal window:    
 
       .. code-block:: none
 
-        geth attach $HOME/Library/Ethereum/bzzd.ipc
+        $ geth attach $HOME/Library/Ethereum/bzzd.ipc
 
     .. group-tab:: Windows
 
       .. code-block:: none
 
-        swarm --bzzaccount $BZZKEY
+        $ swarm --bzzaccount $BZZKEY
 
       And, in a new terminal window:    
 
       .. code-block:: none
 
-        geth attach %HOMEPATH%\AppData\Roaming\Ethereum\bzzd.ipc
+        $ geth attach %HOMEPATH%\AppData\Roaming\Ethereum\bzzd.ipc
 
 
 Swarm is fully compatible with Geth Console commands. For example, you can list your peers using ``admin.peers``, add a peer using ``admin.addPeer``, and so on.
@@ -113,13 +113,13 @@ First you must start your geth node and establish connection with Ethereum main 
 
 .. code-block:: none
 
-  geth
+  $ geth
 
 for a full geth node, or
 
 .. code-block:: none
 
-  geth --syncmode=light
+  $ geth --syncmode=light
 
 for light client mode.
 
@@ -135,7 +135,7 @@ After the connection is established, open another terminal window and connect to
 
       .. code-block:: none
 
-        swarm --ens-api $HOME/.ethereum/geth.ipc \
+        $ swarm --ens-api $HOME/.ethereum/geth.ipc \
         --bzzaccount $BZZKEY
 
     .. group-tab:: macOS
@@ -146,14 +146,14 @@ After the connection is established, open another terminal window and connect to
 
       .. code-block:: none
 
-        swarm --ens-api $HOME/Library/Ethereum/geth.ipc \
+        $ swarm --ens-api $HOME/Library/Ethereum/geth.ipc \
         --bzzaccount $BZZKEY
 
     .. group-tab:: Windows
 
       .. code-block:: none
 
-        swarm --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc \
+        $ swarm --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc \
         --bzzaccount $BZZKEY
 
 
@@ -168,9 +168,9 @@ Run a geth node connected to the Ropsten testnet
 
 .. code-block:: none
 
-  geth --testnet
+  $ geth --testnet
 
-Then launch the swarm; connecting it to the geth node (``--ens-api``).
+Then launch the ``swarm``; connecting it to the geth node (``--ens-api``).
 
 .. tabs::
 
@@ -178,21 +178,21 @@ Then launch the swarm; connecting it to the geth node (``--ens-api``).
 
       .. code-block:: none
 
-        swarm --ens-api $HOME/.ethereum/geth/testnet/geth.ipc \
+        $ swarm --ens-api $HOME/.ethereum/geth/testnet/geth.ipc \
         --bzzaccount $BZZKEY
 
     .. group-tab:: macOS
 
       .. code-block:: none
 
-        swarm --ens-api $HOME/Library/Ethereum/geth/testnet/geth.ipc \
+        $ swarm --ens-api $HOME/Library/Ethereum/geth/testnet/geth.ipc \
         --bzzaccount $BZZKEY
 
     .. group-tab:: Windows
 
       .. code-block:: none
 
-        swarm --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth\testnet\geth.ipc \
+        $ swarm --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth\testnet\geth.ipc \
         --bzzaccount $BZZKEY
 
 
@@ -202,7 +202,7 @@ For other ethereum blockchains and other deployments of the ENS contracts, you c
 
 .. code-block:: none
 
-  swarm --ens-api eth:314159265dD8dbb310642f98f50C066173C1259b@/home/user/.ethereum/geth.ipc \
+  $ swarm --ens-api eth:314159265dD8dbb310642f98f50C066173C1259b@/home/user/.ethereum/geth.ipc \
            --ens-api test:0x112234455C3a32FD11230C42E7Bccd4A84e02010@ws:1.2.3.4:5678 \
            --ens-api 0x230C42E7Bccd4A84e02010112234455C3a32FD11@ws:8.9.0.1:2345
 
@@ -217,13 +217,13 @@ Using an external ENS source
 
 Maintaining a fully synced Ethereum node comes with certain hardware and bandwidth constraints, and can be tricky to achieve. Also, light client mode, where syncing is not necessary, is still experimental.
 
-An alternative solution for development purposes is to connect to an external node that you trust, and that offers the necessary functionality through http.
+An alternative solution for development purposes is to connect to an external node that you trust, and that offers the necessary functionality through HTTP.
 
 If the external node is running on IP 12.34.56.78 port 8545, the command would be:
 
 .. code-block:: none
 
-  swarm --ens-api http://12.34.45.78:8545
+  $ swarm --ens-api http://12.34.45.78:8545
 
 You can also use ``https``. But keep in mind that Swarm *does not validate the certificate*.
 
@@ -231,12 +231,15 @@ You can also use ``https``. But keep in mind that Swarm *does not validate the c
 Alternative modes
 =================
 
-Below are examples on ways to run swarm beyond just the default network. You can instruct Swarm using the geth command line interface or use the geth javascript console.
+Below are examples on ways to run ``swarm`` beyond just the default network. You can instruct Swarm using the geth command line interface or use the geth javascript console.
 
 Swarm in singleton mode (no peers)
 ------------------------------------
 
-To launch in singleton mode, use the ``--maxpeers 0``  [see # `864 <https://github.com/ethersphere/go-ethereum/issues/864>`_ ].
+..To launch in singleton mode, use the ``--maxpeers 0``  [see # `864 <https://github.com/ethersphere/go-ethereum/issues/864>`_ ].
+
+If you **don't** want your swarm node to connect to any existing networks, you can provide it with a custom network identifier using ``--bzznetworkid`` with a random large number.
+
 
 .. tabs::
 
@@ -244,28 +247,28 @@ To launch in singleton mode, use the ``--maxpeers 0``  [see # `864 <https://gith
 
       .. code-block:: none
 
-        swarm --bzzaccount $BZZKEY \
+        $ swarm --bzzaccount $BZZKEY \
         --datadir $HOME/.ethereum \
         --ens-api $HOME/.ethereum/geth.ipc \
-        --maxpeers 0
+        --bzznetworkid <random number between 15 and 256>
 
     .. group-tab:: macOS
 
       .. code-block:: none
 
-        swarm --bzzaccount $BZZKEY \
+        $ swarm --bzzaccount $BZZKEY \
         --datadir $HOME/Library/Ethereum/ \
         --ens-api $HOME/Library/Ethereum/geth.ipc \
-        --maxpeers 0
+        --bzznetworkid <random number between 15 and 256>
 
     .. group-tab:: Windows
 
       .. code-block:: none
 
-        swarm --bzzaccount $BZZKEY \
+        $ swarm --bzzaccount $BZZKEY \
         --datadir %HOMEPATH%\AppData\Roaming\Ethereum \
         --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc \
-        --maxpeers 0
+        --bzznetworkid <random number between 15 and 256>
 
 Adding enodes manually
 ------------------------
@@ -278,7 +281,7 @@ By default, swarm will automatically seek out peers in the network. This can be 
 
       .. code-block:: none
 
-        swarm --bzzaccount $BZZKEY \
+        $ swarm --bzzaccount $BZZKEY \
         --datadir $HOME/.ethereum \
         --ens-api $HOME/.ethereum/geth.ipc \
         --nodiscover
@@ -287,7 +290,7 @@ By default, swarm will automatically seek out peers in the network. This can be 
 
       .. code-block:: none
 
-        swarm --bzzaccount $BZZKEY \
+        $ swarm --bzzaccount $BZZKEY \
         --datadir $HOME/Library/Ethereum/ \
         --ens-api $HOME/Library/Ethereum/geth.ipc \
         --nodiscover
@@ -296,7 +299,7 @@ By default, swarm will automatically seek out peers in the network. This can be 
 
       .. code-block:: none
 
-        swarm --bzzaccount $BZZKEY \
+        $ swarm --bzzaccount $BZZKEY \
         --datadir %HOMEPATH%\AppData\Roaming\Ethereum \
         --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc \
         --nodiscover
@@ -311,19 +314,19 @@ Without discovery, it is possible to manually start off the connection process b
 
       .. code-block:: none
 
-        geth --exec='admin.addPeer("ENODE")' attach $HOME/.ethereum/bzzd.ipc
+        $ geth --exec='admin.addPeer("ENODE")' attach $HOME/.ethereum/bzzd.ipc
 
     .. group-tab:: macOS
 
       .. code-block:: none
 
-        geth --exec='admin.addPeer("ENODE")' attach $HOME/Library/Ethereum/bzzd.ipc
+        $ geth --exec='admin.addPeer("ENODE")' attach $HOME/Library/Ethereum/bzzd.ipc
 
     .. group-tab:: Windows
 
       .. code-block:: none
 
-        geth --exec='admin.addPeer("ENODE")' attach %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc
+        $ geth --exec='admin.addPeer("ENODE")' attach %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc
 
 (You can also do this in the Geth Console, as seen in Section 3.2_.)
 
@@ -345,25 +348,23 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 
       .. code-block:: none
 
-        geth --exec "admin.nodeInfo.enode" attach $HOME/.ethereum/bzzd.ipc
+        $ geth --exec "admin.nodeInfo.enode" attach $HOME/.ethereum/bzzd.ipc
 
     .. group-tab:: macOS
 
       .. code-block:: none
 
-        geth --exec "admin.nodeInfo.enode" attach $HOME/Library/Ethereum/bzzd.ipc
+        $ geth --exec "admin.nodeInfo.enode" attach $HOME/Library/Ethereum/bzzd.ipc
 
     .. group-tab:: Windows
 
       .. code-block:: none
 
-        geth --exec "admin.nodeInfo.enode" attach %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc
+        $ geth --exec "admin.nodeInfo.enode" attach %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc
 
 
 .. note::
   Note how ``geth`` is used for two different purposes here: You use it to run an Ethereum Mainnet node for ENS lookups. But you also use it to "attach" to the Swarm node to send commands to it.
-
-If you **don't** want your swarm node to connect to any existing networks, you can provide it with a custom network identifier using `--bzznetworkid`.
 
 Connecting to the public Swarm cluster
 --------------------------------------
@@ -374,7 +375,24 @@ https://gist.github.com/homotopycolimit/db446fa3269a199762e67b2ca037dbeb
 
 The cluster functions as a free-to-use public access gateway to Swarm, without the need to run a local node. To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` URL.
 
-For developers
---------------
+Metrics reporting
+------------------
 
-Swarm uses the `go-metrics` library for metrics collection. You can set your node to collect metrics and push them to an influxdb database (called `metrics` by default) with the default settings. Tracing is also supported.
+Swarm uses the `go-metrics` library for metrics collection. You can set your node to collect metrics and push them to an influxdb database (called `metrics` by default) with the default settings. Tracing is also supported. An example of a default configuration is given below:
+
+.. code-block:: none
+
+  $ swarm --bzzaccount <bzzkey> \
+  --debug \
+  --metrics \
+  --metrics.influxdb.export \
+  --metrics.influxdb.endpoint "http://localhost:8086" \
+  --metrics.influxdb.username "user" \
+  --metrics.influxdb.password "pass" \
+  --metrics.influxdb.database "metrics" \
+  --metrics.influxdb.host.tag "localhost" \
+  --verbosity 4 \
+  --tracing \
+  --tracing.endpoint=jaeger:6831 \
+  --tracing.svc myswarm
+  

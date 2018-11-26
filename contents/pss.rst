@@ -52,7 +52,7 @@ Intended recipients first need to be registered with the node. This registration
 
 1. ``Encryption key`` - can be a ECDSA public key for asymmetric encryption or a 32 byte symmetric key.
 
-2. ``Topic`` - an arbitrary 4 byte word (``0x0000`` is reserved for ``raw`` messages).
+2. ``Topic`` - an arbitrary 4 byte word.
 
 3. ``Address``- destination (fully or partially specified Swarm overlay address) to use for deterministic routing.
 

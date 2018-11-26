@@ -1,3 +1,5 @@
+.. _Encryption:
+
 Encryption
 ===========
 
@@ -20,32 +22,32 @@ More info about how we handle encryption at Swarm can be found `here <https://gi
   The encryption feature is non-deterministic (due to a random key generated on every upload request) and users of the API should not rely on the result being idempotent; thus uploading the same content twice to Swarm with encryption enabled will not result in the same reference.
 
 
-**Example usage**:
+Example usage:
 
 First, we create a simple test file.
 
 .. code-block:: none
 
-  echo "testfile" > mytest.txt
+  $ echo "testfile" > mytest.txt
 
 We upload the test file **without** encryption, 
 
 .. code-block:: none
 
-  swarm up mytest.txt
+  $ swarm up mytest.txt
   > <file reference>
 
 and **with** encryption. 
 
 .. code-block:: none
 
-  swarm up --encrypt mytest.txt
+  $ swarm up --encrypt mytest.txt
   > <encrypted reference>
 
 Note that the reference of the encrypted upload is **longer** than that of the unencrypted upload. Note also that, because of the random encryption key, repeating the encrypted upload results in a different reference:
 
 .. code-block:: none
 
-  swarm up --encrypt mytest.txt
+  $ swarm up --encrypt mytest.txt
   <another encrypted reference>
 

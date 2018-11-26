@@ -1,4 +1,4 @@
-.. _bzz protocol suite:
+.. _BZZ URL schemes:
 
 BZZ URL schemes
 =======================
