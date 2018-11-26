@@ -3,7 +3,7 @@ Access Control
 
 Swarm supports restricting access to content through several access control strategies:
 
-- Password protection - where a number of undisclosed parties can access content using a shared secret ``(pass)``
+- Password protection - where a number of undisclosed parties can access content using a shared secret ``(pass, act)``
 
 - Selective access using `Elliptic Curve <https://en.wikipedia.org/wiki/Elliptic-curve_cryptography>`_ key-pairs:
 
@@ -16,6 +16,8 @@ Swarm supports restricting access to content through several access control stra
 **Accessing** restricted content is available through CLI and HTTP. When accessing content which is restricted by a password `HTTP Basic access authentication <https://en.wikipedia.org/wiki/Basic_access_authentication>`_ can be used out-of-the-box.
 
 .. important:: When accessing content which is restricted to certain EC keys - the node which exposes the HTTP proxy that is queried must be started with the granted private key as its ``bzzaccount`` CLI parameter.
+
+.. important:: Beware: this is planned to change soon.
 
 Password protection 
 -------------------
@@ -30,40 +32,42 @@ with a given passphrase and a random salt.
 The encrypted reference and the salt are then embedded into an unencrypted manifest which can be freely
 distributed but only accessed by undisclosed parties that posses knowledge of the passphrase.
 
-**Example usage**:
+Password protection can also be used for selective access when using the ``act`` strategy - similarly to granting access to a certain EC key access can be also given to a party identified by a password. In fact, one could also create an ``act`` manifest that solely grants access to grantees through passwords, without the need to know their public keys.
 
-.. important:: Restricting access to content on Swarm is a 2-step process - you first upload your content, then wrap the reference with an access control manifest. **We recommend that you always upload your content with encryption enabled**. In the following examples we will refer the uploaded content hash as ``REF``
+Example usage:
 
-First, we create a simple test file. We upload it to swarm (with encryption).
+.. important:: Restricting access to content on Swarm is a 2-step process - you first upload your content, then wrap the reference with an access control manifest. **We recommend that you always upload your content with encryption enabled**. In the following examples we will refer the uploaded content hash as ``reference hash``
+
+First, we create a simple test file. We upload it to Swarm (with encryption).
 
 .. code-block:: none
 
-  echo "testfile" > mytest.txt
-  swarm up --encrypt mytest.txt
+  $ echo "testfile" > mytest.txt
+  $ swarm up --encrypt mytest.txt
   > <reference hash>
 
 Then, for the sake of this example, we create a file with our password in it.
 
 .. code-block:: none
 
-  echo "mypassword" > mypassword.txt
+  $ echo "mypassword" > mypassword.txt
 
 This password will protect the access-controlled content that we upload. We can refer to this password using the `--password` flag. The password file should contain the password in plaintext. 
 
-The `swarm access` command sets a new password using the `new pass` argument. It expects you to input the password file and the uploaded swarm content hash you'd like to limit access to.
+The ``swarm access`` command sets a new password using the ``new pass`` argument. It expects you to input the password file and the uploaded Swarm content hash you'd like to limit access to.
 
 .. code-block:: bash
 
-  swarm access new pass --password mypassword.txt <reference hash>
+  $ swarm access new pass --password mypassword.txt <reference hash>
   > <reference of access controlled manifest>
 
 The returned hash is the hash of the access controlled manifest. 
 
-When requesting this hash through the HTTP gateway you should receive an `HTTP Unauthorized 401` error:
+When requesting this hash through the HTTP gateway you should receive an ``HTTP Unauthorized 401`` error:
 
 .. code-block:: bash
 
-  curl http://localhost:8500/bzz:/<reference of access controlled manifest>/
+  $ curl http://localhost:8500/bzz:/<reference of access controlled manifest>/
   > Code: 401
   > Message: cant decrypt - forbidden
   > Timestamp: XXX
@@ -75,14 +79,14 @@ You can retrieve the content in three ways.
 
 .. code-block:: bash
 
-  curl http://x:mypassword@localhost:8500/bzz:/<reference of access controlled manifest>/
+  $ curl http://x:mypassword@localhost:8500/bzz:/<reference of access controlled manifest>/
 
-3. You can also use `swarm down` with the `--password` flag.  
+3. You can also use ``swarm down`` with the ``--password`` flag.  
 
 .. code-block:: bash
 
-  swarm  --password mypassword.txt down bzz:/<reference of access controlled manifest>/ mytest2.txt
-  cat mytest2.txt
+  $ swarm  --password mypassword.txt down bzz:/<reference of access controlled manifest>/ mytest2.txt
+  $ cat mytest2.txt
   > testfile
 
 Selective access using EC keys
@@ -121,22 +125,22 @@ Grantee public keys are expected to be in an *secp256 compressed* form - 66 char
 
 .. code-block:: bash
 
-	swarm --bzzaccount <your account> access new pk --grant-key <your public key> <reference hash>
+	$ swarm --bzzaccount <your account> access new pk --grant-key <your public key> <reference hash>
 	> <reference of access controlled manifest>
 
 The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. 
 
 The only way to fetch the access controlled content in this case would be to request the hash through one of the nodes that were granted access and/or posses the granted private key (and that the requesting node has been started with the appropriate ``bzzaccount`` that is associated with the relevant key) - either the local node that was used to upload the content or the node which was granted access through its public key.
 
-**Protecting content with Elliptic curve keys (multiple grantees):**
+**Protecting content with Elliptic curve keys and passwords (multiple grantees):**
 
 The ``act`` strategy also requires a ``bzzaccount`` to encrypt with. The most comfortable option in this case would be the same ``bzzaccount`` you normally start your Swarm node with - this will allow you to access your content seamlessly through that node at any given point in time
 
-.. note:: the ``act`` strategy expects a grantee public-key list to be communicated to the CLI. This is done using the ``--grant-keys`` flag. Grantee public keys are expected to be in an *secp256 compressed* form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``). Each grantee should appear in a separate line. Comments and other characters are not allowed.
+.. note:: the ``act`` strategy expects a grantee public-key list and/or a list of permitted passwords to be communicated to the CLI. This is done using the ``--grant-keys`` flag and/or the ``--password`` flag. Grantee public keys are expected to be in an *secp256 compressed* form - 66 characters long string (e.g. ``02e6f8d5e28faaa899744972bb847b6eb805a160494690c9ee7197ae9f619181db``). Each grantee should appear in a separate line. Passwords are also expected to be line-separated. Comments and other characters are not allowed.
 
 .. code-block:: bash
 
-	$ swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 access new act --grant-keys /path/to/public-keys/file <REF>
+	swarm --bzzaccount 2f1cd699b0bf461dcfbf0098ad8f5587b038f0f1 access new act --grant-keys /path/to/public-keys/file --password /path/to/passwords/file  <reference hash>
 	4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b
 
 The returned hash ``4b964a75ab19db960c274058695ca4ae21b8e19f03ddf1be482ba3ad3c5b9f9b`` is the hash of the access controlled manifest. 
@@ -158,7 +162,7 @@ receive an ``HTTP 401 Unauthorized`` response and will show a pop-up dialog aski
 For the sake of decrypting the content - only the password input in the dialog matters and the username field can be left blank.
 
 The credentials for accessing content protected by a password can be provided in the initial request in the form of:
-``http://:<password>@localhost:8500/bzz:/<hash or ens name>``
+``http://x:<password>@localhost:8500/bzz:/<hash or ens name>`` (``curl`` needs you to input a username as well as a password, but the former can be an arbitrary string (here, it's ``x``).)
 
 .. important:: Access controlled content should be accessed through the ``bzz://`` protocol
 
@@ -172,32 +176,34 @@ decrypted and displayed, otherwise - an ``HTTP 401 Unauthorized`` error will be 
 Access control in the CLI: example usage
 -----------------------------------------
 
+Here is a summary of examples for the CLI usage.
+
 .. tabs::
 
   .. group-tab:: Passwords
 
-    First, we create a simple test file. We upload it to swarm.
+    First, we create a simple test file. We upload it to Swarm using encryption.
     
     .. code-block:: none
     
-      echo "testfile" > mytest.txt
-      swarm up mytest.txt
+      $ echo "testfile" > mytest.txt
+      $ swarm up  --encrypt mytest.txt
       > <reference hash>
   
     Then, we define a password file and use it to create an access-controlled manifest.
   
     .. code-block:: none
     
-      echo "mypassword" > mypassword.txt
-      swarm access new pass --password mypassword.txt <reference hash>
+      $ echo "mypassword" > mypassword.txt
+      $ swarm access new pass --password mypassword.txt <reference hash>
       > <reference of access controlled manifest>
     
     We can create a passwords file with one password per line in plaintext (``password1`` is probably not a very good password).
     
     .. code-block:: bash
     
-      for i in {1..3}; do echo -e password$i; done > mypasswords.txt
-      cat mypasswords.txt
+      $ for i in {1..3}; do echo -e password$i; done > mypasswords.txt
+      $ cat mypasswords.txt
       > password1
       > password2
       > password3
@@ -206,47 +212,47 @@ Access control in the CLI: example usage
     
     .. code-block:: bash
     
-      swarm access new act --password mypasswords.txt <reference hash>
+      $ swarm access new act --password mypasswords.txt <reference hash>
       > <reference of access controlled manifest>
     
     We can access the returned manifest using any of the passwords in the password list.
     
     .. code-block:: bash
     
-      echo password1 > password1.txt  
-      swarm --password1.txt down bzz:/<reference of access controlled manifest>
+      $ echo password1 > password1.txt  
+      $ swarm --password1.txt down bzz:/<reference of access controlled manifest>
     
     We can also `curl` it.
     
     .. code-block:: bash
     
-      curl http://:password1@localhost:8500/bzz:/<reference of access controlled manifest>/
+      $ curl http://:password1@localhost:8500/bzz:/<reference of access controlled manifest>/
   
   .. group-tab:: Elliptic curve keys
 
     1. ``pk`` strategy
 
-    First, we create a simple test file. We upload it to swarm.
+    First, we create a simple test file. We upload it to Swarm using encryption.
     
       .. code-block:: none
     
-        echo "testfile" > mytest.txt
-        swarm up mytest.txt
+        $ echo "testfile" > mytest.txt
+        $ swarm up --encrypt mytest.txt
         > <reference hash>
 
     Then, we draw an EC key pair and use the public key to create the access-controlled manifest.
 
       .. code-block:: none
 
-        swarm access new pk --grant-key <public key> <reference hash>
+        $ swarm access new pk --grant-key <public key> <reference hash>
         > <reference of access controlled manifest>
 
     We can retrieve the access-controlled manifest via a node that has the private key. You can add a private key using ``geth`` (see `here <https://github.com/ethereum/go-ethereum/wiki/Managing-your-accounts>`_).
 
       .. code-block:: none
 
-        swarm --bzzaccount <address of node with granted private key> down bzz:/<reference of access controlled manifest> out.txt
-        cat out.txt
+        $ swarm --bzzaccount <address of node with granted private key> down bzz:/<reference of access controlled manifest> out.txt
+        $ cat out.txt
         > "testfile"
 
     2. ``act`` strategy
@@ -255,13 +261,13 @@ Access control in the CLI: example usage
 
       .. code-block:: none
 
-        swarm access new act --grant-keys <public key list> <reference hash>
+        $ swarm access new act --grant-keys <public key list> <reference hash>
         > <reference of access controlled manifest>
 
     Again, only nodes that possess the private key will have access to the content.
     
     .. code-block:: none
 
-        swarm --bzzaccount <address of node with a granted private key> down bzz:/<reference of access controlled manifest> out.txt
-        cat out.txt
+        $ swarm --bzzaccount <address of node with a granted private key> down bzz:/<reference of access controlled manifest> out.txt
+        $ cat out.txt
         > "testfile"    
