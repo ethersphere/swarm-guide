@@ -40,13 +40,13 @@ You can run it with optional arguments, e.g.:
 
 .. code-block:: shell
 
-  $ docker run -e PASSWORD=<password> -t ethdevops/swarm:latest -- --debug --verbosity 4
+  $ docker run -e PASSWORD=<password> -t ethdevops/swarm:latest --debug --verbosity 4
 
 In order to up/download, you need to expose the HTTP api port (here: to localhost:8501) and set the HTTP address:
 
 .. code-block:: shell
 
-  $ docker run -p 8501:8500/tcp -e PASSWORD=<password> -t ethdevops/swarm:latest --  --httpaddr=0.0.0.0 --debug --verbosity 4
+  $ docker run -p 8501:8500/tcp -e PASSWORD=<password> -t ethdevops/swarm:latest  --httpaddr=0.0.0.0 --debug --verbosity 4
 
 In this example, you can use ``swarm --bzzapi http://localhost:8501 up testfile.md`` to upload ``testfile.md`` to swarm using the Docker node, and you can get it back e.g. with ``curl http://localhost:8501/bzz:/<hash>``.
 
@@ -56,7 +56,7 @@ In order to attach a Geth Javascript console, you need to mount a data directory
 
 .. code-block:: shell
 
-  $ docker run -p 8501:8500/tcp -e PASSWORD=<password> -e DATADIR=/data -v /tmp/hostdata:/data -t-t ethdevops/swarm:latest --  --httpaddr=0.0.0.0 --debug --verbosity 4
+  $ docker run -p 8501:8500/tcp -e PASSWORD=<password> -e DATADIR=/data -v /tmp/hostdata:/data -t-t ethdevops/swarm:latest --httpaddr=0.0.0.0 --debug --verbosity 4
 
 Then, you can attach the console with:
 
