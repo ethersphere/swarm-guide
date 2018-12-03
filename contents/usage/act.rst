@@ -72,7 +72,7 @@ When requesting this hash through the HTTP gateway you should receive an ``HTTP 
   > Message: cant decrypt - forbidden
   > Timestamp: XXX
 
-You can retrieve the content in three ways.
+You can retrieve the content in three ways:
 
 1. The same request should make an authentication dialog pop-up in the browser. You could then input the password needed and the content should correctly appear. (Leave the username empty.)
 2. Requesting the same hash with HTTP basic authentication would return the content too. ``curl`` needs you to input a username as well as a password, but the former can be an arbitrary string (here, it's ``x``).
@@ -175,8 +175,6 @@ decrypted and displayed, otherwise - an ``HTTP 401 Unauthorized`` error will be 
 
 Access control in the CLI: example usage
 -----------------------------------------
-
-Here is a summary of examples for the CLI usage.
 
 .. tabs::
 

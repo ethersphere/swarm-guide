@@ -40,11 +40,11 @@ The choice of identifier in Swarm is the hierarchical Swarm hash described in :r
 The properties above allow us to view hashes as addresses at which content is expected to be found.
 Since hashes can be assumed to be collision free, they are bound to one specific version of a content. Hash addressing is therefore immutable in the strong sense that you cannot even express mutable content: "changing the content changes the hash".
 
-Users of the web, however, are accustomed to mutable resources, looking up domains and expect to see the most up to date version of the 'site'. Mutable resources are made possible by the ethereum name service (ENS) and Mutable Resource Updates (MRU).
+Users of the web, however, are accustomed to mutable resources, looking up domains and expect to see the most up to date version of the 'site'. Mutable resources are made possible by the ethereum name service (ENS) and Feeds.
 The ENS is a smart contract on the ethereum blockchain which enables domain owners to register a content reference to their domain.
 Using ENS for domain name resolution, the url scheme provides
 content retrieval based on mnemonic (or branded) names, much like the DNS of the world wide web, but without servers.
-MRU is an off-chain solution for communicating updates to a resource, it offers cheaper and faster updates than ENS, yet the updates can be consolidated on ENS by any third party willing to pay for the transaction.
+Feeds is an off-chain solution for communicating updates to a resource, it offers cheaper and faster updates than ENS, yet the updates can be consolidated on ENS by any third party willing to pay for the transaction.
 
 Just as content in Swarm is addressed with a 32-byte hash, so is every Swarm node in the network associated with a 32-byte hash address.
 All Swarm nodes have their own :dfn:`base address` which is derived as the (Keccak 256bit SHA3) hash of the public key of an ethereum account:

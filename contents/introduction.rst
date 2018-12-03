@@ -174,10 +174,10 @@ Special thanks
 * Nick Savers for his unrelenting support and meticulous reviews of our papers
 * Gregor Zavcer, Alexei Akhunov, Alex Beregszaszi, Daniel Varga, Julien Boutloup for inspiring discussions and ideas
 * Juan Benet and the IPFS team for continued inspiration
-* Carl Youngblood, Shane Howley, Paul Le Cam, Doug Leonard and the mainframe team for their contribution to PSS and MRU/Feeds
+* Carl Youngblood, Shane Howley, Paul Le Cam, Doug Leonard and the mainframe team for their contribution to PSS and Feeds
 * Sourabh Niyogi and the entire Wolk team for the inspiring collaboration on databases
 * Ralph Pilcher for implementing the swap swear and swindle contract suite in solidity/truffle and Oren Sokolowsky for the initial version
-* Javier Peletier from Epiclabs (ethergit) for his contribution to MRUs/Feeds
+* Javier Peletier from Epiclabs (ethergit) for his contribution to Feeds
 * Jarrad Hope and Carl Bennet (Status) for their support
 * Participants of the orange lounge research group and the Swarm orange summits
 * Roman Mandeleil and Anton Nashatyrev for an early java implementation of swarm

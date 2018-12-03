@@ -140,10 +140,6 @@ After the connection is established, open another terminal window and connect to
 
     .. group-tab:: macOS
 
-      ..  note::
-
-        Mac users should avoid using "~". 
-
       .. code-block:: none
 
         $ swarm --ens-api $HOME/Library/Ethereum/geth.ipc \
@@ -202,11 +198,11 @@ For other ethereum blockchains and other deployments of the ENS contracts, you c
 
 .. code-block:: none
 
-  $ swarm --ens-api eth:314159265dD8dbb310642f98f50C066173C1259b@/home/user/.ethereum/geth.ipc \
-           --ens-api test:0x112234455C3a32FD11230C42E7Bccd4A84e02010@ws:1.2.3.4:5678 \
-           --ens-api 0x230C42E7Bccd4A84e02010112234455C3a32FD11@ws:8.9.0.1:2345
+  $ swarm --ens-api eth:<contract 1>@/home/user/.ethereum/geth.ipc \
+           --ens-api test:<contract 2>@ws:<address 1> \
+           --ens-api <contract 3>@ws:<address 2>
 
-Will use the ``geth.ipc`` to resolve ``.eth`` names using the contract at ``314159265dD8dbb310642f98f50C066173C1259b`` and it will use ``ws:1.2.3.4:5678`` to resolve ``.test`` names using the contract at ``0x112234455C3a32FD11230C42E7Bccd4A84e02010``. For all other names it will use the ENS contract at ``0x230C42E7Bccd4A84e02010112234455C3a32FD11`` on ``ws:8.9.0.1:2345``.
+Will use the ``geth.ipc`` to resolve ``.eth`` names using the contract at address ``<contract 1>`` and it will use ``ws:<address 1>`` to resolve ``.test`` names using the contract at address ``<contract 2>``. For all other names it will use the ENS contract at address ``<contract 3>`` on ``ws:<address 2>``.
 
 Using an external ENS source
 ----------------------------

@@ -49,7 +49,7 @@ A Feed Manifest is simply a JSON object that contains the ``Topic`` and ``User``
 Feeds API
 ---------
 
-There  are 3 different ways of interacting with *Feeds* : HTTP API, CLI, and Golang API.
+There  are 3 different ways of interacting with *Feeds* : HTTP API, CLI and Golang API.
 
 HTTP API
 ~~~~~~~~
