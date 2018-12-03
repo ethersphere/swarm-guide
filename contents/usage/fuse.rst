@@ -51,13 +51,13 @@ Once you get the returned manifest hash, use it to mount the manifest to a mount
 
 .. code-block:: none
 
-	swarm fs mount --ipcpath <path-to-bzzd.ipc> <manifest-hash> <mount-point>
+	swarm fs mount <manifest-hash> <mount-point>
 
 For example:
 
 .. code-block:: none
 
-	swarm fs mount --ipcpath /home/user/ethereum/bzzd.ipc <manifest-hash> /home/user/swarmmount
+	swarm fs mount <manifest-hash> /home/user/swarmmount
 
 Your running Swarm node terminal output should show something similar to the following in case the command returned successfuly:
 
@@ -82,7 +82,7 @@ To unmount a swarmfs mount, either use the List Mounts command below, or use a k
 
 .. code-block:: none
 
-	swarm fs unmount --ipcpath <path-to-bzzd.ipc> <mount-point>
+	swarm fs unmount <mount-point>
 	> 41e422e6daf2f4b32cd59dc6a296cce2f8cce1de9f7c7172e9d0fc4c68a3987a
 
 The returned hash is the latest manifest version that was mounted.
@@ -95,7 +95,7 @@ To see all existing swarmfs mount points, use the List Mounts command:
 
 .. code-block:: none
 
-	swarm fs list --ipcpath <path-to-bzzd.ipc>
+	swarm fs list
 
 Example Output:
 
