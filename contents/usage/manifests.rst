@@ -3,7 +3,7 @@ Manifests
 
 .. _swarm-manifest:
 
-In general manifests declare a list of strings associated with Swarm hashes. A manifest matches to exactly one hash, and it consists of a list of entries declaring the content which can be retrieved through that hash. This is demonstrated by the following example.
+In general manifests declare a list of strings associated with Swarm hashes. A manifest matches to exactly one hash, and it consists of a list of entries declaring the content which can be retrieved through that hash. This is demonstrated by the following example:
 
 Let's create a directory containing the two orange papers and an html index file listing the two pdf documents.
 

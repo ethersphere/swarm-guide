@@ -133,11 +133,7 @@ You should then prepare your Go environment.
         $ echo 'export PATH=$GOPATH/bin:$PATH' >> ~/.bashrc
         $ source ~/.bashrc
 
-    .. group-tab:: macOS
-
-      ..  note::
-
-        Mac users should avoid using "~". 
+    .. group-tab:: macOS 
 
       .. code-block:: shell
 
