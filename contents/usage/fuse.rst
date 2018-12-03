@@ -53,11 +53,13 @@ Once you get the returned manifest hash, use it to mount the manifest to a mount
 
 	$ swarm fs mount <manifest-hash> <mount-point>
 
+
 For example:
 
 .. code-block:: none
 
 	$ swarm fs mount <manifest-hash> /home/user/swarmmount
+
 
 Your running Swarm node terminal output should show something similar to the following in case the command returned successfuly:
 
@@ -96,6 +98,7 @@ To see all existing swarmfs mount points, use the List Mounts command:
 .. code-block:: none
 
   $ swarm fs list
+
 
 Example Output:
 
