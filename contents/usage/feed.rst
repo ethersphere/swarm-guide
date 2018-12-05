@@ -35,7 +35,7 @@ Users can post to any topic. If you know the user's address and agree on a parti
   is that it should be easy to derive out of information that is accesible to other users.
   
   For convenience, ``feed.NewTopic()`` provides a way to "merge" a byte array with a string in order to build a Feed Topic out of both.
-  This is used at the API level to create the illusion of subtopics. This way of building topics allows to use a random byte array (for example the hash of a photo)
+  This is used at the API level to create the illusion of subtopics. This way of building topics allows using a random byte array (for example the hash of a photo)
   and merge it with a human-readable string such as "comments" in order to create a Topic that could represent the comments about that particular photo.
   This way, when you see a picture in a website you could immediately build a Topic out of it and see if some user posted comments about that photo.
 
@@ -44,13 +44,12 @@ Feeds are not created, only updated. If a particular Feed (user, topic combinati
 Feed Manifests
 --------------
 
-
 A Feed Manifest is simply a JSON object that contains the ``Topic`` and ``User`` of a particular Feed (i.e., a serialized ``Feed`` object). Uploading this JSON object to Swarm in the regular way will return the immutable hash of this object. We can then store this immutable hash in an ENS Resolver so that we can have a ENS domain that "follows" the Feed described in the manifest.
 
 Feeds API
 ---------
 
-There  are 3 different ways of interacting with *Feeds* : HTTP API, Golang API and Swarm CLI.
+There  are 3 different ways of interacting with *Feeds* : HTTP API, CLI and Golang API.
 
 HTTP API
 ~~~~~~~~
@@ -183,9 +182,6 @@ Posting to a Feed
   
   func (c *Client) UpdateFeed(request *feed.Request, createManifest bool) (io.ReadCloser, error) 
 
-
-
-
 Reading a Feed
 ..............
 
@@ -195,13 +191,11 @@ To retrieve a Feed update, use `client.QueryFeed()`. ``QueryFeed`` returns a byt
 
   func (c *Client) QueryFeed(query *feed.Query, manifestAddressOrDomain string) (io.ReadCloser, error)
 
-
 ``manifestAddressOrDomain`` is the address you obtained in ``CreateFeedWithManifest`` or an ``ENS`` domain whose Resolver
 points to that address.
 ``query`` is a Query object, as defined above.
 
 You only need to provide either ``manifestAddressOrDomain`` or ``Query`` to ``QueryFeed()``. Set to ``""`` or ``nil`` respectively.
-
 
 Creating a Feed Manifest
 ........................
@@ -253,77 +247,93 @@ Example Go code
 Command-Line
 ~~~~~~~~~~~~~~~~
 
-Posting to a Feed
-.................
+The CLI API allows us to go through how Feeds work using practical examples. You can look up CL usage by typing ``swarm feed`` into your CLI.
 
-To update a Feed with the cli:
-
-.. code-block:: none
-
- swarm feed update [command options] <0x Hex data>
-
- creates a new update on the specified topic
-            The topic can be specified directly with the --topic flag as an hex string
-            If no topic is specified, the default topic (zero) will be used
-            The --name flag can be used to specify subtopics with a specific name.
-            If you have a manifest, you can specify it with --manifest instead of --topic / --name
-            to refer to the feed
-   OPTIONS:
-  --manifest value  Refers to the feed through a manifest
-  --name value      User-defined name for the new feed, limited to 32 characters. If combined with topic, the feed will be a       subtopic with this name
-  --topic value     User-defined topic this feed is tracking, hex encoded. Limited to 64 hexadecimal characters
-
-
-Reading Feed status
-...................
-
-.. code-block:: none
-
-  swarm feed info [command options] [arguments...]
-
-  obtains information about an existing Swarm feed
-            The topic can be specified directly with the --topic flag as an hex string
-            If no topic is specified, the default topic (zero) will be used
-            The --name flag can be used to specify subtopics with a specific name.
-            The --user flag allows to refer to a user other than yourself. If not specified,
-            it will then default to your local account (--bzzaccount)
-            If you have a manifest, you can specify it with --manifest instead of --topic / --name / ---user
-            to refer to the feed
-
-  OPTIONS:
-  --manifest value  Refers to the feed through a manifest
-  --name value      User-defined name for the new feed, limited to 32 characters. If combined with topic, it will refer to a subtopic with this name
-  --topic value     User-defined topic this feed is tracking, hex encoded. Limited to 64 hexadecimal characters
-  --user value      Indicates the user who updates the feed
-
-
+In the CLI examples, we will create and update feeds using the bzzapi on a running local Swarm node that listens by default on port 8500. 
 
 Creating a Feed Manifest
 ........................
 
-The Swarm CLI allows to create Feed Manifests directly from the console:
+The Swarm CLI allows creating Feed Manifests directly from the console.
 
 ``swarm feed create`` is defined as a command to create and publish a ``Feed manifest``.
 
+The feed topic can be built in the following ways:
+  * use ``--topic`` to set the topic to an arbitrary binary hex string.
+  * use ``--name`` to set the topic to a human-readable name.
+      For example, ``--name`` could be set to "profile-picture", meaning this feed allows to get this user's current profile picture.
+  * use both ``--topic`` and ``--name`` to create named subtopics. 
+      For example, `--topic` could be set to an Ethereum contract address and ``--name`` could be set to "comments", meaning this feed tracks a discussion about that contract.
+
+The ``--user`` flag allows to have this manifest refer to a user other than yourself. If not specified, it will then default to your local account (``--bzzaccount``).
+
+If you don't specify a name or a topic, the topic will be set to ``0 hex`` and name will be set to your username. 
+
 .. code-block:: none
 
-  swarm feed create [command options]
+  $ swarm --bzzapi http://localhost:8500 feed create --name test
 
-  creates and publishes a new feed manifest pointing to a specified user's updates about a particular topic.
-            The feed topic can be built in the following ways:
-            * use --topic to set the topic to an arbitrary binary hex string.
-            * use --name to set the topic to a human-readable name.
-                For example --name could be set to "profile-picture", meaning this feed allows to get this user's current profile picture.
-            * use both --topic and --name to create named subtopics. 
-              For example, --topic could be set to an Ethereum contract address and --name could be set to "comments", meaning
-              this feed tracks a discussion about that contract.
-            The --user flag allows to have this manifest refer to a user other than yourself. If not specified,
-            it will then default to your local account (--bzzaccount)
+creates a feed named "test". This is equivalent to the HTTP API way of
 
-  OPTIONS:
-  --name value   User-defined name for the new feed, limited to 32 characters. If combined with topic, it will refer to a subtopic with this name
-  --topic value  User-defined topic this feed is tracking, hex encoded. Limited to 64 hexadecimal characters
-  --user value   Indicates the user who updates the feed
+.. code-block:: none
+
+  $ swarm --bzzapi http://localhost:8500 feed create --topic 0x74657374    
+
+since ``test string == 0x74657374 hex``. Name and topic are interchangeable, as long as you don't specify both. 
+
+``feed create`` will return the **feed manifest**.
+
+You can also use ``curl`` in the HTTP API, but, here, you have to explicitly define the user (which, in this case, is your account) and the manifest.
+
+.. code-block:: none
+
+  $ curl -XPOST -d 'name=test&user=<your account>&manifest=1' http://localhost:8500/bzz-Feed:/
+
+is equivalent to
+
+.. code-block:: none
+
+  $ curl -XPOST -d 'topic=0x74657374&user=<your account>&manifest=1' http://localhost:8500/bzz-Feed:/
+
+
+Posting to a Feed
+.................
+
+To update a Feed with the CLI, use ``feed update``. The **update** argument has to be in ``hex``. If you want to update your *test* feed with the update *hello*, you can refer to it by name:
+
+.. code-block:: none
+
+  $ swarm --bzzapi http://localhost:8500 feed update --name test 0x68656c6c6f203
+
+You can also refer to it by topic,
+
+.. code-block:: none
+
+  $ swarm --bzzapi http://localhost:8500 feed update --topic 0x74657374 0x68656c6c6f203
+
+or manifest.
+
+.. code-block:: none
+
+  $ swarm --bzzapi http://localhost:8500 feed update --manifest <manifest hash> 0x68656c6c6f203
+
+Reading Feed status
+...................
+
+You can read the feed object using ``feed info``. Again, you can use the feed name, the topic, or the manifest hash. Below, we use the name.
+
+.. code-block:: none
+
+  $ swarm --bzzapi http://localhost:8500 feed info --name test
+
+Reading Feed Updates
+.....................  
+
+Although the Swarm CLI doesn't have the functionality to retrieve feed updates, we can use ``curl`` and the HTTP api to retrieve them. Again, you can use the feed name, topic, or manifest hash. To return the update ``hello`` for your ``test`` feed, do this:
+
+.. code-block:: none
+
+  $ curl 'http://localhost:8500/bzz-feed:/?user=<your address>&name=test'
 
 
 Computing Feed Signatures

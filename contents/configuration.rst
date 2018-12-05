@@ -2,6 +2,7 @@
 Configuration
 ******************************
 
+.. _configuration:
 
 Command line options for swarm
 ====================================
