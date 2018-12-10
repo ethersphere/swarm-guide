@@ -57,6 +57,11 @@ html:
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
+html-docker:
+	@which docker &> /dev/null || (echo "please, install Docker to use this target" >&2 && exit 1)
+	@docker build --tag swarm-sphinx .
+	@docker run --rm --volume $$PWD:/src swarm-sphinx make html
+
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
 	@echo
