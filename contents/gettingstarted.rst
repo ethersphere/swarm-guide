@@ -232,8 +232,6 @@ Below are examples on ways to run ``swarm`` beyond just the default network. You
 Swarm in singleton mode (no peers)
 ------------------------------------
 
-..To launch in singleton mode, use the ``--maxpeers 0``  [see # `864 <https://github.com/ethersphere/go-ethereum/issues/864>`_ ].
-
 If you **don't** want your swarm node to connect to any existing networks, you can provide it with a custom network identifier using ``--bzznetworkid`` with a random large number.
 
 
