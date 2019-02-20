@@ -37,6 +37,32 @@ Podcasts
 -------------
 https://oktahedron.diskordia.org/?podcast=oh003-Swarm
 
+
+Tutorial videos
+--------------
+
+Aron Fischer: Getting started with Swarm and ENS (15:39')
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/1hLOEBjwBkY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+++++++++++++
+
+Aron Fischer: A look at files. bzz-list, swarm-explorer and FUSE (7:08')
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/t_CLnDfdONA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+++++++++++++
+
+Aron Fischer: Troubleshooting: Not enough peers (3:27')
+
+.. raw:: html
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/Qh9k51jL_PI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
 Videos
 --------------
 
