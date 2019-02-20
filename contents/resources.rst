@@ -39,29 +39,32 @@ https://oktahedron.diskordia.org/?podcast=oh003-Swarm
 
 
 Tutorial videos
---------------
+---------------
 
 Aron Fischer: Getting started with Swarm and ENS (15:39')
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/1hLOEBjwBkY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/1hLOEBjwBkY/0.jpg
+   :target: http://www.youtube.com/watch?v=1hLOEBjwBkY
 
 ++++++++++++
 
 Aron Fischer: A look at files. bzz-list, swarm-explorer and FUSE (7:08')
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/t_CLnDfdONA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/t_CLnDfdONA/0.jpg
+   :target: http://www.youtube.com/watch?v=t_CLnDfdONA
 
 ++++++++++++
 
 Aron Fischer: Troubleshooting: Not enough peers (3:27')
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/Qh9k51jL_PI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/Qh9k51jL_PI/0.jpg
+   :target: http://www.youtube.com/watch?v=Qh9k51jL_PI
 
 Videos
 --------------
@@ -69,45 +72,50 @@ Videos
 Aron Fischer, Louis Holbrook, Daniel A. Nagy: Swarm Development Update - Devcon3 Cancun, November 2017
 
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/kT7BgOH49Sk" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/kT7BgOH49Sk/0.jpg
+   :target: http://www.youtube.com/watch?v=kT7BgOH49Sk
 
 ++++++++++++
 
 
 Viktor Trón and Aron Fischer - Swap, Swear and Swindle Games - Devcon3 Cancun, November 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/9Cgyhsjsfbg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/9Cgyhsjsfbg/0.jpg
+   :target: http://www.youtube.com/watch?v=9Cgyhsjsfbg
 
 ++++++++++++
 
 
 sw3 London
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/Bn65-bI-S1o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/Bn65-bI-S1o/0.jpg
+   :target: http://www.youtube.com/watch?v=Bn65-bI-S1o
 
 ++++++++++++
 
 
 Louis Holbrook: Resource Updates - EthCC, Paris, March 2018
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/CgvRFsezTI4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/CgvRFsezTI4/0.jpg
+   :target: http://www.youtube.com/watch?v=CgvRFsezTI4
 
 ++++++++++++
 
 
 Daniel A Nagy: Encryption in Swarm - EthCC, Paris, March 2018
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/ZW7E8KTplgg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/ZW7E8KTplgg/0.jpg
+   :target: http://www.youtube.com/watch?v=ZW7E8KTplgg
 
 ++++++++++++
 
@@ -119,124 +127,140 @@ Viktor Tron
 
 Louis Holbrook (Ethersphere, Jaak) PSS - Node to node Communication Over Swarm - Devcon3 Cancun, November 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/fNlO5XJv9mI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/fNlO5XJv9mI/0.jpg
+   :target: http://www.youtube.com/watch?v=fNlO5XJv9mI
 
 ++++++++++++
 
 Daniel A Nagy - Scalable Responsive Đapps with Swarm and ENS - Devcon3 Cancun, November 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/y01YJ_e5oHw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/y01YJ_e5oHw/0.jpg
+   :target: http://www.youtube.com/watch?v=y01YJ_e5oHw
 
 ++++++++++++
 
 Aron Fischer - Data retrieval in Swarm - Swarm Orange Summit, Berlin, June 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/moEbbjOUUHI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/moEbbjOUUHI/0.jpg
+   :target: http://www.youtube.com/watch?v=moEbbjOUUHI
 
 ++++++++++++
 
 Zahoor Mohamed (EF, Swarm team): Swarm Fuse Demo - Ethereum Meetup, Berlin, June 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/LObSTf2jozM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/LObSTf2jozM/0.jpg
+   :target: http://www.youtube.com/watch?v=LObSTf2jozM
 
 ++++++++++++
 
 Daniel Nagy: Network topology for distributed storage - Swarm Orange Summit, Berlin, June 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/kKoGcAzEnJQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/kKoGcAzEnJQ/0.jpg
+   :target: http://www.youtube.com/watch?v=kKoGcAzEnJQ
 
 ++++++++++++
 
 Fabian Vogelsteller - Swarm Integration in Mist - Swarm Orange Summit, Berlin, June 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/AFVeWiP4ibQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/AFVeWiP4ibQ/0.jpg
+   :target: http://www.youtube.com/watch?v=AFVeWiP4ibQ
 
 ++++++++++++
 
 Daniel Nagy (EF, Swarm team): Plausible Deniability (2 parts) - Swarm Orange Summit, Berlin, June 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/fOJgNPdwy18" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/fOJgNPdwy18/0.jpg
+   :target: http://www.youtube.com/watch?v=fOJgNPdwy18
 
 ++++++++++++
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/dHCWaiHtxOw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/dHCWaiHtxOw/0.jpg
+   :target: http://www.youtube.com/watch?v=dHCWaiHtxOw
 
 ++++++++++++
 
 Elad Verbin: Data structures and security on Swarm (2 parts) - Swarm orange summit, Berlin, June 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/h5msn6FcP5o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/h5msn6FcP5o/0.jpg
+   :target: http://www.youtube.com/watch?v=h5msn6FcP5o
 
 ++++++++++++
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/IjYkEypa-ww" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/IjYkEypa-ww/0.jpg
+   :target: http://www.youtube.com/watch?v=IjYkEypa-ww
 
 ++++++++++++
 
 Louis Holbrook (Ethersphere, Jaak): PSS - internode messaging protocol - Swarm Orange Summit, Berlin, June 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/x9Rs23itEXo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/x9Rs23itEXo/0.jpg
+   :target: http://www.youtube.com/watch?v=x9Rs23itEXo
 
 ++++++++++++
 
 Viktor Tron - Distributed Database Services - Swarm Orange Summit 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/H9MclB0J6-A" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/H9MclB0J6-A/0.jpg
+   :target: http://www.youtube.com/watch?v=H9MclB0J6-A
 
 ++++++++++++
 
 Viktor Tron - network testing framework and visualisation - Ethereum Meetup, Berlin, June 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/-c_kTW_aNgg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/-c_kTW_aNgg/0.jpg
+   :target: http://www.youtube.com/watch?v=-c_kTW_aNgg
 
 ++++++++++++
 
 Doug Petkanics (Livepeer): Realtime video streaming on Swarm - Swarm Orange Summit, Berlin, June 2017
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/MB-drzcRCD8" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/MB-drzcRCD8/0.jpg
+   :target: http://www.youtube.com/watch?v=MB-drzcRCD8
 
 ++++++++++++
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/pQjwySXLm6Y" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/pQjwySXLm6Y/0.jpg
+   :target: http://www.youtube.com/watch?v=pQjwySXLm6Y
 
 
 ++++++++++++
 
 Nick Johnson on the Ethereum Name System
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/pLDDbCZXvTE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/pLDDbCZXvTE/0.jpg
+   :target: http://www.youtube.com/watch?v=pLDDbCZXvTE
 
 
 
@@ -244,9 +268,10 @@ Nick Johnson on the Ethereum Name System
 
 Viktor Trón, Aron Fischer: Swap, Swear and Swindle. Swarm Incentivisation.
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/DZbhjnhP5g4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/DZbhjnhP5g4/0.jpg
+   :target: http://www.youtube.com/watch?v=DZbhjnhP5g4
 
 
 
@@ -254,27 +279,30 @@ Viktor Trón, Aron Fischer: Swap, Swear and Swindle. Swarm Incentivisation.
 
 Viktor Trón: Towards Web3 Infrastructure.
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/RF8L6V_E-MM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/RF8L6V_E-MM/0.jpg
+   :target: http://www.youtube.com/watch?v=RF8L6V_E-MM
 
 
 ++++++++++++
 
 Dániel A. Nagy: Developing Scalable Decentralized Applications for Swarm and Ethereum
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/xrw9rvee7rc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/xrw9rvee7rc/0.jpg
+   :target: http://www.youtube.com/watch?v=xrw9rvee7rc
 
 
 ++++++++++++
 
 Aron Fischer, Dániel A. Nagy, Viktor Trón: Swarm - Ethereum.
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/Y9kch84cbPA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/Y9kch84cbPA/0.jpg
+   :target: http://www.youtube.com/watch?v=Y9kch84cbPA
 
 
 
@@ -282,42 +310,47 @@ Aron Fischer, Dániel A. Nagy, Viktor Trón: Swarm - Ethereum.
 
 Viktor Trón, Nick Johnson: Swarm, web3, and the Ethereum Name Service.
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/BAAAhZI7qRQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/BAAAhZI7qRQ/0.jpg
+   :target: http://www.youtube.com/watch?v=BAAAhZI7qRQ
 
 
 ++++++++++++
 
 Nagy Dániel, Trón Viktor: Ethereum és Swarm: okos szerződések és elosztott világháló.
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/vD8PAJvhH-4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/vD8PAJvhH-4/0.jpg
+   :target: http://www.youtube.com/watch?v=vD8PAJvhH-4
 
 
 ++++++++++++
 
 Dániel Nagy: Swarm: Distributed storage for Ethereum, the Turing-complete blockchain.
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/N_vtxw6nfmQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/N_vtxw6nfmQ/0.jpg
+   :target: http://www.youtube.com/watch?v=N_vtxw6nfmQ
 
 
 ++++++++++++
 
 Viktor Trón, Dániel A. Nagy: Swarm. Ethereum Devcon1, London, November 2015.
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/VOC45AgZG5Q" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/VOC45AgZG5Q/0.jpg
+   :target: http://www.youtube.com/watch?v=VOC45AgZG5Q
 
 
 ++++++++++++
 
 Dániel A. Nagy: Keeping the public record safe and accessible. Ethereum Devcon0, Berlin, December 2014.
 
-.. raw:: html
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/QzYZQ03ON2o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+.. image:: http://img.youtube.com/vi/QzYZQ03ON2o/0.jpg
+   :target: http://www.youtube.com/watch?v=QzYZQ03ON2o
