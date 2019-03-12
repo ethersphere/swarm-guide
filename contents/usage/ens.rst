@@ -13,7 +13,7 @@ Suppose we upload a directory to Swarm containing (among other things) the file 
 
 .. code-block:: none
 
-  swarm --recursive up /path/to/dir
+  $ swarm --recursive up /path/to/dir
   >2477cc8584cc61091b5cc084cdcdb45bf3c6210c263b0143f030cf7d750e894d
 
 If we register the root hash as the ``content`` for ``theswarm.eth``, then we can access the pdf at

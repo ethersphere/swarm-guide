@@ -5,13 +5,13 @@ Resources
 Homepage
 --------
 
-the *Swarm homepage* is accessible via Swarm at `theswarm.eth`. The page can be accessed through the public gateway on http://swarm-gateways.net/bzz:/theswarm.eth/
+the *Swarm homepage* is accessible via Swarm at `theswarm.eth`. The page can be accessed through the public gateway on https://swarm.ethereum.org or https://swarm-gateways.net/bzz:/theswarm.eth/
 
 Blogposts
 ---------------
 
-* [Announcement of POC3](https://blog.ethereum.org/2018/06/21/announcing-swarm-proof-of-concept-release-3/)
-* [POC2 public alpha announcement](https://blog.ethereum.org/2016/12/15/Swarm-alpha-public-pilot-basics-Swarm/)
+* `Announcement of POC3 <https://blog.ethereum.org/2018/06/21/announcing-swarm-proof-of-concept-release-3/>`_
+* `POC2 public alpha announcement <https://blog.ethereum.org/2016/12/15/Swarm-alpha-public-pilot-basics-Swarm/>`_
 
 Swarm Orange Summit
 ----------------------
@@ -23,7 +23,6 @@ Swarm Orange Summit
 
 Orange papers
 --------------
-
 
 * Viktor Trón, Aron Fischer, Dániel Nagy A and Zsolt Felföldi, Nick Johnson: swap, swear and swindle: incentive system for Swarm. May 2016 - https://swarm-gateways.net/bzz:/theswarm.eth/ethersphere/orange-papers/1/sw^3.pdf
 * Viktor Trón, Aron Fischer, Nick Johnson: smash-proof: auditable storage for Swarm secured by masked audit secret hash. May 2016 - https://swarm-gateways.net/bzz:/theswarm.eth/ethersphere/orange-papers/2/smash.pdf
@@ -41,7 +40,7 @@ https://oktahedron.diskordia.org/?podcast=oh003-Swarm
 Videos
 --------------
 
-Aron Fischer, Louis Holbrook, Daniel A. Nagy: Swarm Development Update - devcon3 cancun, Nov 2017
+Aron Fischer, Louis Holbrook, Daniel A. Nagy: Swarm Development Update - Devcon3 Cancun, November 2017
 
 
 .. raw:: html
@@ -51,7 +50,7 @@ Aron Fischer, Louis Holbrook, Daniel A. Nagy: Swarm Development Update - devcon3
 ++++++++++++
 
 
-Viktor Trón and Aron Fischer - Swap, Swear and Swindle Games - devcon3 cancun, Nov 2017
+Viktor Trón and Aron Fischer - Swap, Swear and Swindle Games - Devcon3 Cancun, November 2017
 
 .. raw:: html
 
@@ -60,7 +59,7 @@ Viktor Trón and Aron Fischer - Swap, Swear and Swindle Games - devcon3 cancun, 
 ++++++++++++
 
 
-sw3 london
+sw3 London
 
 .. raw:: html
 
@@ -69,7 +68,7 @@ sw3 london
 ++++++++++++
 
 
-Louis Holbrook: resource updates ethcc - EthCC, Paris, March 2018
+Louis Holbrook: Resource Updates - EthCC, Paris, March 2018
 
 .. raw:: html
 
@@ -78,7 +77,7 @@ Louis Holbrook: resource updates ethcc - EthCC, Paris, March 2018
 ++++++++++++
 
 
-Daniel A Nagy: encryption in Swarm - EthCC, Paris, March 2018
+Daniel A Nagy: Encryption in Swarm - EthCC, Paris, March 2018
 
 .. raw:: html
 
@@ -92,7 +91,7 @@ Viktor Tron
 ++++++++++++
 
 
-Louis Holbrook (Ethersphere, Jaak) PSS - Node to node Communication Over Swarm - devcon3 cancun, Nov 2017
+Louis Holbrook (Ethersphere, Jaak) PSS - Node to node Communication Over Swarm - Devcon3 Cancun, November 2017
 
 .. raw:: html
 
@@ -100,7 +99,7 @@ Louis Holbrook (Ethersphere, Jaak) PSS - Node to node Communication Over Swarm -
 
 ++++++++++++
 
-Daniel A Nagy - Scalable Responsive Đapps with Swarm and ENS - devcon3 cancun, Nov 2017
+Daniel A Nagy - Scalable Responsive Đapps with Swarm and ENS - Devcon3 Cancun, November 2017
 
 .. raw:: html
 
@@ -108,7 +107,7 @@ Daniel A Nagy - Scalable Responsive Đapps with Swarm and ENS - devcon3 cancun, 
 
 ++++++++++++
 
-Aron Fischer - Data retrieval in Swarm - Swarm orange summit, Berlin, June 2017
+Aron Fischer - Data retrieval in Swarm - Swarm Orange Summit, Berlin, June 2017
 
 .. raw:: html
 
@@ -124,7 +123,7 @@ Zahoor Mohamed (EF, Swarm team): Swarm Fuse Demo - Ethereum Meetup, Berlin, June
 
 ++++++++++++
 
-Daniel Nagy: Network topology for distributed storage - Swarm orange summit, Berlin, June 2017
+Daniel Nagy: Network topology for distributed storage - Swarm Orange Summit, Berlin, June 2017
 
 .. raw:: html
 
@@ -132,7 +131,7 @@ Daniel Nagy: Network topology for distributed storage - Swarm orange summit, Ber
 
 ++++++++++++
 
-Fabian Vogelsteller - Swarm Integration in Mist - Swarm orange summit, Berlin, June 2017
+Fabian Vogelsteller - Swarm Integration in Mist - Swarm Orange Summit, Berlin, June 2017
 
 .. raw:: html
 
@@ -140,7 +139,7 @@ Fabian Vogelsteller - Swarm Integration in Mist - Swarm orange summit, Berlin, J
 
 ++++++++++++
 
-Daniel Nagy (EF, Swarm team): Plausible Deniability (2 parts) - Swarm orange summit, Berlin, June 2017
+Daniel Nagy (EF, Swarm team): Plausible Deniability (2 parts) - Swarm Orange Summit, Berlin, June 2017
 
 .. raw:: html
 
@@ -168,7 +167,7 @@ Elad Verbin: Data structures and security on Swarm (2 parts) - Swarm orange summ
 
 ++++++++++++
 
-Louis Holbrook (Ethersphere, Jaak): PSS - internode messaging protocol - Swarm orange summit, Berlin, June 2017
+Louis Holbrook (Ethersphere, Jaak): PSS - internode messaging protocol - Swarm Orange Summit, Berlin, June 2017
 
 .. raw:: html
 
@@ -192,7 +191,7 @@ Viktor Tron - network testing framework and visualisation - Ethereum Meetup, Ber
 
 ++++++++++++
 
-Doug Petkanics (Livepeer): Realtime video streaming on Swarm - Swarm orange summit, Berlin, June 2017
+Doug Petkanics (Livepeer): Realtime video streaming on Swarm - Swarm Orange Summit, Berlin, June 2017
 
 .. raw:: html
 
@@ -282,7 +281,7 @@ Dániel Nagy: Swarm: Distributed storage for Ethereum, the Turing-complete block
 
 ++++++++++++
 
-Viktor Trón, Dániel A. Nagy: Swarm. Ethereum Devcon1, London, Nov 2015.
+Viktor Trón, Dániel A. Nagy: Swarm. Ethereum Devcon1, London, November 2015.
 
 .. raw:: html
 
@@ -291,7 +290,7 @@ Viktor Trón, Dániel A. Nagy: Swarm. Ethereum Devcon1, London, Nov 2015.
 
 ++++++++++++
 
-Dániel A. Nagy: Keeping the public record safe and accessible. Ethereum Devcon0, Berlin, Dec 2014.
+Dániel A. Nagy: Keeping the public record safe and accessible. Ethereum Devcon0, Berlin, December 2014.
 
 .. raw:: html
 
