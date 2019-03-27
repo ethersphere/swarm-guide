@@ -200,12 +200,4 @@ The same as the generic scheme but there is no ENS domain resolution, the domain
         "Details": ""
     }
 
-bzz-resource
--------------
 
-``bzz-resource`` allows you to receive hash pointers to content that the ENS entry resolved to at different versions
-
-bzz-resource://<id> - get latest update
-bzz-resource://<id>/<n> - get latest update on period n
-bzz-resource://<id>/<n>/<m> - get update version m of period n
-<id> = ens name
