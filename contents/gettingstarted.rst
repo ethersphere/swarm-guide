@@ -363,11 +363,9 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 Connecting to the public Swarm cluster
 --------------------------------------
 
-If you would like to join the public Swarm cluster operated by the Ethereum Foundation and other contributors, you can use one of the bootnodes avaible from this list:
+By default Swarm connects to the public Swarm testnet operated by the Ethereum Foundation and other contributors.
 
-https://gist.github.com/homotopycolimit/db446fa3269a199762e67b2ca037dbeb
-
-The cluster functions as a free-to-use public access gateway to Swarm, without the need to run a local node. To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` URL.
+The nodes the team maintains function as a free-to-use public access gateway to Swarm, so that users can experiment with Swarm without the need to run a local node. To download data through the gateway use the ``https://swarm-gateways.net/bzz:/<address>/`` URL.
 
 Metrics reporting
 ------------------
