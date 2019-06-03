@@ -196,10 +196,3 @@ Updating your client
 ---------------------
 
 To update your client simply download the newest source code and recompile.
-
-.. code-block:: shell
-
-  $ cd $GOPATH/src/github.com/ethersphere/swarm
-  $ git checkout master
-  $ git pull
-  $ go install ./cmd/swarm
