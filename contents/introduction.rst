@@ -46,7 +46,7 @@ Swarm is a peer-to-peer network of nodes providing distributed digital services 
 
 The Ethereum Foundation operates a Swarm testnet that can be used to test out functionality in a similar manner to the Ethereum testnet (ropsten).
 Everyone can join the network by running the Swarm client node on their server, desktop, laptop or mobile device. See :ref:`Getting Started` for how to do this.
-The Swarm client is part of the Ethereum stack, the reference implementation is written in golang and found under the go-ethereum repository. Currently at POC (proof of concept) version 0.3 is running on all nodes.
+The Swarm client is part of the Ethereum stack, the reference implementation is written in golang and found under the ethersphere/swarm repository. Currently at POC (proof of concept) version 0.3 is running on all nodes.
 
 Uploaded content is **not guaranteed to persist on the testnet** until storage insurance is implemented (see `Roadmap <https://github.com/orgs/ethersphere/projects/5>`_ for more details). All participating nodes should consider participation a voluntary service with no formal obligation whatsoever and should be expected to delete content at their will. Therefore, users should **under no circumstances regard Swarm as safe storage** until the incentive system is functional.
 
@@ -80,7 +80,7 @@ Swarm offers several APIs:
 Code
 ========
 
-Source code is located at https://github.com/ethereum/go-ethereum/.
+Source code is located at https://github.com/ethersphere/swarm/.
 
 Roadmap
 =======
@@ -102,21 +102,21 @@ Example Dapps
 =============
 
 * https://swarm-gateways.net/bzz://swarmapps.eth
-* source code: https://github.com/ethersphere/Swarm-dapps
+* source code: https://github.com/ethersphere/swarm-dapps
 
 Reporting a bug and contributing
 ================================
 
 Issues are tracked on github and github only. Swarm related issues and PRs have labels prefixed with *swarm*:
 
-* https://github.com/ethersphere/go-ethereum/issues
-* `Good first issues <https://github.com/ethersphere/go-ethereum/issues?utf8=✓&q=is%3Aopen+is%3Aissue+label%3A"good+first+issue">`_
+* https://github.com/ethersphere/swarm/issues
+* `Good first issues <https://github.com/ethersphere/swarm/issues?utf8=✓&q=is%3Aopen+is%3Aissue+label%3A"good+first+issue">`_
 
 Please include the commit and branch when reporting an issue.
 
 Pull requests should by default commit on the `master` branch.
 
-Prospective contributors please read the `Developers' Guide <https://github.com/ethereum/go-ethereum/wiki/Developers'-Guide>`
+Prospective contributors please read the `Contributing` section from our readme: https://github.com/ethersphere/swarm#contributing.
 
 Credits
 ===============

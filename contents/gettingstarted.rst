@@ -267,40 +267,9 @@ If you **don't** want your swarm node to connect to any existing networks, you c
 Adding enodes manually
 ------------------------
 
-By default, swarm will automatically seek out peers in the network. This can be suppressed using the ``--nodiscover`` flag:
+By default, Swarm will automatically seek out peers in the network.
 
-.. tabs::
-
-    .. group-tab:: Linux
-
-      .. code-block:: none
-
-        $ swarm --bzzaccount $BZZKEY \
-        --datadir $HOME/.ethereum \
-        --ens-api $HOME/.ethereum/geth.ipc \
-        --nodiscover
-
-    .. group-tab:: macOS
-
-      .. code-block:: none
-
-        $ swarm --bzzaccount $BZZKEY \
-        --datadir $HOME/Library/Ethereum/ \
-        --ens-api $HOME/Library/Ethereum/geth.ipc \
-        --nodiscover
-
-    .. group-tab:: Windows
-
-      .. code-block:: none
-
-        $ swarm --bzzaccount $BZZKEY \
-        --datadir %HOMEPATH%\AppData\Roaming\Ethereum \
-        --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc \
-        --nodiscover
-
-.. https://github.com/ethersphere/go-ethereum/issues/864
-
-Without discovery, it is possible to manually start off the connection process by adding one or more peers using the ``admin.addPeer`` console command.
+Additionally you can manually start off the connection process by adding one or more peers using the ``admin.addPeer`` console command.
 
 .. tabs::
 
