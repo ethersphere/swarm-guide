@@ -151,10 +151,8 @@ Once all prerequisites are met, download and install packages and dependencies f
 
   $ mkdir -p $GOPATH/src/github.com/ethereum
   $ cd $GOPATH/src/github.com/ethereum
-  $ git clone https://github.com/ethereum/go-ethereum
-  $ cd go-ethereum
   $ go get github.com/ethereum/go-ethereum
-  $ cd $GOPATH/src/github.com/ethereum/go-ethereum
+  $ cd go-ethereum
 
 This will download the master source code branch.
 
