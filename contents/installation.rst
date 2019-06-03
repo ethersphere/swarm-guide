@@ -78,7 +78,7 @@ The Swarm source code for can be found on https://github.com/ethersphere/swarm
 Prerequisites: Go and Git
 --------------------------
 
-Building the Swarm daemon :command:``swarm`` requires the following packages:
+Building the Swarm binary requires the following packages:
 
 * go: https://golang.org
 * git: http://git.org
@@ -167,7 +167,7 @@ Alternatively you could also use the Go tooling and download and compile Swarm f
   $ go get -d github.com/ethersphere/swarm
   $ go install github.com/ethersphere/swarm/cmd/swarm
 
-You can now run :command:``swarm`` to start your Swarm node.
+You can now run ``swarm`` to start your Swarm node.
 Let's check if the installation of ``swarm`` was successful:
 
 .. code-block:: none
