@@ -93,7 +93,14 @@ Grab the relevant prerequisites and build from source.
       .. code-block:: shell
 
          $ sudo apt install git
-         $ sudo apt install golang
+
+         $ sudo add-apt-repository ppa:gophers/archive
+         $ sudo apt-get update
+         $ sudo apt-get install golang-1.11-go
+
+         // Note that golang-1.11-go puts binaries in /usr/lib/go-1.11/bin. If you want them on your PATH, you need to make that change yourself.
+
+         $ export PATH=/usr/lib/go-1.11/bin:$PATH
 
    .. tab:: Archlinux
 
