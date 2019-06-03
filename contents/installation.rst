@@ -139,7 +139,7 @@ You should then prepare your Go environment.
 
         $ mkdir $HOME/go
         $ echo 'export GOPATH=$HOME/go' >> $HOME/.bash_profile
-        $ echo 'export PATH=$GOPATH/bin:$PATH' >> $HOME/.bash_profle
+        $ echo 'export PATH=$GOPATH/bin:$PATH' >> $HOME/.bash_profile
         $ source $HOME/.bash_profile
 
 Download and install Geth
