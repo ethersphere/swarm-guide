@@ -78,7 +78,7 @@ The Swarm source code for can be found on https://github.com/ethersphere/swarm
 Prerequisites: Go and Git
 --------------------------
 
-Building the Swarm daemon :command:``swarm`` requires the following packages:
+Building the Swarm binary requires the following packages:
 
 * go: https://golang.org
 * git: http://git.org
@@ -146,7 +146,7 @@ You should then prepare your Go environment.
 
         $ mkdir $HOME/go
         $ echo 'export GOPATH=$HOME/go' >> $HOME/.bash_profile
-        $ echo 'export PATH=$GOPATH/bin:$PATH' >> $HOME/.bash_profle
+        $ echo 'export PATH=$GOPATH/bin:$PATH' >> $HOME/.bash_profile
         $ source $HOME/.bash_profile
 
 Download and install Geth
@@ -174,7 +174,7 @@ Alternatively you could also use the Go tooling and download and compile Swarm f
   $ go get -d github.com/ethersphere/swarm
   $ go install github.com/ethersphere/swarm/cmd/swarm
 
-You can now run :command:``swarm`` to start your Swarm node.
+You can now run ``swarm`` to start your Swarm node.
 Let's check if the installation of ``swarm`` was successful:
 
 .. code-block:: none
@@ -203,10 +203,3 @@ Updating your client
 ---------------------
 
 To update your client simply download the newest source code and recompile.
-
-.. code-block:: shell
-
-  $ cd $GOPATH/src/github.com/ethersphere/swarm
-  $ git checkout master
-  $ git pull
-  $ go install ./cmd/swarm
