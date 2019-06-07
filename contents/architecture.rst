@@ -354,3 +354,74 @@ POC3
 POC4
 * Swarm database services
 * swap, swear and swindle games: payment channel network and standardised service-level agreements for decentralied new
+
+
+High level component description
+================================
+
+In this chapter we introduce the internal software architecture of the go swarm code. It is only a high level description of the most important components. The code is documented in finer detail as comments in the codebase itself.
+
+
+.. image:: img/high-level-components.svg
+   :alt: High level component architecture 
+   :width: 700
+
+
+
+Interfaces to Swarm
+-------------------
+There are currently three entry points for communicating with a swarm node, and there is a command line interface.
+
+:dfn:`Wire Protocol`
+  The p2p entry point - this is the way the peers talk to each other. Protocol structure adheres to the devp2p standard and the transport is being done RLPx over TCP.
+
+:dfn:`HTTP Proxy`
+  The user entry point to Swarm. User operations over dapps and CLI that interact with Swarm are proxied through the HTTP interface. The API exposes methods to interact with content on Swarm.
+
+:dfn:`RPC`
+  Another user interface mainly used for development purposes. The user facing side of this is to be deprecated.
+
+:dfn:`CLI`
+  The CLI is a wrapper for the HTTP interface allowing users easy access to basic up-download functionality, content management, and it also implements some administrative tasks.
+
+----
+
+Structural components and key processes
+---------------------------------------
+
+:dfn:`Chunker`
+  When a file is submitted to the system, the input data stream is then transformed into chunks, encrypted, then hashed and stored. This results in a single root chunk reference of the data.
+
+
+:dfn:`Syncing process`
+  Syncing is the process that deals with changes in the network when nodes join and leave, and when new content is uploaded. Push and pull syncing work together to get chunks to where they are supposed to be stored (to the local neighbourhood where they belong).
+
+:dfn:`Push Sync`
+  A process initiated by the uploader of content to make sure that the chunks get to the areas in the network from which they can be retrieved. Combining push-sync with tags allows users to track the status of their uploads. Push syncing is initiated upon upload of new content.
+
+:dfn:`Pull Sync`
+  Pull syncing is initiated by all participating nodes in order to fill up their local storage allocation in order to keep redundancy by replicating the local storage of their neighbouring peers. Pull syncing caters the need for chunk propagation towards the nearest neighbourhood. This process is responsible for maintaining a minimal redundancy level for the stored chunks.
+
+
+Storage module
+--------------
+
+:dfn:`LocalStore`
+  Provides persistent storage on each node. Provides indexes, iterators and metric storage to other components.
+
+:dfn:`NetStore`
+  Extends local storage with network fetching. The net store is exposed internally between the APIs in order to transparently resolve any chunk dependencies that might be needed to be satisfied from the network in order to accomodate different operations on content.
+
+
+:dfn:`Kademlia`
+  Kademlia in the sense of Swarm has two different meanings. Firstly, Kademlia is the type of the network topology that Swarm builds upon. Secondly, within the Swarm codebase the component which manages the connections to peers over the devp2p network in order to form the Kademlia topology. Peers exchange the neccessary information about each other through a discovery protocol (which does not build upon the devp2p discovery protocol).
+
+:dfn:`Feeds`
+  Swarm Feeds allows a user to build an update feed about a particular topic without resorting to ENS on each update. The update scheme is built on swarm chunks with chunk keys following a predictable, versionable pattern. A Feed is defined as the series of updates of a specific user about a particular topic.
+
+Communication layer
+-------------------
+
+:dfn:`PSS`
+  A messaging subsystem which builds upon the Kademlia topology to provide application level messaging (eg. chat dapps) and is also used for Push-sync.
+
