@@ -378,7 +378,7 @@ There are currently three entry points for communicating with a swarm node, and 
 :dfn:`HTTP Proxy`
   The user entry point to Swarm. User operations over dapps and CLI that interact with Swarm are proxied through the HTTP interface. The API exposes methods to interact with content on Swarm.
 
-:dfn:`RCP`
+:dfn:`RPC`
   Another user interface mainly used for development purposes. The user facing side of this is to be deprecated.
 
 :dfn:`CLI`
@@ -386,14 +386,14 @@ There are currently three entry points for communicating with a swarm node, and 
 
 ----
 
-Structural Components and key processes
+Structural components and key processes
 ---------------------------------------
 
 :dfn:`Chunker`
   When a file is submitted to the system, the input data stream is then transformed into chunks, encrypted, then hashed and stored. This results in a single root chunk reference of the data.
 
 
-:dfn:`The syncing processes`
+:dfn:`Syncing process`
   Syncing is the process that deals with changes in the network when nodes join and leave, and when new content is uploaded. Push and pull syncing work together to get chunks to where they are supposed to be stored (to the local neighbourhood where they belong).
 
 :dfn:`Push Sync`
@@ -407,7 +407,7 @@ Storage module
 --------------
 
 :dfn:`LocalStore`
-  Implements provides persistent storage on each node. Provides indexes, iterators and metric storage to other components.
+  Provides persistent storage on each node. Provides indexes, iterators and metric storage to other components.
 
 :dfn:`NetStore`
   Extends local storage with network fetching. The net store is exposed internally between the APIs in order to transparently resolve any chunk dependencies that might be needed to be satisfied from the network in order to accomodate different operations on content.
