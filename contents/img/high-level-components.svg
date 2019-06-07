@@ -639,7 +639,7 @@
         <rect class="BoundingBox" stroke="none" fill="none" x="11426" y="14350" width="3300" height="2150"/>
         <path fill="rgb(80,147,138)" stroke="none" d="M 13076,16498 L 11427,16498 11427,14351 14724,14351 14724,16498 13076,16498 Z"/>
         <path fill="none" stroke="rgb(0,0,0)" d="M 13076,16498 L 11427,16498 11427,14351 14724,14351 14724,16498 13076,16498 Z"/>
-        <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="423px" font-weight="700"><tspan class="TextPosition" x="11920" y="15335"><tspan fill="rgb(255,255,255)" stroke="none">Local Store</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="423px" font-weight="400"><tspan class="TextPosition" x="11789" y="15809"><tspan fill="rgb(255,255,255)" stroke="none">Local Chunks </tspan></tspan><tspan class="TextPosition" x="12568" y="16283"><tspan fill="rgb(255,255,255)" stroke="none">Store</tspan></tspan></tspan></text>
+        <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="423px" font-weight="700"><tspan class="TextPosition" x="11979" y="15335"><tspan fill="rgb(255,255,255)" stroke="none">LocalStore</tspan></tspan></tspan><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="423px" font-weight="400"><tspan class="TextPosition" x="11789" y="15809"><tspan fill="rgb(255,255,255)" stroke="none">Local Chunks </tspan></tspan><tspan class="TextPosition" x="12568" y="16283"><tspan fill="rgb(255,255,255)" stroke="none">Store</tspan></tspan></tspan></text>
        </g>
       </g>
       <g class="com.sun.star.drawing.TextShape">
@@ -1325,7 +1325,7 @@
         <rect class="BoundingBox" stroke="none" fill="none" x="11426" y="11310" width="3300" height="2130"/>
         <path fill="rgb(80,147,138)" stroke="none" d="M 13076,13438 L 11427,13438 11427,11311 14724,11311 14724,13438 13076,13438 Z"/>
         <path fill="none" stroke="rgb(0,0,0)" d="M 13076,13438 L 11427,13438 11427,11311 14724,11311 14724,13438 13076,13438 Z"/>
-        <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="423px" font-weight="700"><tspan class="TextPosition" x="11984" y="12295"><tspan fill="rgb(255,255,255)" stroke="none">(Net)-Store</tspan></tspan></tspan></text>
+        <text class="TextShape"><tspan class="TextParagraph" font-family="Liberation Sans, sans-serif" font-size="423px" font-weight="700"><tspan class="TextPosition" x="12193" y="12295"><tspan fill="rgb(255,255,255)" stroke="none">NetStore</tspan></tspan></tspan></text>
        </g>
       </g>
       <g class="com.sun.star.drawing.TextShape">
