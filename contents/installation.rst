@@ -36,7 +36,7 @@ Setting up Swarm in Docker
 
 You can run Swarm in a Docker container. The official Swarm Docker image including documentation on how to run it can be found on `Github <https://github.com/ethersphere/swarm-docker/>`_ or pulled from `Docker <https://hub.docker.com/r/ethdevops/swarm/>`_.
 
-You can run it with optional arguments, e.g.: 
+You can run it with optional arguments, e.g.:
 
 .. code-block:: shell
 
@@ -73,12 +73,12 @@ You can also open a terminal session inside the container:
 Installing Swarm from source
 =============================
 
-The Swarm source code for can be found on https://github.com/ethereum/go-ethereum
+The Swarm source code for can be found on https://github.com/ethersphere/swarm
 
 Prerequisites: Go and Git
 --------------------------
 
-Building the Swarm daemon :command:``swarm`` requires the following packages:
+Building the Swarm binary requires the following packages:
 
 * go: https://golang.org
 * git: http://git.org
@@ -93,7 +93,14 @@ Grab the relevant prerequisites and build from source.
       .. code-block:: shell
 
          $ sudo apt install git
-         $ sudo apt install golang
+
+         $ sudo add-apt-repository ppa:gophers/archive
+         $ sudo apt-get update
+         $ sudo apt-get install golang-1.11-go
+
+         // Note that golang-1.11-go puts binaries in /usr/lib/go-1.11/bin. If you want them on your PATH, you need to make that change yourself.
+
+         $ export PATH=/usr/lib/go-1.11/bin:$PATH
 
    .. tab:: Archlinux
 
@@ -133,39 +140,41 @@ You should then prepare your Go environment.
         $ echo 'export PATH=$GOPATH/bin:$PATH' >> ~/.bashrc
         $ source ~/.bashrc
 
-    .. group-tab:: macOS 
+    .. group-tab:: macOS
 
       .. code-block:: shell
 
         $ mkdir $HOME/go
         $ echo 'export GOPATH=$HOME/go' >> $HOME/.bash_profile
-        $ echo 'export PATH=$GOPATH/bin:$PATH' >> $HOME/.bash_profle
-        $ source $HOME/.bash_profile        
-                
-Compiling and installing Swarm and Geth
+        $ echo 'export PATH=$GOPATH/bin:$PATH' >> $HOME/.bash_profile
+        $ source $HOME/.bash_profile
+
+Download and install Geth
 ----------------------------------------
 
-Once all prerequisites are met, download and install packages and dependencies for go-ethereum.
+Once all prerequisites are met, download and install Geth from https://github.com/ethereum/go-ethereum
+
+
+Compiling and installing Swarm
+----------------------------------------
+
+Once all prerequisites are met, and you have ``geth`` on your system, clone the Swarm git repo and build from source:
 
 .. code-block:: shell
 
-  $ mkdir -p $GOPATH/src/github.com/ethereum
-  $ cd $GOPATH/src/github.com/ethereum
-  $ git clone https://github.com/ethereum/go-ethereum
-  $ cd go-ethereum
-  $ go get github.com/ethereum/go-ethereum
-  $ cd $GOPATH/src/github.com/ethereum/go-ethereum
+  $ git clone https://github.com/ethersphere/swarm
+  $ cd swarm
+  $ make swarm
 
-This will download the master source code branch.
+Alternatively you could also use the Go tooling and download and compile Swarm from `master` via:
 
-Finally compile the swarm daemon ``swarm`` and the main go-ethereum client ``geth``.
 
-.. code-block:: none
+.. code-block:: shell
 
-  $ go install ./cmd/geth
-  $ go install ./cmd/swarm
+  $ go get -d github.com/ethersphere/swarm
+  $ go install github.com/ethersphere/swarm/cmd/swarm
 
-You can now run :command:``swarm`` to start your Swarm node.
+You can now run ``swarm`` to start your Swarm node.
 Let's check if the installation of ``swarm`` was successful:
 
 .. code-block:: none
@@ -194,11 +203,3 @@ Updating your client
 ---------------------
 
 To update your client simply download the newest source code and recompile.
-
-.. code-block:: shell
-
-  $ cd $GOPATH/src/github.com/ethereum/go-ethereum
-  $ git checkout master
-  $ git pull
-  $ go install ./cmd/geth
-  $ go install ./cmd/swarm
