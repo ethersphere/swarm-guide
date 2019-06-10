@@ -1,7 +1,7 @@
 .. _architecture:
 
 *******************
-Architecture
+Go-Client Sofware Architecture
 *******************
 
 This chapter is aimed at developers who want to understand the underlying concepts and design of Swarm.
