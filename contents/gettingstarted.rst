@@ -89,11 +89,11 @@ The easiest way to access Swarm through the command line, or through the `Geth J
 
         $ swarm --bzzaccount $BZZKEY
 
-      And, in a new terminal window:    
+      And, in a new terminal window:
 
       .. code-block:: none
 
-        $ geth attach %HOMEPATH%\AppData\Roaming\Ethereum\bzzd.ipc
+        $ geth attach \\.\pipe\bzzd.ipc
 
 
 Swarm is fully compatible with Geth Console commands. For example, you can list your peers using ``admin.peers``, add a peer using ``admin.addPeer``, and so on.
@@ -149,7 +149,7 @@ After the connection is established, open another terminal window and connect to
 
       .. code-block:: none
 
-        $ swarm --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc \
+        $ swarm --ens-api \\.\pipe\geth.ipc \
         --bzzaccount $BZZKEY
 
 
@@ -188,7 +188,7 @@ Then launch the ``swarm``; connecting it to the geth node (``--ens-api``).
 
       .. code-block:: none
 
-        $ swarm --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth\testnet\geth.ipc \
+        $ swarm --ens-api \\.\pipe\geth.ipc \
         --bzzaccount $BZZKEY
 
 
@@ -261,7 +261,7 @@ If you **don't** want your swarm node to connect to any existing networks, you c
 
         $ swarm --bzzaccount $BZZKEY \
         --datadir %HOMEPATH%\AppData\Roaming\Ethereum \
-        --ens-api %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc \
+        --ens-api \\.\pipe\geth.ipc \
         --bzznetworkid <random number between 15 and 256>
 
 Adding enodes manually
@@ -289,7 +289,7 @@ Additionally you can manually start off the connection process by adding one or 
 
       .. code-block:: none
 
-        $ geth --exec='admin.addPeer("ENODE")' attach %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc
+        $ geth --exec='admin.addPeer("ENODE")' attach \\.\pipe\bzzd.ipc
 
 (You can also do this in the Geth Console, as seen in Section 3.2_.)
 
@@ -323,7 +323,7 @@ The enode of your swarm node can be accessed using ``geth`` connected to ``bzzd.
 
       .. code-block:: none
 
-        $ geth --exec "admin.nodeInfo.enode" attach %HOMEPATH%\AppData\Roaming\Ethereum\geth.ipc
+        $ geth --exec "admin.nodeInfo.enode" attach \\.\pipe\bzzd.ipc
 
 
 .. note::
