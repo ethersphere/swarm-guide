@@ -316,7 +316,7 @@ Swarm Hash is constructed using any chunk hash function with a generalization of
 Hashes of data chunks are defined as the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content and the content itself. Because of the inclusion of the length, it is resistant to [length extension attacks](http://en.wikipedia.org/wiki/Length_extension_attack),  even if the underlying chunk hash function is not.
 Intermediate chunks are composed of the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content subsumed under this chunk followed by the references to its children (reference is either a chunk hash or chunk hash plus decryption key for encrypted content).
 
-To distinguish between the two, one should compare the length of the chunk to the 64-bit number with which every chunk begins. If the chunk is exactly 8 bytes longer than this number, it is a data chunk. If it is shorter than that, it is an inner chunk. Otherwise, it is not a valid Swarm Hash chunk.
+To distinguish between the two, one should compare the length of the chunk to the 64-bit number with which every chunk begins. If the chunk is exactly 8 bytes longer than this number, it is a data chunk. If it is shorter than that, it is an intermediate chunk. Otherwise, it is not a valid Swarm Hash chunk.
 
 For the chunk hash we use a hashing algorithm based on a binary merkle tree over the 32-byte  segments of the chunk data using a base hash function. Our choice for this base hash is the ethereum-wide used Keccak 256 SHA3 hash.  For integrity protection the 8 byte span metadata is hashed together with the root of the BMT resulting in the BMT hash. BMT hash is ideal for compact solidity-friendly inclusion proofs.
 
