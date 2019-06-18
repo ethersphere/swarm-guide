@@ -233,7 +233,7 @@ Data layer
 There are 4 different layers of data units relevant to Swarm:
 
 
-*  :dfn:`message`: p2p RLPx network layer. Messages are relevant for the devp2p wire protocols The :ref:`BZZ URL schemes`.
+*  :dfn:`message`: p2p RLPx network layer. Messages are relevant for the devp2p wire protocols 
 *  :dfn:`chunk`: fixed size data unit of storage in the distributed preimage archive
 *  :dfn:`file`: the smallest unit that is associated with a mime-type and not guaranteed to have integrity unless it is complete. This is the smallest unit semantic to the user, basically a file on a filesystem.
 *  :dfn:`collection`: a mapping of paths to files is represented by the :dfn:`swarm manifest`. This layer has a mapping to file system directory tree. Given trivial routing conventions, a url can be mapped to files in a standardised way, allowing manifests to mimic site maps/routing tables. As a result, Swarm is able to act as a webserver, a virtual cloud hosting service.
