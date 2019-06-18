@@ -342,19 +342,6 @@ When :dfn:`joining` a document, the chunker needs the Swarm root hash and return
    splitting
 
 
-Web3 services
------------------
-
-On top of a storage solution outlined so far, Swarm offers various services of a web3 stack needed to build decentralised realtime interactive web applications.
-
-POC3
-* pss node-to-node messaging: (basis for higher-level communication  platforms like forum, reddit)
-* mru (mutable resource updates) implement fast, cheap and restrictions
-
-POC4
-* Swarm database services
-* swap, swear and swindle games: payment channel network and standardised service-level agreements for decentralied new
-
 
 High level component description
 ================================
