@@ -65,7 +65,7 @@ The viability of both hinges on the assumption that any node (uploader/requester
 .. note:: There is no such thing as delete/remove in Swarm. Once data is uploaded there is no way to revoke it.
 
 Nodes cache content that they pass on at retrieval, resulting in an auto scaling elastic cloud: popular (oft-accessed) content is replicated throughout the network decreasing its retrieval latency. Caching also results in a :dfn:`maximum resource utilisation` in as much as nodes will fill their dedicated storage space with data passing through them. If capacity is reached, least accessed chunks are purged by a garbage collection process. As a consequence, unpopular content will end up
-getting deleted. Storage insurance (to be implemented in POC4 2019) will offer users a secure guarantee to protect important content from being purged.
+getting deleted. Storage insurance (yet to be implemented) will offer users a secure guarantee to protect important content from being purged.
 
 
 Overlay network
@@ -187,8 +187,8 @@ The area of the fully connected neighbourhood defines an :dfn:`area of responsib
 A storer node is responsible for (storing) a chunk if the chunk falls within the node's area of responsibility.
 Let us assume, then, (1) a forwarding strategy that relays requests along stable nodes and (2) a storage strategy that each node in the nearest neighbourhood (of mimimum R peers) stores all chunks within the area of responsibility. As long as these assumptions hold, each chunk is retrievable even if :math:`R-1` storer nodes drop offline simultaneously. As for (2), we still need to assume that every node in the nearest neighbour set can store each chunk.
 
-In POC 4 further measures of redundancy with erasure codes will be implemented. (https://en.wikipedia.org/wiki/Erasure_code), see
-the orange papers for our specific application)
+Further measures of redundancy, e.g. `Erasure coding <https://en.wikipedia.org/wiki/Erasure_code>`_, will be implemented in the future.
+
 
 Caching and purging Storage
 ----------------------------
@@ -233,7 +233,7 @@ Data layer
 There are 4 different layers of data units relevant to Swarm:
 
 
-*  :dfn:`message`: p2p RLPx network layer. Messages are relevant for the devp2p wire protocols The :ref:`BZZ URL schemes`.
+*  :dfn:`message`: p2p RLPx network layer. Messages are relevant for the devp2p wire protocols 
 *  :dfn:`chunk`: fixed size data unit of storage in the distributed preimage archive
 *  :dfn:`file`: the smallest unit that is associated with a mime-type and not guaranteed to have integrity unless it is complete. This is the smallest unit semantic to the user, basically a file on a filesystem.
 *  :dfn:`collection`: a mapping of paths to files is represented by the :dfn:`swarm manifest`. This layer has a mapping to file system directory tree. Given trivial routing conventions, a url can be mapped to files in a standardised way, allowing manifests to mimic site maps/routing tables. As a result, Swarm is able to act as a webserver, a virtual cloud hosting service.
@@ -313,10 +313,11 @@ Swarm Hash is constructed using any chunk hash function with a generalization of
 .. image:: img/chunk.png
    :alt:  A Swarm chunk consists of 4096 bytes of the file or a sequence of 128 subtree hashes
 
-Hashes of data chunks are defined as the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content and the content itself. Because of the inclusion of the length, it is resistant to [length extension attacks](http://en.wikipedia.org/wiki/Length_extension_attack),  even if the underlying chunk hash function is not.
+Hashes of data chunks are defined as the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content and the content itself. Because of the inclusion of the length, it is resistant to `length extension attacks <http://en.wikipedia.org/wiki/Length_extension_attack>`_,  even if the underlying chunk hash function is not.
+
 Intermediate chunks are composed of the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content subsumed under this chunk followed by the references to its children (reference is either a chunk hash or chunk hash plus decryption key for encrypted content).
 
-To distinguish between the two, one should compare the length of the chunk to the 64-bit number with which every chunk begins. If the chunk is exactly 8 bytes longer than this number, it is a data chunk. If it is shorter than that, it is an inner chunk. Otherwise, it is not a valid Swarm Hash chunk.
+To distinguish between the two, one should compare the length of the chunk to the 64-bit number with which every chunk begins. If the chunk is exactly 8 bytes longer than this number, it is a data chunk. If it is shorter than that, it is an intermediate chunk. Otherwise, it is not a valid Swarm Hash chunk.
 
 For the chunk hash we use a hashing algorithm based on a binary merkle tree over the 32-byte  segments of the chunk data using a base hash function. Our choice for this base hash is the ethereum-wide used Keccak 256 SHA3 hash.  For integrity protection the 8 byte span metadata is hashed together with the root of the BMT resulting in the BMT hash. BMT hash is ideal for compact solidity-friendly inclusion proofs.
 
@@ -341,19 +342,6 @@ When :dfn:`joining` a document, the chunker needs the Swarm root hash and return
    joining
    splitting
 
-
-Web3 services
------------------
-
-On top of a storage solution outlined so far, Swarm offers various services of a web3 stack needed to build decentralised realtime interactive web applications.
-
-POC3
-* pss node-to-node messaging: (basis for higher-level communication  platforms like forum, reddit)
-* mru (mutable resource updates) implement fast, cheap and restrictions
-
-POC4
-* Swarm database services
-* swap, swear and swindle games: payment channel network and standardised service-level agreements for decentralied new
 
 
 High level component description
