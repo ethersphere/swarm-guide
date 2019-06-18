@@ -65,7 +65,7 @@ The viability of both hinges on the assumption that any node (uploader/requester
 .. note:: There is no such thing as delete/remove in Swarm. Once data is uploaded there is no way to revoke it.
 
 Nodes cache content that they pass on at retrieval, resulting in an auto scaling elastic cloud: popular (oft-accessed) content is replicated throughout the network decreasing its retrieval latency. Caching also results in a :dfn:`maximum resource utilisation` in as much as nodes will fill their dedicated storage space with data passing through them. If capacity is reached, least accessed chunks are purged by a garbage collection process. As a consequence, unpopular content will end up
-getting deleted. Storage insurance (to be implemented in POC4 2019) will offer users a secure guarantee to protect important content from being purged.
+getting deleted. Storage insurance (yet to be implemented) will offer users a secure guarantee to protect important content from being purged.
 
 
 Overlay network
@@ -187,8 +187,8 @@ The area of the fully connected neighbourhood defines an :dfn:`area of responsib
 A storer node is responsible for (storing) a chunk if the chunk falls within the node's area of responsibility.
 Let us assume, then, (1) a forwarding strategy that relays requests along stable nodes and (2) a storage strategy that each node in the nearest neighbourhood (of mimimum R peers) stores all chunks within the area of responsibility. As long as these assumptions hold, each chunk is retrievable even if :math:`R-1` storer nodes drop offline simultaneously. As for (2), we still need to assume that every node in the nearest neighbour set can store each chunk.
 
-In POC 4 further measures of redundancy with erasure codes will be implemented. (https://en.wikipedia.org/wiki/Erasure_code), see
-the orange papers for our specific application)
+Further measures of redundancy, e.g. `Erasure coding <https://en.wikipedia.org/wiki/Erasure_code>`_, will be implemented in the future.
+
 
 Caching and purging Storage
 ----------------------------
@@ -313,7 +313,8 @@ Swarm Hash is constructed using any chunk hash function with a generalization of
 .. image:: img/chunk.png
    :alt:  A Swarm chunk consists of 4096 bytes of the file or a sequence of 128 subtree hashes
 
-Hashes of data chunks are defined as the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content and the content itself. Because of the inclusion of the length, it is resistant to [length extension attacks](http://en.wikipedia.org/wiki/Length_extension_attack),  even if the underlying chunk hash function is not.
+Hashes of data chunks are defined as the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content and the content itself. Because of the inclusion of the length, it is resistant to `length extension attacks <http://en.wikipedia.org/wiki/Length_extension_attack>`_,  even if the underlying chunk hash function is not.
+
 Intermediate chunks are composed of the hashes of the concatenation of the 64-bit length (in LSB-first order) of the content subsumed under this chunk followed by the references to its children (reference is either a chunk hash or chunk hash plus decryption key for encrypted content).
 
 To distinguish between the two, one should compare the length of the chunk to the 64-bit number with which every chunk begins. If the chunk is exactly 8 bytes longer than this number, it is a data chunk. If it is shorter than that, it is an intermediate chunk. Otherwise, it is not a valid Swarm Hash chunk.
