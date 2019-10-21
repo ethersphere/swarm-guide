@@ -112,9 +112,9 @@ Kademlia topology
 
 Swarm uses the ethereum devp2p rlpx suite as the  transport layer of the underlay network. This uncommon variant allows semi-stable peer connections (over TCP), with authenticated, encrypted, synchronous data streams.
 
-We say that a node has :dfn:`kademlia connectivity` if (1) it is connected to at least one node for each proximity order up to (but excluding) some maximum value :math:`d` (called the :dfn:`saturation depth`) and (2) it is connected to all nodes whose proximity order relative to the node is greater or equal to :math:`d`.
+We say that a node has :dfn:`kademlia k-connectivity` if (1) it is connected to at least :math:`k` (called :dfn:`Kademlia redundancy` with :math:`k ≥ 1`) nodes for each proximity order up to (but excluding) some maximum value :math:`d` (called the :dfn:`saturation depth`) and (2) it is connected to all nodes whose proximity order relative to the node is greater or equal to :math:`d`.
 
-If each point of a connected subgraph has kademlia connectivity, then we say the subgraph has  :dfn:`kademlia topology`. In a graph with kademlia topology, (1) a path between any two points exists, (2) it can be found using only local decisions on each hop and (3) is guaranteed to terminate in no more steps than the depth of the destination plus one.
+If each point of a connected subgraph has kademlia k-connectivity with a given :math:`k`, then we say the subgraph has  :dfn:`kademlia topology` of :math:`k`-fold redundancy. In a graph with kademlia topology, (1) a path between any two points exists, (2) it can be found using only local decisions on each hop and (3) is guaranteed to terminate in no more steps than the depth of the destination plus one.
 
 
 Given a set of points uniformly distributed in the space (e.g., the results of a hash function applied to Swarm data) the proximity bins map onto a series of subsets with cardinalities on a negative exponential scale, i.e., PO bin 0 has half of the points of any random sample, PO bin 1 has one fourth, PO bin 2 one eighth, etc.
